@@ -1,15 +1,12 @@
-import Loader from "../partials/Loader";
 import { useGetUser } from "../hooks/useGetUser";
 import { useGetChats } from "../hooks/useGetChats";
 import { Link } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
+import TopBar from "../components/TopBar";
+import ChatSkeleton from "../partials/ChatSkeleton";
 
 export default function Home() {
-  const { loading, user } = useGetUser();
-
-  return loading ? (
-    <Loader />
-  ) : (
+  return (
     <div className="w-full h-screen flex">
       <Chats />
       <Messages />
@@ -21,7 +18,7 @@ const Chats = () => {
   const { loading, chats } = useGetChats();
 
   return loading ? (
-    <Loader />
+    <ChatSkeleton />
   ) : (
     <div className="w-full md:w-[40%] lg:w-[30%]">
       <SearchBar />
@@ -32,12 +29,13 @@ const Chats = () => {
           <Link
             to={""}
             key={chat._id}
-            className="mb-1.5 flex items-center gap-5 bg-backgroundLight hover:bg-indigo-500 px-5 py-3 rounded-lg duration-300 ease-in-out"
+            className="mb-2 flex items-center gap-5 bg-backgroundLight hover:bg-indigo-500 px-5 py-3 rounded-lg duration-300 ease-in-out"
           >
             <div className="size-16 rounded-full overflow-hidden">
               <img
                 src={chat?.users[0]?.avatar?.url || "/user-placeholder.png"}
                 className="w-full h-full object-cover"
+                alt="User Avatar"
               />
             </div>
             <h1 className="text-lg">{chat?.users[0]?.username}</h1>
@@ -49,9 +47,15 @@ const Chats = () => {
 };
 
 const Messages = () => {
+  const { loading, user } = useGetUser();
+
   return (
-    <div className="hidden md:block md:w-[60%] lg:w-[70%] bg-background md:border-l border-neutral-600">
-      Messages
-    </div>
+    !loading && (
+      <div className="hidden md:block md:w-[60%] lg:w-[70%] bg-background md:border-l border-neutral-700">
+        <TopBar user={user as UserTypes} />
+
+        <div className="px-5 mt-3"></div>
+      </div>
+    )
   );
 };

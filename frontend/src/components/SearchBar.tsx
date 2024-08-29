@@ -78,6 +78,7 @@ export default function SearchBar() {
                       <div className="size-14 rounded-full overflow-hidden">
                         <img
                           src={user?.avatar?.url || "/user-placeholder.png"}
+                          alt="User Avatar"
                           className="w-full h-full object-cover"
                         />
                       </div>

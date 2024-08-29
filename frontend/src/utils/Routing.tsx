@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import Loader from "../partials/Loader";
+import PageLoader from "../partials/PageLoader";
 
 const Home = lazy(() => import("../pages/Home"));
 const Signup = lazy(() => import("../pages/Signup"));
@@ -11,7 +11,7 @@ export default function Routing() {
   const loc = useLocation();
 
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense fallback={<PageLoader />}>
       <Routes location={loc} key={loc.pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
