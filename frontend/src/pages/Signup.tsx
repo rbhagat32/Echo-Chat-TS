@@ -96,7 +96,7 @@ export default function Signup() {
         <input
           type="submit"
           value="Sign Up"
-          className="border-2 border-black shadow-xl text-xl font-bold rounded-md py-3 bg-rose-500 hover:bg-rose-600 cursor-pointer text-white"
+          className="shadow-xl font-bold rounded-md py-3 bg-rose-500 hover:bg-rose-600 cursor-pointer text-white"
         />
         <p className="mx-auto">Already have an account ?</p>
         <Button

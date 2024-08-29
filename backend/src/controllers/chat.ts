@@ -41,6 +41,11 @@ const deleteChat = async (req: RequestWithUser, res: Response) => {
 
   try {
     const chat = await chatModel.findById(chatId);
+
+    if (!chat) {
+      return res.status(404).json({ message: "Chat doesn't exist!" });
+    }
+
     const otherUserId = chat.users.find(
       (id: string) => id.toString() !== userId.toString()
     );

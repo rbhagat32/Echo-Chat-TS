@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
 import { MdOutlinePersonAddAlt1 } from "react-icons/md";
 import Loader from "../partials/Loader";
 import useDebounce from "../hooks/useDebounce";
 import axios from "../utils/axios";
+import { toast } from "react-toastify";
 
 export default function SearchBar() {
   const [loading, setLoading] = useState(true);
@@ -35,6 +37,20 @@ export default function SearchBar() {
     }
   }, [debouncedQuery]);
 
+  const sendRequest = (userId: string) => {
+    axios
+      .post(`/user/send-request/${userId}`)
+      .then((res) => {
+        toast.success(res?.data?.message);
+      })
+      .catch((error) => {
+        if (error?.status === 400) {
+          toast.error(error?.response?.data?.message);
+        }
+        console.error(error);
+      });
+  };
+
   return (
     <>
       {/* blur div */}
@@ -54,9 +70,15 @@ export default function SearchBar() {
             placeholder="Search Users :"
             className="w-full p-3 px-5 bg-transparent border-2 border-white rounded-full placeholder:text-white"
           />
-          <button className="absolute bottom-[33%] right-[4%]">
-            <FaSearch className="text-lg" />
-          </button>
+
+          {query.length > 0 ? (
+            <IoClose
+              className="text-2xl cursor-pointer absolute bottom-[28%] right-[4%]"
+              onClick={() => setQuery("")}
+            />
+          ) : (
+            <FaSearch className="absolute bottom-[33%] right-[4%] text-lg" />
+          )}
         </div>
       </div>
 
@@ -82,9 +104,9 @@ export default function SearchBar() {
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <h1>{user.username}</h1>
+                      <h1 className="text-lg">{user.username}</h1>
                     </div>
-                    <button>
+                    <button onClick={() => sendRequest(user._id)}>
                       <MdOutlinePersonAddAlt1 className="text-2xl" />
                     </button>
                   </div>

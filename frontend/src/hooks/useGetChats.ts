@@ -12,7 +12,8 @@ const useGetChats = () => {
   const navigate = useNavigate();
   const chats = useSelector((state: RootState) => state.ChatReducer.chats);
 
-  useEffect(() => {
+  const fetchChats = () => {
+    setLoading(true);
     dispatch(asyncGetChats())
       .then(() => {
         setLoading(false);
@@ -25,9 +26,13 @@ const useGetChats = () => {
         }
         navigate("/login");
       });
+  };
+
+  useEffect(() => {
+    fetchChats();
   }, [dispatch, navigate]);
 
-  return { loading, chats };
+  return { loading, chats, fetchChats };
 };
 
 export { useGetChats };

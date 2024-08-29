@@ -61,7 +61,7 @@ export default function Login() {
         <input
           type="submit"
           value="Login"
-          className="border-2 border-black shadow-xl text-xl font-bold rounded-md py-3 bg-rose-500 hover:bg-rose-600 cursor-pointer text-white"
+          className="shadow-xl font-bold rounded-md py-3 bg-rose-500 hover:bg-rose-600 cursor-pointer text-white"
         />
         <p className="mx-auto">Don't have an account ?</p>
         <Button

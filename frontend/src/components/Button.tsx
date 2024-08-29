@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 
 interface ButtonProps {
-  buttonType: "button" | "link";
-  text: string;
+  text?: string;
+  buttonType?: "button" | "link";
   color?: string;
   hoverColor?: string;
   to?: string;
@@ -10,8 +10,8 @@ interface ButtonProps {
 }
 
 export default function Button({
-  buttonType,
-  text,
+  text = "Button",
+  buttonType = "button",
   color = "bg-rose-500",
   hoverColor = "hover:bg-rose-600",
   to,
@@ -21,7 +21,7 @@ export default function Button({
     return (
       <button
         onClick={onClick}
-        className={`border-2 border-black shadow-xl w-fit text-xl font-bold rounded-md px-5 py-2 pb-2.5 ${color} ${hoverColor} cursor-pointer text-white duration-300 ease-in-out`}
+        className={`shadow-xl w-fit font-bold rounded-md px-5 py-2 pb-2.5 ${color} ${hoverColor} cursor-pointer text-white duration-300 ease-in-out`}
       >
         {text}
       </button>
@@ -30,7 +30,7 @@ export default function Button({
     return (
       <Link
         to={to as string}
-        className={`border-2 border-black shadow-xl text-center text-xl font-bold rounded-md py-3 ${color} ${hoverColor} cursor-pointer text-white duration-300 ease-in-out`}
+        className={`shadow-xl text-center font-bold rounded-md py-3 ${color} ${hoverColor} cursor-pointer text-white duration-300 ease-in-out`}
       >
         {text}
       </Link>
