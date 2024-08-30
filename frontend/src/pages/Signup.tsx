@@ -72,18 +72,18 @@ export default function Signup() {
           {...register("username")}
           type="text"
           placeholder="Username :"
-          className="px-4 py-2 rounded-md bg-backgroundLight border-2 border-white placeholder:text-white"
+          className="px-4 py-2 rounded-md bg-backgroundLight outline-none border-2 border-white placeholder:text-white"
         />
         <textarea
           {...register("bio")}
           placeholder="Bio :"
-          className="min-h-32 max-h-32 px-4 py-2 rounded-md bg-backgroundLight border-2 border-white placeholder:text-white"
+          className="min-h-32 max-h-32 px-4 py-2 rounded-md bg-backgroundLight outline-none border-2 border-white placeholder:text-white"
         ></textarea>
         <input
           {...register("password")}
           type={showPassword ? "text" : "password"}
           placeholder="Password :"
-          className="px-4 py-2 rounded-md bg-backgroundLight border-2 border-white placeholder:text-white"
+          className="px-4 py-2 rounded-md bg-backgroundLight outline-none border-2 border-white placeholder:text-white"
         />
         <label className="w-fit">
           <input

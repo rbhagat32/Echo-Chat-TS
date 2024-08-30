@@ -94,7 +94,7 @@ export default function SearchBar() {
                 searchData.map((user: UserTypes, i: number) => (
                   <div
                     key={i}
-                    className="flex justify-between items-center bg-backgroundLight hover:bg-indigo-500 px-6 py-3 rounded-lg duration-300 ease-in-out"
+                    className="flex justify-between items-center bg-backgroundLight hover:bg-neutral-700/60 px-6 py-3 rounded-lg duration-300 ease-in-out"
                   >
                     <div className="flex gap-4 items-center">
                       <div className="size-14 rounded-full overflow-hidden">

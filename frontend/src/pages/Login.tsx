@@ -46,13 +46,13 @@ export default function Login() {
           {...register("username")}
           type="text"
           placeholder="Username :"
-          className="px-4 py-2 rounded-md bg-backgroundLight border-2 border-white placeholder:text-white"
+          className="px-4 py-2 rounded-md bg-backgroundLight outline-none border-2 border-white placeholder:text-white"
         />
         <input
           {...register("password")}
           type={showPassword ? "text" : "password"}
           placeholder="Password :"
-          className="relative px-4 py-2 rounded-md bg-backgroundLight border-2 border-white placeholder:text-white"
+          className="relative px-4 py-2 rounded-md bg-backgroundLight outline-none border-2 border-white placeholder:text-white"
         />
         <label>
           <input type="checkbox" onChange={toggleShowPassword} />

@@ -26,8 +26,8 @@ interface ChatTypes {
 interface MessageTypes {
   _id: string;
   chatId: ChatTypes;
-  senderId: UserTypes;
-  receiverId: UserTypes;
+  senderId: string;
+  receiverId: string;
   content: string;
   createdAt: Date;
   updatedAt: Date;

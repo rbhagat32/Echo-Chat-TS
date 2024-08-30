@@ -17,7 +17,7 @@ export default function TopBar({ user }: { user: UserTypes }) {
 
   return (
     <>
-      <div className="px-5 py-3 flex justify-between items-center border-b border-neutral-700">
+      <div className="h-[10vh] px-5 py-3 flex justify-between items-center border-b border-neutral-700">
         <Link to={""} className="flex gap-4 items-center">
           <div className="size-14 rounded-full overflow-hidden">
             <img
@@ -26,7 +26,12 @@ export default function TopBar({ user }: { user: UserTypes }) {
               className="w-full h-full object-cover"
             />
           </div>
-          <h1 className="text-2xl font-semibold">{user.username}</h1>
+          <h1 className="text-2xl font-semibold">
+            {user.username}
+            <span className="text-neutral-700 inline-block ml-2 text-lg">
+              --me
+            </span>
+          </h1>
         </Link>
 
         <div className="flex gap-6 items-center">
