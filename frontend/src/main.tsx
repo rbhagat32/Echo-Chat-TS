@@ -5,13 +5,16 @@ import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "./store/store.ts";
+import { SocketContextProvider } from "./context/SocketContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
-  // <StrictMode>
-  <Provider store={store}>
+  <StrictMode>
     <BrowserRouter>
-      <App />
+      <Provider store={store}>
+        <SocketContextProvider>
+          <App />
+        </SocketContextProvider>
+      </Provider>
     </BrowserRouter>
-  </Provider>
-  // </StrictMode>
+  </StrictMode>
 );

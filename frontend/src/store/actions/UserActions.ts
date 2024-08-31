@@ -7,7 +7,6 @@ export { removeUser } from "../reducers/UserReducer";
 const asyncGetUser = () => async (dispatch: Dispatch) => {
   try {
     const { data } = await axios.get("/user/get-user");
-    console.log(data);
     dispatch(getUser(data));
   } catch (error: unknown) {
     if (error instanceof AxiosError) {

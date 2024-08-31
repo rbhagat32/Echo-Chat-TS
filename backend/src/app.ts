@@ -12,9 +12,9 @@ import authRouter from "./routes/auth.js";
 import userRouter from "./routes/user.js";
 import chatRouter from "./routes/chat.js";
 import messageRouter from "./routes/message.js";
+import { app, server } from "./socket.js";
 
 // setup
-const app = express();
 dotenv.config({ path: "./.env" });
 app.use(
   cors({
@@ -45,6 +45,6 @@ app.use("/api/user", userRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/message", messageRouter);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

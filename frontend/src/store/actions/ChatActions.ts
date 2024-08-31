@@ -7,7 +7,6 @@ export { removeChats } from "../reducers/ChatReducer";
 const asyncGetChats = () => async (dispatch: AppDispatch) => {
   try {
     const { data } = await axios.get("/chat/get-chats");
-    console.log(data);
     dispatch(getChats(data));
   } catch (error: unknown) {
     if (error instanceof AxiosError) {

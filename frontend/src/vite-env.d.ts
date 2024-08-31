@@ -3,7 +3,6 @@
 interface UserTypes {
   _id: string;
   username: string;
-  password: string;
   bio: string;
   avatar: {
     public_id: string;
