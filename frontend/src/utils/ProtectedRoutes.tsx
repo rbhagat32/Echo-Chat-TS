@@ -2,16 +2,16 @@ import { Navigate, Outlet } from "react-router-dom";
 
 interface ProtectedRoutesProps {
   children?: JSX.Element;
-  user: boolean;
+  isLoggedIn: boolean;
   redirect: string;
 }
 
 const ProtectedRoutes = ({
   children,
-  user,
+  isLoggedIn,
   redirect,
 }: ProtectedRoutesProps) => {
-  if (!user) return <Navigate to={redirect} />;
+  if (!isLoggedIn) return <Navigate to={redirect} />;
   return children ? children : <Outlet />;
 };
 

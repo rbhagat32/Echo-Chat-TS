@@ -1,12 +1,14 @@
-import Input from "../components/Input";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { toast } from "sonner";
 import Button from "../components/Button";
 import ButtonAlt from "../components/ButtonAlt";
-import { Link, useNavigate } from "react-router-dom";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { useState } from "react";
-import axios from "../utils/axios";
+import Input from "../components/Input";
 import Spinner from "../partials/Spinner";
+import { api } from "../store/api";
+import { setAuth } from "../store/reducers/AuthSlice";
+import axios from "../utils/axios";
 
 interface SignupFormData {
   username: string;
@@ -18,7 +20,7 @@ interface SignupFormData {
 const SignUp = () => {
   const { handleSubmit, register, reset } = useForm<SignupFormData>();
   const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const signup: SubmitHandler<SignupFormData> = (data) => {
     setLoading(true);
@@ -35,7 +37,8 @@ const SignUp = () => {
       .then((res) => {
         reset();
         toast.success(res?.data?.message);
-        navigate("/");
+        dispatch(setAuth(true));
+        dispatch(api.util.invalidateTags(["Auth"]));
       })
       .catch((error) => {
         toast.error(error.response?.data?.message || "Unable to Sign Up !");
@@ -101,10 +104,10 @@ const SignUp = () => {
         }}
         className="bg-neutral-800/30 px-10 lg:px-20 xl:px-40 hidden md:flex py-20 w-full h-full justify-between items-end flex-col gap-4"
       >
-        <Link to="/" className="w-fit flex items-center gap-2 text-right">
+        <div className="w-fit flex items-center gap-2 text-right">
           <img src="/logo-light.svg" alt="Logo" className="size-10" />
           <h1 className="text-3xl font-semibold">Echo.</h1>
-        </Link>
+        </div>
 
         <div className="text-right">
           <h1 className="text-lg text-zinc-500">

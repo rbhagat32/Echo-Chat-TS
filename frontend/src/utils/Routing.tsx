@@ -8,18 +8,22 @@ const SignUp = lazy(() => import("../pages/SignUp"));
 const Chat = lazy(() => import("../pages/Chat"));
 const NotFound = lazy(() => import("../partials/NotFound"));
 
-const Routing = () => {
-  let user: boolean = true;
-
+const Routing = ({ isLoggedIn = true }: { isLoggedIn: boolean }) => {
   return (
     <Suspense fallback={<PageLoader />}>
       <Routes>
-        <Route element={<ProtectedRoutes user={user} redirect="/login" />}>
+        <Route
+          element={
+            <ProtectedRoutes isLoggedIn={isLoggedIn} redirect="/login" />
+          }
+        >
           <Route path="/" element={<Home />} />
           <Route path="/chat/:chatId" element={<Chat />} />
         </Route>
 
-        <Route element={<ProtectedRoutes user={!user} redirect="/" />}>
+        <Route
+          element={<ProtectedRoutes isLoggedIn={!isLoggedIn} redirect="/" />}
+        >
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
         </Route>

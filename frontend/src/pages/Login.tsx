@@ -1,12 +1,14 @@
-import Input from "../components/Input";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { toast } from "sonner";
 import Button from "../components/Button";
 import ButtonAlt from "../components/ButtonAlt";
-import { Link, useNavigate } from "react-router-dom";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { useState } from "react";
-import axios from "../utils/axios";
-import { toast } from "sonner";
+import Input from "../components/Input";
 import Spinner from "../partials/Spinner";
+import { api } from "../store/api";
+import { setAuth } from "../store/reducers/AuthSlice";
+import axios from "../utils/axios";
 
 interface LoginFormData {
   username: string;
@@ -16,7 +18,7 @@ interface LoginFormData {
 const Login = () => {
   const { handleSubmit, register, reset } = useForm<LoginFormData>();
   const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const login: SubmitHandler<LoginFormData> = (data) => {
     setLoading(true);
@@ -24,7 +26,8 @@ const Login = () => {
       .post("/auth/login", data)
       .then(() => {
         reset();
-        navigate("/");
+        dispatch(setAuth(true));
+        dispatch(api.util.invalidateTags(["Auth"]));
       })
       .catch((error) => {
         toast.error(error.response?.data?.message || "Unable to Sign In !");
@@ -45,10 +48,10 @@ const Login = () => {
         }}
         className="bg-neutral-800/30 px-10 lg:px-20 xl:px-40 hidden md:flex py-20 w-full h-full justify-between flex-col gap-4"
       >
-        <Link to="/" className="w-fit flex items-center gap-2">
+        <div className="w-fit flex items-center gap-2">
           <img src="/logo-light.svg" alt="Logo" className="size-10" />
           <h1 className="text-3xl font-semibold">Echo.</h1>
-        </Link>
+        </div>
 
         <div>
           <h1 className="text-lg text-zinc-500">
