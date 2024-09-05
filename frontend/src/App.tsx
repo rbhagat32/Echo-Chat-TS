@@ -1,21 +1,13 @@
 import Routing from "./utils/Routing";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "sonner";
 
-export default function App() {
+const App = () => {
   return (
     <>
-      <ToastContainer
-        toastStyle={{
-          backgroundColor: "white",
-          color: "black",
-        }}
-        stacked
-        autoClose={4000}
-      />
-      <div className="w-full min-h-screen">
-        <Routing />
-      </div>
+      <Toaster richColors position="top-center" duration={1500} />
+      <Routing />
     </>
   );
-}
+};
+
+export default App;

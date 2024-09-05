@@ -1,20 +1,24 @@
-import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import axios from "../utils/axios";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import Input from "../components/Input";
 import Button from "../components/Button";
-import Loader from "../partials/Loader";
-import VisuallyHiddenInput from "../components/VisuallyHiddenInput";
-import { useCheckAuth } from "../hooks/useCheckAuth";
+import ButtonAlt from "../components/ButtonAlt";
+import { Link, useNavigate } from "react-router-dom";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { useState } from "react";
+import axios from "../utils/axios";
+import Spinner from "../partials/Spinner";
 
-export default function Signup() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [uploadedAvatar, setUploadedAvatar] = useState("/user-placeholder.png");
+interface SignupFormData {
+  username: string;
+  bio: string;
+  password: string;
+  avatar: FileList;
+}
+
+const SignUp = () => {
+  const { handleSubmit, register, reset } = useForm<SignupFormData>();
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { register, handleSubmit, reset } = useForm<SignupFormData>();
-
-  const { loading, setLoading } = useCheckAuth();
 
   const signup: SubmitHandler<SignupFormData> = (data) => {
     setLoading(true);
@@ -34,79 +38,84 @@ export default function Signup() {
         navigate("/");
       })
       .catch((error) => {
-        toast.error(error.response?.data?.message);
+        toast.error(error.response?.data?.message || "Unable to Sign Up !");
       })
       .finally(() => {
         setLoading(false);
       });
   };
 
-  const toggleShowPassword = () => {
-    setShowPassword((prev) => !prev);
-  };
-
-  return loading ? (
-    <Loader />
-  ) : (
-    <div className="w-full min-h-screen flex flex-col gap-5 justify-center items-center">
-      <h1 className="text-5xl font-black">SignUp</h1>
-
-      <form
-        onSubmit={handleSubmit(signup)}
-        className="w-96 flex flex-col gap-3"
-      >
-        <div className="relative rounded-full border-2 border-white mx-auto">
-          <div className="size-40 rounded-full overflow-hidden">
-            <img
-              src={uploadedAvatar}
-              alt="Selected Image"
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <VisuallyHiddenInput
-            register={register("avatar")}
-            setterFunc={setUploadedAvatar}
-          />
+  return (
+    <div className="w-screen h-screen flex">
+      <div className="relative px-20 lg:px-40 w-full h-full flex justify-center items-center flex-col text-center gap-2">
+        <ButtonAlt absolute={true} side="left" route="login">
+          Sign In
+        </ButtonAlt>
+        <div>
+          <h1 className="font-bold text-2xl mb-1">Signup to a new account</h1>
+          <h2 className="text-lg text-zinc-500">
+            Enter your details to create a new account
+          </h2>
         </div>
-        <input
-          {...register("username")}
-          type="text"
-          placeholder="Username :"
-          className="px-4 py-2 rounded-md bg-backgroundLight outline-none border-2 border-white placeholder:text-white"
-        />
-        <textarea
-          {...register("bio")}
-          placeholder="Bio :"
-          className="min-h-32 max-h-32 px-4 py-2 rounded-md bg-backgroundLight outline-none border-2 border-white placeholder:text-white"
-        ></textarea>
-        <input
-          {...register("password")}
-          type={showPassword ? "text" : "password"}
-          placeholder="Password :"
-          className="px-4 py-2 rounded-md bg-backgroundLight outline-none border-2 border-white placeholder:text-white"
-        />
-        <label className="w-fit">
-          <input
-            type="checkbox"
-            onChange={toggleShowPassword}
-            className="cursor-pointer"
+        <form
+          onSubmit={handleSubmit(signup)}
+          className="w-full flex flex-col gap-3"
+        >
+          <Input
+            register={register("username")}
+            type="text"
+            placeholder="Username"
           />
-          <span className="inline-block ml-2">Show Password</span>
-        </label>
-        <input
-          type="submit"
-          value="Sign Up"
-          className="shadow-xl font-bold rounded-md py-3 bg-rose-500 hover:bg-rose-600 cursor-pointer text-white"
-        />
-        <p className="mx-auto">Already have an account ?</p>
-        <Button
-          buttonType="link"
-          text="Login"
-          to="/login"
-          color="bg-indigo-500"
-          hoverColor="hover:bg-indigo-600"
-        />
-      </form>
+          <textarea
+            {...register("bio")}
+            placeholder="Bio"
+            className="resize-none min-h-28 px-4 py-3 rounded-lg bg-zinc-800 text-white outline-none focus:ring focus:border-indigo-500 placeholder:text-white placeholder:font-semibold"
+          ></textarea>
+          <Input
+            register={register("password")}
+            type="password"
+            placeholder="Password"
+          />
+          <input
+            {...register("avatar")}
+            multiple={false}
+            type="file"
+            accept="image/*"
+            className="text-zinc-500 rounded-lg"
+          />
+          <Button type="submit" width="w-full">
+            {!loading ? "Sign Up" : <Spinner />}
+          </Button>
+          <p className="text-zinc-500">
+            By continuing, you agree to our Terms of Service and Privacy Policy.
+          </p>
+        </form>
+      </div>
+
+      <div
+        style={{
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.9),rgba(0,0,0,1)), url(/background.jpeg)`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+        className="bg-neutral-800/30 px-10 lg:px-20 xl:px-40 hidden md:flex py-20 w-full h-full justify-between items-end flex-col gap-4"
+      >
+        <Link to="/" className="w-fit flex items-center gap-2 text-right">
+          <img src="/logo-light.svg" alt="Logo" className="size-10" />
+          <h1 className="text-3xl font-semibold">Echo.</h1>
+        </Link>
+
+        <div className="text-right">
+          <h1 className="text-lg text-zinc-500">
+            "Welcome back! Ready to dive into your conversations? Connect with
+            friends, share moments, and enjoy seamless communication all in one
+            place."
+          </h1>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default SignUp;

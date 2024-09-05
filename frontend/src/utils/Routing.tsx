@@ -1,23 +1,23 @@
 import { lazy, Suspense } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import PageLoader from "../partials/PageLoader";
-
 const Home = lazy(() => import("../pages/Home"));
-const Signup = lazy(() => import("../pages/Signup"));
 const Login = lazy(() => import("../pages/Login"));
-const NotFound = lazy(() => import("../partials/NotFound"));
+const SignUp = lazy(() => import("../pages/SignUp"));
+const Chat = lazy(() => import("../pages/Chat"));
 
-export default function Routing() {
-  const loc = useLocation();
-
+const Routing = () => {
   return (
     <Suspense fallback={<PageLoader />}>
-      <Routes location={loc} key={loc.pathname}>
+      <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="*" element={<NotFound />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/chat/:chatId" element={<Chat />} />
+        <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>
     </Suspense>
   );
-}
+};
+
+export default Routing;

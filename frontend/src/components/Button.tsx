@@ -1,41 +1,24 @@
-import { Link } from "react-router-dom";
-
 interface ButtonProps {
-  text?: string;
-  buttonType?: "button" | "link";
+  children?: React.ReactNode;
+  type?: "button" | "submit";
+  width?: string;
   color?: string;
-  hoverColor?: string;
-  to?: string;
-  onClick?: () => void;
 }
 
-export default function Button({
-  text = "Button",
-  buttonType = "button",
-  color = "bg-rose-500",
-  hoverColor = "hover:bg-rose-600",
-  to,
-  onClick,
-}: ButtonProps) {
-  if (buttonType === "button") {
-    return (
-      <button
-        onClick={onClick}
-        className={`shadow-xl w-fit font-bold rounded-md px-5 py-2 pb-2.5 ${color} ${hoverColor} cursor-pointer text-white duration-300 ease-in-out`}
-      >
-        {text}
-      </button>
-    );
-  } else if (buttonType === "link") {
-    return (
-      <Link
-        to={to as string}
-        className={`shadow-xl text-center font-bold rounded-md py-3 ${color} ${hoverColor} cursor-pointer text-white duration-300 ease-in-out`}
-      >
-        {text}
-      </Link>
-    );
-  } else {
-    return null;
-  }
-}
+const Button = ({
+  children,
+  type = "button",
+  width = "w-fit",
+  color = "bg-indigo-500",
+}: ButtonProps) => {
+  return (
+    <button
+      type={type}
+      className={`${width} ${color} text-lg px-4 py-3 rounded-lg font-semibold`}
+    >
+      {children}
+    </button>
+  );
+};
+
+export default Button;

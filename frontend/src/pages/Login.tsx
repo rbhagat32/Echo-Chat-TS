@@ -1,19 +1,22 @@
+import Input from "../components/Input";
+import Button from "../components/Button";
+import ButtonAlt from "../components/ButtonAlt";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { useState } from "react";
 import axios from "../utils/axios";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import Button from "../components/Button";
-import Loader from "../partials/Loader";
-import { useCheckAuth } from "../hooks/useCheckAuth";
+import { toast } from "sonner";
+import Spinner from "../partials/Spinner";
 
-export default function Login() {
-  const [showPassword, setShowPassword] = useState(false);
+interface LoginFormData {
+  username: string;
+  password: string;
+}
+
+const Login = () => {
+  const { handleSubmit, register, reset } = useForm<LoginFormData>();
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-
-  const { register, handleSubmit, reset } = useForm<LoginFormData>();
-
-  const { loading, setLoading } = useCheckAuth();
 
   const login: SubmitHandler<LoginFormData> = (data) => {
     setLoading(true);
@@ -24,54 +27,72 @@ export default function Login() {
         navigate("/");
       })
       .catch((error) => {
-        toast.error(error.response?.data?.message);
+        toast.error(error.response?.data?.message || "Unable to Sign In !");
       })
       .finally(() => {
         setLoading(false);
       });
   };
 
-  const toggleShowPassword = () => {
-    setShowPassword((prev) => !prev);
-  };
+  return (
+    <div className="w-screen h-screen flex">
+      <div
+        style={{
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.9),rgba(0,0,0,1)), url(/background.jpeg)`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+        className="bg-neutral-800/30 px-10 lg:px-20 xl:px-40 hidden md:flex py-20 w-full h-full justify-between flex-col gap-4"
+      >
+        <Link to="/" className="w-fit flex items-center gap-2">
+          <img src="/logo-light.svg" alt="Logo" className="size-10" />
+          <h1 className="text-3xl font-semibold">Echo.</h1>
+        </Link>
 
-  return loading ? (
-    <Loader />
-  ) : (
-    <div className="w-full min-h-screen flex flex-col gap-10 justify-center items-center">
-      <h1 className="text-5xl font-black">Login</h1>
+        <div>
+          <h1 className="text-lg text-zinc-500">
+            "Welcome back! Ready to dive into your conversations? Connect with
+            friends, share moments, and enjoy seamless communication all in one
+            place."
+          </h1>
+        </div>
+      </div>
 
-      <form onSubmit={handleSubmit(login)} className="w-96 flex flex-col gap-3">
-        <input
-          {...register("username")}
-          type="text"
-          placeholder="Username :"
-          className="px-4 py-2 rounded-md bg-backgroundLight outline-none border-2 border-white placeholder:text-white"
-        />
-        <input
-          {...register("password")}
-          type={showPassword ? "text" : "password"}
-          placeholder="Password :"
-          className="relative px-4 py-2 rounded-md bg-backgroundLight outline-none border-2 border-white placeholder:text-white"
-        />
-        <label>
-          <input type="checkbox" onChange={toggleShowPassword} />
-          <span className="inline-block ml-2">Show Password</span>
-        </label>
-        <input
-          type="submit"
-          value="Login"
-          className="shadow-xl font-bold rounded-md py-3 bg-rose-500 hover:bg-rose-600 cursor-pointer text-white"
-        />
-        <p className="mx-auto">Don't have an account ?</p>
-        <Button
-          buttonType="link"
-          text="Signup"
-          to="/signup"
-          color="bg-indigo-500"
-          hoverColor="hover:bg-indigo-600"
-        />
-      </form>
+      <div className="relative px-20 lg:px-40 w-full h-full flex justify-center items-center flex-col text-center gap-2">
+        <ButtonAlt absolute={true} side="right" route="signup">
+          Sign Up
+        </ButtonAlt>
+        <div>
+          <h1 className="font-bold text-2xl mb-1">Login to your account</h1>
+          <h2 className="text-lg text-zinc-500">
+            Enter your username and password to sign in
+          </h2>
+        </div>
+        <form
+          onSubmit={handleSubmit(login)}
+          className="w-full flex flex-col gap-3"
+        >
+          <Input
+            register={register("username")}
+            type="text"
+            placeholder="Username"
+          />
+          <Input
+            register={register("password")}
+            type="password"
+            placeholder="Password"
+          />
+          <Button type="submit" width="w-full">
+            {!loading ? "Sign In" : <Spinner />}
+          </Button>
+          <p className="text-zinc-500">
+            By continuing, you agree to our Terms of Service and Privacy Policy.
+          </p>
+        </form>
+      </div>
     </div>
   );
-}
+};
+
+export default Login;

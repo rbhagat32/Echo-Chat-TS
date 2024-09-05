@@ -3,26 +3,7 @@
 @tailwind utilities;
 
 body {
-  font-family: "Gilroy";
-  background-color: rgb(28 25 23);
+  background-color: #171717;
   color: white;
-}
-
-img {
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 0px;
-}
-
-::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 0 transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: rgb(82 82 91);
-  border-radius: 50px;
+  overflow: hidden;
 }
