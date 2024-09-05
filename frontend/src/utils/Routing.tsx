@@ -1,20 +1,30 @@
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import PageLoader from "../partials/PageLoader";
+import ProtectedRoutes from "./ProtectedRoutes";
 const Home = lazy(() => import("../pages/Home"));
 const Login = lazy(() => import("../pages/Login"));
 const SignUp = lazy(() => import("../pages/SignUp"));
 const Chat = lazy(() => import("../pages/Chat"));
+const NotFound = lazy(() => import("../partials/NotFound"));
 
 const Routing = () => {
+  let user: boolean = true;
+
   return (
     <Suspense fallback={<PageLoader />}>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/chat/:chatId" element={<Chat />} />
-        <Route path="*" element={<h1>Not Found</h1>} />
+        <Route element={<ProtectedRoutes user={user} redirect="/login" />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/chat/:chatId" element={<Chat />} />
+        </Route>
+
+        <Route element={<ProtectedRoutes user={!user} redirect="/" />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+        </Route>
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );
