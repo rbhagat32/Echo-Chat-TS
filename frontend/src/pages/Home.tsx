@@ -1,13 +1,16 @@
-import { useGetUserQuery } from "../store/api";
+import { Outlet, useLocation } from "react-router-dom";
+import Navbar from "../partials/Navbar";
+import Chats from "../layout/Chats";
+import SelectChat from "../components/SelectChat";
 
 const Home = () => {
-  const { isLoading, data } = useGetUserQuery();
-  console.log(isLoading, data);
+  const loc = useLocation();
 
   return (
-    <div className="w-screen h-screen flex">
-      <div className="h-full w-full md:w-[30%] bg-red-200"></div>
-      <div className="h-full w-0 md:w-[70%] bg-blue-200"></div>
+    <div className="relative w-screen h-screen overflow-hidden">
+      <Navbar />
+      <Chats />
+      {loc.pathname === "/" ? <SelectChat /> : <Outlet />}
     </div>
   );
 };

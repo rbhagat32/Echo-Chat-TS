@@ -1,5 +1,12 @@
 /// <reference types="vite/client" />
 
+interface StateTypes {
+  auth: boolean;
+  user: UserTypes;
+  chats: ChatTypes[];
+  misc: MiscTypes;
+}
+
 interface UserTypes {
   _id: string;
   username: string;
@@ -15,3 +22,7 @@ interface UserTypes {
 }
 
 interface ChatTypes {}
+
+interface MiscTypes {
+  isSideBarOpen: boolean;
+}

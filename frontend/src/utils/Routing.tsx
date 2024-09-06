@@ -5,7 +5,7 @@ import ProtectedRoutes from "./ProtectedRoutes";
 const Home = lazy(() => import("../pages/Home"));
 const Login = lazy(() => import("../pages/Login"));
 const SignUp = lazy(() => import("../pages/SignUp"));
-const Chat = lazy(() => import("../pages/Chat"));
+const MessageContainer = lazy(() => import("../layout/MessageContainer"));
 const NotFound = lazy(() => import("../partials/NotFound"));
 
 const Routing = ({ isLoggedIn = true }: { isLoggedIn: boolean }) => {
@@ -17,8 +17,9 @@ const Routing = ({ isLoggedIn = true }: { isLoggedIn: boolean }) => {
             <ProtectedRoutes isLoggedIn={isLoggedIn} redirect="/login" />
           }
         >
-          <Route path="/" element={<Home />} />
-          <Route path="/chat/:chatId" element={<Chat />} />
+          <Route path="/" element={<Home />}>
+            <Route path="/chat/:chatId" element={<MessageContainer />} />
+          </Route>
         </Route>
 
         <Route
