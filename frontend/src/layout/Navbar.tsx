@@ -8,11 +8,11 @@ const Navbar = () => {
   const { isSideBarOpen } = useSelector((state: StateTypes) => state.misc);
 
   return (
-    <div className="w-full fixed p-4 lg:px-8 z-[100] flex justify-between">
+    <div className="w-full fixed px-2 py-4 z-[100] flex justify-between">
       <button
         onClick={() => dispatch(toggleSideBar())}
         className={`${
-          isSideBarOpen ? "border-white" : "border-indigo-400"
+          !isSideBarOpen ? "border-white" : "border-indigo-400"
         } rounded-full text-white text-3xl border-2 p-1 duration-300 ease-in-out`}
       >
         <HiBars3 />

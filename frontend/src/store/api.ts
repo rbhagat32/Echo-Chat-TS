@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setAuth } from "./reducers/AuthSlice";
 import { setUsers } from "./reducers/UserSlice";
 import { setChats } from "./reducers/ChatSlice";
+import { setMessages } from "./reducers/MessagesSlice";
 
 export const api = createApi({
   reducerPath: "api",
@@ -9,7 +10,7 @@ export const api = createApi({
     baseUrl: `${import.meta.env.VITE_BACKEND_URL}`,
     credentials: "include",
   }),
-  tagTypes: ["Auth", "User", "Chat"],
+  tagTypes: ["Auth", "User", "Chat", "Message"],
 
   endpoints: (builder) => ({
     checkLogin: builder.query<{ isLoggedIn: boolean }, void>({
@@ -50,7 +51,29 @@ export const api = createApi({
         }
       },
     }),
+
+    getMessages: builder.query<
+      MessageStateTypes,
+      { chatId: string | undefined; page: number; limit: number }
+    >({
+      query: ({ chatId, page = 1, limit = 10 }) =>
+        `message/get-messages/${chatId}?page=${page}&limit=${limit}`,
+      providesTags: ["Message"],
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setMessages(data));
+        } catch (error) {
+          console.error("Failed to fetch messages:", error);
+        }
+      },
+    }),
   }),
 });
 
-export const { useCheckLoginQuery, useGetUserQuery, useGetChatsQuery } = api;
+export const {
+  useCheckLoginQuery,
+  useGetUserQuery,
+  useGetChatsQuery,
+  useGetMessagesQuery,
+} = api;

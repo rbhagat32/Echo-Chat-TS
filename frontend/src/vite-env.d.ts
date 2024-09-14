@@ -28,6 +28,11 @@ interface ChatTypes {
   updatedAt: Date;
 }
 
+interface MessageStateTypes {
+  messages: MessageTypes[];
+  hasMore: boolean;
+}
+
 interface MessageTypes {
   _id: string;
   chatId: string;
