@@ -21,7 +21,22 @@ interface UserTypes {
   updatedAt: Date;
 }
 
-interface ChatTypes {}
+interface ChatTypes {
+  _id: string;
+  users: UserTypes[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface MessageTypes {
+  _id: string;
+  chatId: string;
+  senderId: string;
+  receiverId: string;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 interface MiscTypes {
   isSideBarOpen: boolean;

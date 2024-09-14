@@ -1,6 +1,13 @@
-const Spinner = () => {
+interface SpinnerProps {
+  size?: string;
+  border?: string;
+}
+
+const Spinner = ({ size = "size-7", border = "border-2" }: SpinnerProps) => {
   return (
-    <div className="mx-auto size-7 rounded-full border-2 border-t-neutral-800 animate-spin"></div>
+    <div
+      className={`mx-auto ${size} rounded-full ${border} border-t-neutral-800 animate-spin`}
+    ></div>
   );
 };
 

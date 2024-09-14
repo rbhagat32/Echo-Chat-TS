@@ -54,6 +54,8 @@ const uploadToCloudinary = async (
   }
 };
 
-const deleteFromCloudinary = async (public_id: string) => {};
+const deleteFromCloudinary = async (public_id: string) => {
+  console.log("public_id", public_id);
+};
 
 export { uploadToCloudinary, deleteFromCloudinary };

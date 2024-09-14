@@ -11,6 +11,7 @@ const getChats = async (req: RequestWithUser, res: Response) => {
   try {
     const user = await userModel.findById(userId).populate({
       path: "chats",
+      select: "-messages",
       populate: {
         path: "users", // Populate the users inside each chat
       },

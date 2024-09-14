@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setAuth } from "./reducers/AuthSlice";
 import { setUsers } from "./reducers/UserSlice";
+import { setChats } from "./reducers/ChatSlice";
 
 export const api = createApi({
   reducerPath: "api",
@@ -8,7 +9,7 @@ export const api = createApi({
     baseUrl: `${import.meta.env.VITE_BACKEND_URL}`,
     credentials: "include",
   }),
-  tagTypes: ["Auth", "User"],
+  tagTypes: ["Auth", "User", "Chat"],
 
   endpoints: (builder) => ({
     checkLogin: builder.query<{ isLoggedIn: boolean }, void>({
@@ -36,7 +37,20 @@ export const api = createApi({
         }
       },
     }),
+
+    getChats: builder.query<ChatTypes[], void>({
+      query: () => "chat/get-chats",
+      providesTags: ["Chat"],
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setChats(data));
+        } catch (error) {
+          console.error("Failed to fetch chats:", error);
+        }
+      },
+    }),
   }),
 });
 
-export const { useCheckLoginQuery, useGetUserQuery } = api;
+export const { useCheckLoginQuery, useGetUserQuery, useGetChatsQuery } = api;

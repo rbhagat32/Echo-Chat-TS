@@ -71,7 +71,7 @@ const login = async (req: Request, res: Response) => {
   }
 };
 
-const logout = (req: Request, res: Response) => {
+const logout = (_: Request, res: Response) => {
   res
     .status(200)
     .cookie("token", "", { ...cookieOptions, expires: new Date(Date.now()) })
