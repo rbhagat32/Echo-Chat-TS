@@ -19,6 +19,7 @@ const MessageInput = () => {
     if (!message.trim()) return toast.error("Message cannot be empty !");
 
     const newMessage: MessageTypes = {
+      _id: (Math.random() * 1000000).toString(),
       chatId,
       content: message,
       senderId: loggedInUser._id,
