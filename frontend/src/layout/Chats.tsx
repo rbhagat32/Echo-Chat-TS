@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useGetChatsQuery } from "../store/api";
 import { toggleSideBar } from "../store/reducers/MiscSlice";
 import Spinner from "../partials/Spinner";
+import { IoMdClose } from "react-icons/io";
 
 const Chats = () => {
   const dispatch = useDispatch();
@@ -15,7 +16,14 @@ const Chats = () => {
         !isSideBarOpen ? "-left-52 lg:-left-80" : "left-0"
       } fixed w-52 lg:w-80 h-full overflow-auto bg-neutral-800 duration-300 ease-in-out z-[99]`}
     >
-      <div className="relative top-20">
+      <button
+        onClick={() => dispatch(toggleSideBar())}
+        className="rounded-full text-white text-3xl border-2 p-1 mx-2 my-5 duration-300 ease-in-out"
+      >
+        <IoMdClose />
+      </button>
+
+      <div>
         {!isLoading ? (
           data?.length ? (
             data?.map((chat) => (

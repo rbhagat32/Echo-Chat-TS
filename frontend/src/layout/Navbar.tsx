@@ -2,21 +2,34 @@ import { HiBars3 } from "react-icons/hi2";
 import { toggleSideBar } from "../store/reducers/MiscSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { IoMdNotifications } from "react-icons/io";
+import { TbLogout2 } from "react-icons/tb";
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const { isSideBarOpen } = useSelector((state: StateTypes) => state.misc);
 
   return (
-    <div className="w-full fixed px-2 py-4 z-[100] flex justify-between">
-      <button
-        onClick={() => dispatch(toggleSideBar())}
-        className={`${
-          !isSideBarOpen ? "border-white" : "border-indigo-400"
-        } rounded-full text-white text-3xl border-2 p-1 duration-300 ease-in-out`}
-      >
-        <HiBars3 />
-      </button>
+    <div
+      onClick={() => {
+        if (isSideBarOpen) {
+          dispatch(toggleSideBar());
+        }
+      }}
+      className="w-full fixed px-2 py-4 flex justify-between"
+    >
+      <div className="flex gap-4 items-center">
+        <button
+          onClick={() => dispatch(toggleSideBar())}
+          className="rounded-full text-white text-3xl border-2 p-1 duration-300 ease-in-out"
+        >
+          <HiBars3 />
+        </button>
+
+        <h1 className="hidden md:block text-3xl font-bold">
+          Echo
+          <span className="inline-block ml-0.5 size-1.5 bg-indigo-400 rounded-full"></span>
+        </h1>
+      </div>
 
       <div className="flex items-center gap-2">
         <input
@@ -24,9 +37,14 @@ const Navbar = () => {
           type="text"
           placeholder="Search"
         />
+
         <button className="relative text-3xl">
           <span className="absolute top-0 right-0 block size-1.5 bg-green-500 rounded-full"></span>
           <IoMdNotifications />
+        </button>
+
+        <button className="relative text-3xl">
+          <TbLogout2 />
         </button>
       </div>
     </div>
