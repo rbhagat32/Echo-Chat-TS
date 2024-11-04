@@ -86,7 +86,7 @@ const MessageContainer = () => {
                       }`}
                     >
                       <span>{moment(message.createdAt).format("hh:mm A")}</span>
-                      <span className="mt-px mx-0.5 size-1 rounded-full bg-zinc-500"></span>
+                      <span className="mt-px mx-0.5 size-[3px] rounded-full bg-zinc-500"></span>
                       <span>{moment(message.createdAt).fromNow()}</span>
                     </p>
                   </div>

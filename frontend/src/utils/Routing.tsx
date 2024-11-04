@@ -7,15 +7,18 @@ const Login = lazy(() => import("../pages/Login"));
 const SignUp = lazy(() => import("../pages/SignUp"));
 // const MessageContainer = lazy(() => import("../layout/MessageContainer"));
 import MessageContainer from "../layout/MessageContainer";
+import { SocketProvider } from "../socket";
 const NotFound = lazy(() => import("../partials/NotFound"));
 
-const Routing = ({ isLoggedIn = true }: { isLoggedIn: boolean }) => {
+const Routing = ({ isLoggedIn = false }: { isLoggedIn: boolean }) => {
   return (
     <Suspense fallback={<PageLoader />}>
       <Routes>
         <Route
           element={
-            <ProtectedRoutes isLoggedIn={isLoggedIn} redirect="/login" />
+            <SocketProvider>
+              <ProtectedRoutes isLoggedIn={isLoggedIn} redirect="/login" />
+            </SocketProvider>
           }
         >
           <Route path="/" element={<Home />}>
