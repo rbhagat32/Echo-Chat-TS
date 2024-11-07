@@ -6,7 +6,7 @@ const MessageSlice = createSlice({
   name: "messages",
   initialState,
   reducers: {
-    setMessages: (_, action: PayloadAction<MessageStateTypes>) => {
+    setMessages: (_, action: PayloadAction<MessageStateTypes | {}>) => {
       return action.payload;
     },
     clearMessages: () => {

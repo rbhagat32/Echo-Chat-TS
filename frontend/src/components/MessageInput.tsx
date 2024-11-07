@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { toggleSideBar } from "../store/reducers/MiscSlice";
 import axios from "../utils/axios";
 import { setMessages } from "../store/reducers/MessagesSlice";
+import { getSocket } from "../socket";
 
 const MessageInput = () => {
   const dispatch = useDispatch();
@@ -14,6 +15,10 @@ const MessageInput = () => {
   const { isSideBarOpen } = useSelector((state: StateTypes) => state.misc);
   const { messages } = useSelector((state: StateTypes) => state.messages);
   const [message, setMessage] = useState<string>("");
+  const socket = getSocket();
+  const chats = useSelector((state: StateTypes) => state.chats);
+  const receiverId = chats.filter((chat) => chat._id === chatId)[0]?.users[0]
+    ?._id;
 
   const sendMessage = () => {
     if (!message.trim()) return toast.error("Message cannot be empty !");
@@ -23,7 +28,10 @@ const MessageInput = () => {
       chatId,
       content: message,
       senderId: loggedInUser._id,
+      receiverId,
     };
+
+    socket!.emit("message", newMessage);
 
     dispatch(
       setMessages({
@@ -43,6 +51,16 @@ const MessageInput = () => {
         );
       });
   };
+
+  socket?.on("realtime", (msg: MessageTypes) => {
+    console.log(msg);
+    dispatch(
+      setMessages({
+        messages: [...messages, msg],
+        hasMore: false,
+      })
+    );
+  });
 
   return (
     <div

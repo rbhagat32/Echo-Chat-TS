@@ -17,7 +17,7 @@ const socketAuthenticator = async (
   try {
     if (err) return next(new Error("Authentication Error"));
 
-    const token = socket.request.cookies?.token;
+    const token = (socket.request as any).cookies?.token;
     if (!token) return next(new Error("Authentication Error"));
 
     const decodedData = jwt.verify(
@@ -25,7 +25,9 @@ const socketAuthenticator = async (
       process.env.JWT_SECRET_KEY as string
     ) as DecodedData;
 
-    socket.user = await userModel.findById(decodedData.userId);
+    const user = await userModel.findById(decodedData.userId);
+    if (!user) return next(new Error("Authentication Error"));
+    socket.user = user;
 
     return next();
   } catch (error) {

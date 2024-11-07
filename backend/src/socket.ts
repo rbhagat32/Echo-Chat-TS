@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request } from "express";
 import http from "http";
 import { Server } from "socket.io";
 import dotenv from "dotenv";
@@ -26,20 +26,27 @@ const userSocketsMap = new Map<string, string>();
 
 io.use((socket, next) => {
   cookieParser()(
-    socket.request,
-    socket.request.res,
-    async (err) => await socketAuthenticator(err, socket, next)
+    socket.request as Request,
+    (socket.request as Request & { res: any }).res,
+    async (err) => await socketAuthenticator(err, socket, next as NextFunction)
   );
 });
 
 io.on("connection", (socket: AuthenticatedSocket) => {
-  const user = socket.user!;
+  const user: UserTypes | any = socket.user;
   userSocketsMap.set(user._id.toString(), socket.id);
 
-  console.log(userSocketsMap);
+  socket.on("message", async (message) => {
+    const receiverSocketId = userSocketsMap.get(message.receiverId.toString());
+    if (receiverSocketId) {
+      socket.to(receiverSocketId).emit("realtime", message);
+    } else {
+      console.log("Other User is not Online !");
+    }
+  });
 
   socket.on("disconnect", () => {
-    console.log("User Disconnected :", socket.id);
+    userSocketsMap.delete(user._id.toString());
   });
 });
 

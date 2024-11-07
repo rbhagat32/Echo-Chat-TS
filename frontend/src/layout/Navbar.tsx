@@ -1,12 +1,35 @@
 import { HiBars3 } from "react-icons/hi2";
-import { toggleSideBar } from "../store/reducers/MiscSlice";
-import { useDispatch, useSelector } from "react-redux";
 import { IoMdNotifications } from "react-icons/io";
 import { TbLogout2 } from "react-icons/tb";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
+import { api } from "../store/api";
+import { setAuth } from "../store/reducers/AuthSlice";
+import { toggleSideBar } from "../store/reducers/MiscSlice";
+import axios from "../utils/axios";
+import { setChats } from "../store/reducers/ChatSlice";
+import { setUsers } from "../store/reducers/UserSlice";
+import { setMessages } from "../store/reducers/MessagesSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const { isSideBarOpen } = useSelector((state: StateTypes) => state.misc);
+
+  const logout = () => {
+    axios
+      .get("/auth/logout")
+      .then(() => {
+        toast.success("Logged out successfully !");
+        dispatch(setAuth(false));
+        dispatch(api.util.invalidateTags(["Auth"]));
+        dispatch(setChats([]));
+        dispatch(setUsers({}));
+        dispatch(setMessages({}));
+      })
+      .catch(() => {
+        toast.error("Failed to logout !");
+      });
+  };
 
   return (
     <div
@@ -43,7 +66,7 @@ const Navbar = () => {
           <IoMdNotifications />
         </button>
 
-        <button className="relative text-3xl">
+        <button onClick={logout} className="relative text-3xl">
           <TbLogout2 />
         </button>
       </div>
