@@ -1,13 +1,13 @@
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import PageLoader from "../partials/PageLoader";
+import { SocketProvider } from "../socket";
 import ProtectedRoutes from "./ProtectedRoutes";
 const Home = lazy(() => import("../pages/Home"));
 const Login = lazy(() => import("../pages/Login"));
 const SignUp = lazy(() => import("../pages/SignUp"));
-// const MessageContainer = lazy(() => import("../layout/MessageContainer"));
-import MessageContainer from "../layout/MessageContainer";
-import { SocketProvider } from "../socket";
+const MessageContainer = lazy(() => import("../layout/MessageContainer"));
+const SearchUser = lazy(() => import("../pages/SearchUser"));
 const NotFound = lazy(() => import("../partials/NotFound"));
 
 const Routing = ({ isLoggedIn = false }: { isLoggedIn: boolean }) => {
@@ -24,6 +24,7 @@ const Routing = ({ isLoggedIn = false }: { isLoggedIn: boolean }) => {
           <Route path="/" element={<Home />}>
             <Route path="/chat/:chatId" element={<MessageContainer />} />
           </Route>
+          <Route path="/search" element={<SearchUser />} />
         </Route>
 
         <Route

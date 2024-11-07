@@ -1,19 +1,23 @@
 import { HiBars3 } from "react-icons/hi2";
 import { IoMdNotifications } from "react-icons/io";
+import { IoSearch } from "react-icons/io5";
 import { TbLogout2 } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import { api } from "../store/api";
 import { setAuth } from "../store/reducers/AuthSlice";
-import { toggleSideBar } from "../store/reducers/MiscSlice";
-import axios from "../utils/axios";
 import { setChats } from "../store/reducers/ChatSlice";
-import { setUsers } from "../store/reducers/UserSlice";
 import { setMessages } from "../store/reducers/MessagesSlice";
+import { setActiveChat, toggleSideBar } from "../store/reducers/MiscSlice";
+import { setUsers } from "../store/reducers/UserSlice";
+import axios from "../utils/axios";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const { isSideBarOpen } = useSelector((state: StateTypes) => state.misc);
+  const { isSideBarOpen, activeChat } = useSelector(
+    (state: StateTypes) => state.misc
+  );
 
   const logout = () => {
     axios
@@ -25,6 +29,7 @@ const Navbar = () => {
         dispatch(setChats([]));
         dispatch(setUsers({}));
         dispatch(setMessages({}));
+        dispatch(setActiveChat({}));
       })
       .catch(() => {
         toast.error("Failed to logout !");
@@ -38,28 +43,43 @@ const Navbar = () => {
           dispatch(toggleSideBar());
         }
       }}
-      className="w-full fixed px-2 py-4 flex justify-between"
+      className="w-full fixed px-2 py-2 flex justify-between"
     >
       <div className="flex gap-4 items-center">
-        <button
-          onClick={() => dispatch(toggleSideBar())}
-          className="rounded-full text-white text-3xl border-2 p-1 duration-300 ease-in-out"
-        >
-          <HiBars3 />
-        </button>
+        {!activeChat.chatId && (
+          <button
+            onClick={() => dispatch(toggleSideBar())}
+            className="rounded-full text-3xl border-2 p-1 duration-300 ease-in-out"
+          >
+            <HiBars3 />
+          </button>
+        )}
 
-        <h1 className="hidden md:block text-3xl font-bold">
-          Echo
-          <span className="inline-block ml-0.5 size-1.5 bg-indigo-400 rounded-full"></span>
-        </h1>
+        {activeChat.chatId ? (
+          <div className="flex gap-4 items-center">
+            <div
+              onClick={() => dispatch(toggleSideBar())}
+              className="overflow-hidden size-12 rounded-full border-2 cursor-pointer"
+            >
+              <img
+                src={activeChat.avatar || "/placeholder.jpeg"}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <h1 className="text-2xl font-semibold">{activeChat.username}</h1>
+          </div>
+        ) : (
+          <h1 className="text-3xl font-bold">
+            Echo
+            <span className="inline-block ml-0.5 size-1.5 bg-indigo-400 rounded-full"></span>
+          </h1>
+        )}
       </div>
 
       <div className="flex items-center gap-2">
-        <input
-          className="outline-none border-2 border-white focus:border-indigo-400 rounded-full text-white placeholder:text-white bg-transparent py-2 px-5 w-60 md:w-80 lg:w-96 duration-300 ease-in-out"
-          type="text"
-          placeholder="Search User"
-        />
+        <Link to={"/search"} className="text-3xl">
+          <IoSearch />
+        </Link>
 
         <button className="relative text-3xl">
           <span className="absolute top-0 right-0 block size-1.5 bg-green-500 rounded-full"></span>

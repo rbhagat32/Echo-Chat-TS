@@ -55,7 +55,7 @@ const MessageContainer = () => {
             }
           }}
           style={{ height: "calc(100vh - 140px)" }}
-          className="overflow-auto relative top-20"
+          className="overflow-auto relative top-16"
         >
           {isFetching ? (
             <div className="relative -top-20">

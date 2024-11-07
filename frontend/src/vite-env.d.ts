@@ -46,4 +46,11 @@ interface MessageTypes {
 
 interface MiscTypes {
   isSideBarOpen: boolean;
+  activeChat: {
+    chatId: string;
+    userId: string;
+    username: string;
+    avatar: string;
+    bio: string;
+  };
 }

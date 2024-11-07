@@ -1,14 +1,25 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { useGetChatsQuery } from "../store/api";
-import { toggleSideBar } from "../store/reducers/MiscSlice";
 import Spinner from "../partials/Spinner";
-import { IoMdClose } from "react-icons/io";
+import { useGetChatsQuery } from "../store/api";
+import { setActiveChat, toggleSideBar } from "../store/reducers/MiscSlice";
 
 const Chats = () => {
   const dispatch = useDispatch();
   const { isSideBarOpen } = useSelector((state: StateTypes) => state.misc);
   const { isLoading, data } = useGetChatsQuery();
+
+  const handleOpenChat = (chat: ChatTypes) => {
+    dispatch(toggleSideBar());
+    const activeChat = {
+      chatId: chat._id,
+      userId: chat.users[0]._id,
+      username: chat.users[0].username,
+      avatar: chat.users[0].avatar.url,
+      bio: chat.users[0].bio,
+    };
+    dispatch(setActiveChat(activeChat));
+  };
 
   return (
     <div
@@ -18,9 +29,13 @@ const Chats = () => {
     >
       <button
         onClick={() => dispatch(toggleSideBar())}
-        className="rounded-full text-white text-3xl border-2 p-1 mx-2 my-5 duration-300 ease-in-out"
+        className="text-white text-4xl p-1 mx-2 my-3 duration-300 ease-in-out"
       >
-        <IoMdClose />
+        {/* <IoMdClose /> */}
+        <h1 className="text-3xl font-bold">
+          Echo
+          <span className="inline-block ml-0.5 size-1.5 bg-indigo-400 rounded-full"></span>
+        </h1>
       </button>
 
       <div>
@@ -28,7 +43,7 @@ const Chats = () => {
           data?.length ? (
             data?.map((chat) => (
               <Link
-                onClick={() => dispatch(toggleSideBar())}
+                onClick={() => handleOpenChat(chat)}
                 to={`/chat/${chat._id}`}
                 key={chat._id}
                 className="flex gap-2 items-center bg-zinc-700 hover:bg-indigo-500 mb-2 mx-2 p-3 rounded-lg duration-300 ease-in-out"

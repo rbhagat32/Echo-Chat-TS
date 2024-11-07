@@ -41,7 +41,7 @@ io.on("connection", (socket: AuthenticatedSocket) => {
     if (receiverSocketId) {
       socket.to(receiverSocketId).emit("realtime", message);
     } else {
-      console.log("Other User is not Online !");
+      // console.log("Other User is not Online !");
     }
   });
 

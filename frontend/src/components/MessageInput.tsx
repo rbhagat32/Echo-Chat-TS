@@ -69,7 +69,7 @@ const MessageInput = () => {
           dispatch(toggleSideBar());
         }
       }}
-      className="fixed bottom-0 w-full h-[60px] bg-zinc-900 p-2"
+      className="fixed bottom-2.5 w-full h-[60px] bg-zinc-900 p-2"
     >
       <input
         type="text"

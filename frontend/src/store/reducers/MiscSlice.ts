@@ -3,6 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState: MiscTypes = {
   // isSideBarOpen: window.innerWidth > 768 ? true : false,
   isSideBarOpen: false,
+  activeChat: {
+    chatId: "",
+    userId: "",
+    username: "",
+    avatar: "",
+    bio: "",
+  },
 };
 
 const MiscSlice = createSlice({
@@ -12,8 +19,11 @@ const MiscSlice = createSlice({
     toggleSideBar: (state) => {
       state.isSideBarOpen = !state.isSideBarOpen;
     },
+    setActiveChat: (state, action) => {
+      state.activeChat = action.payload;
+    },
   },
 });
 
 export { MiscSlice };
-export const { toggleSideBar } = MiscSlice.actions;
+export const { toggleSideBar, setActiveChat } = MiscSlice.actions;
