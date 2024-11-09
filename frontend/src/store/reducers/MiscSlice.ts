@@ -22,8 +22,18 @@ const MiscSlice = createSlice({
     setActiveChat: (state, action) => {
       state.activeChat = action.payload;
     },
+    clearActiveChat: (state) => {
+      state.activeChat = {
+        chatId: "",
+        userId: "",
+        username: "",
+        avatar: "",
+        bio: "",
+      };
+    },
   },
 });
 
 export { MiscSlice };
-export const { toggleSideBar, setActiveChat } = MiscSlice.actions;
+export const { toggleSideBar, setActiveChat, clearActiveChat } =
+  MiscSlice.actions;

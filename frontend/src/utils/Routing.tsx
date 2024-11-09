@@ -23,8 +23,8 @@ const Routing = ({ isLoggedIn = false }: { isLoggedIn: boolean }) => {
         >
           <Route path="/" element={<Home />}>
             <Route path="/chat/:chatId" element={<MessageContainer />} />
+            <Route path="/search" element={<SearchUser />} />
           </Route>
-          <Route path="/search" element={<SearchUser />} />
         </Route>
 
         <Route

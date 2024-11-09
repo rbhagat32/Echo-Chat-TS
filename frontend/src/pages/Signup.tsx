@@ -85,7 +85,7 @@ const SignUp = () => {
             multiple={false}
             type="file"
             accept="image/*"
-            className="text-zinc-500 rounded-lg"
+            className="text-zinc-500 rounded-lg cursor-pointer"
           />
           <Button type="submit" width="w-full">
             {!loading ? "Sign Up" : <Spinner />}

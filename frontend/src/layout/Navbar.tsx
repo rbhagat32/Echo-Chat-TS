@@ -3,18 +3,19 @@ import { IoMdNotifications } from "react-icons/io";
 import { IoSearch } from "react-icons/io5";
 import { TbLogout2 } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { api } from "../store/api";
 import { setAuth } from "../store/reducers/AuthSlice";
-import { setChats } from "../store/reducers/ChatSlice";
-import { setMessages } from "../store/reducers/MessagesSlice";
-import { setActiveChat, toggleSideBar } from "../store/reducers/MiscSlice";
-import { setUsers } from "../store/reducers/UserSlice";
+import { clearChats } from "../store/reducers/ChatSlice";
+import { clearMessages } from "../store/reducers/MessagesSlice";
+import { clearActiveChat, toggleSideBar } from "../store/reducers/MiscSlice";
+import { clearUser } from "../store/reducers/UserSlice";
 import axios from "../utils/axios";
-import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { isSideBarOpen, activeChat } = useSelector(
     (state: StateTypes) => state.misc
   );
@@ -26,14 +27,19 @@ const Navbar = () => {
         toast.success("Logged out successfully !");
         dispatch(setAuth(false));
         dispatch(api.util.invalidateTags(["Auth"]));
-        dispatch(setChats([]));
-        dispatch(setUsers({}));
-        dispatch(setMessages({}));
-        dispatch(setActiveChat({}));
+        dispatch(clearChats());
+        dispatch(clearUser());
+        dispatch(clearMessages());
+        dispatch(clearActiveChat());
       })
       .catch(() => {
         toast.error("Failed to logout !");
       });
+  };
+
+  const handleSearchButton = () => {
+    navigate("/search");
+    dispatch(clearActiveChat());
   };
 
   return (
@@ -49,7 +55,7 @@ const Navbar = () => {
         {!activeChat.chatId && (
           <button
             onClick={() => dispatch(toggleSideBar())}
-            className="rounded-full text-3xl border-2 p-1 duration-300 ease-in-out"
+            className="rounded-full text-3xl mt-0.5 border-2 p-1 duration-300 ease-in-out"
           >
             <HiBars3 />
           </button>
@@ -77,9 +83,9 @@ const Navbar = () => {
       </div>
 
       <div className="flex items-center gap-2">
-        <Link to={"/search"} className="text-3xl">
+        <button onClick={handleSearchButton} className="text-3xl">
           <IoSearch />
-        </Link>
+        </button>
 
         <button className="relative text-3xl">
           <span className="absolute top-0 right-0 block size-1.5 bg-green-500 rounded-full"></span>

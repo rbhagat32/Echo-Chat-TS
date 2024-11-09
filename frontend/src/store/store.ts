@@ -5,6 +5,7 @@ import { UserSlice } from "./reducers/UserSlice";
 import { ChatSlice } from "./reducers/ChatSlice";
 import { MiscSlice } from "./reducers/MiscSlice";
 import { MessageSlice } from "./reducers/MessagesSlice";
+import { SearchSlice } from "./reducers/SearchSlice";
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     [UserSlice.name]: UserSlice.reducer,
     [ChatSlice.name]: ChatSlice.reducer,
     [MessageSlice.name]: MessageSlice.reducer,
+    [SearchSlice.name]: SearchSlice.reducer,
     [MiscSlice.name]: MiscSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

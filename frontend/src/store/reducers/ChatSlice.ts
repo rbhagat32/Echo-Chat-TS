@@ -9,8 +9,11 @@ const ChatSlice = createSlice({
     setChats: (_, action: PayloadAction<ChatTypes[]>) => {
       return action.payload;
     },
+    clearChats: () => {
+      return [];
+    },
   },
 });
 
 export { ChatSlice };
-export const { setChats } = ChatSlice.actions;
+export const { setChats, clearChats } = ChatSlice.actions;

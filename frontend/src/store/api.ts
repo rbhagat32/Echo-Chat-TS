@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setAuth } from "./reducers/AuthSlice";
-import { setUsers } from "./reducers/UserSlice";
+import { setUser } from "./reducers/UserSlice";
 import { setChats } from "./reducers/ChatSlice";
 import { setMessages } from "./reducers/MessagesSlice";
 
@@ -32,7 +32,7 @@ export const api = createApi({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(setUsers(data));
+          dispatch(setUser(data));
         } catch (error) {
           console.error("Failed to fetch user:", error);
         }
