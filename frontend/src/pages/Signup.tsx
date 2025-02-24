@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import Button from "../components/Button";
@@ -12,41 +14,89 @@ import axios from "../utils/axios";
 
 interface SignupFormData {
   username: string;
-  bio: string;
+  bio?: string;
   password: string;
-  avatar: FileList;
+  avatar?: FileList;
 }
 
-const SignUp = () => {
-  const { handleSubmit, register, reset } = useForm<SignupFormData>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const dispatch = useDispatch();
+const schema = yup.object().shape({
+  username: yup
+    .string()
+    .required("Username is required")
+    .min(4, "Username must be at least 4 characters")
+    .max(12, "Username must not exceed 12 characters"),
+  bio: yup.string().max(50, "Bio must not exceed 50 characters").optional(),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(6, "Password must be at least 6 characters")
+    .max(16, "Password must not exceed 16 characters")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/,
+      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+    ),
+  avatar: yup
+    .mixed<FileList>()
+    .test("fileSize", "Avatar must be less than 5MB", (value) => {
+      return value && value.length > 0
+        ? value[0].size <= 5 * 1024 * 1024
+        : true;
+    })
+    .test("fileType", "Only images are allowed", (value) => {
+      return value && value.length > 0
+        ? ["image/jpeg", "image/png", "image/webp"].includes(value[0].type)
+        : true;
+    })
+    .optional(),
+});
 
-  const signup: SubmitHandler<SignupFormData> = (data) => {
+const SignUp = () => {
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const {
+    handleSubmit,
+    register,
+    reset,
+    trigger,
+    formState: { errors },
+  } = useForm<SignupFormData>({
+    resolver: yupResolver(schema),
+    mode: "onSubmit",
+  });
+
+  useEffect(() => {
+    if (errors.username) {
+      toast.error(errors.username.message);
+    } else if (errors.bio) {
+      toast.error(errors.bio.message);
+    } else if (errors.password) {
+      toast.error(errors.password.message);
+    }
+  }, [errors]);
+
+  const signup: SubmitHandler<SignupFormData> = async (data) => {
     setLoading(true);
-    axios
-      .post(
+    try {
+      await axios.post(
         "/auth/signup",
-        { ...data, avatar: data.avatar[0] },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      )
-      .then((res) => {
-        reset();
-        toast.success(res?.data?.message);
-        dispatch(setAuth(true));
-        dispatch(api.util.invalidateTags(["Auth"]));
-        dispatch(api.util.invalidateTags(["Chat"]));
-      })
-      .catch((error) => {
-        toast.error(error.response?.data?.message || "Unable to Sign Up !");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+        { ...data, avatar: data.avatar ? data.avatar[0] : undefined },
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+      reset();
+      dispatch(setAuth(true));
+      dispatch(api.util.invalidateTags(["Auth", "Chat"]));
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Unable to Sign Up!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const validation = async (data: SignupFormData) => {
+    const isValid = await trigger();
+    if (!isValid) return;
+    signup(data);
   };
 
   return (
@@ -62,7 +112,7 @@ const SignUp = () => {
           </h2>
         </div>
         <form
-          onSubmit={handleSubmit(signup)}
+          onSubmit={handleSubmit(validation)}
           className="w-full flex flex-col gap-3"
         >
           <Input
@@ -72,7 +122,7 @@ const SignUp = () => {
           />
           <textarea
             {...register("bio")}
-            placeholder="Bio"
+            placeholder="Bio (max 50 characters)"
             className="resize-none min-h-28 px-4 py-3 rounded-lg bg-zinc-800 text-white outline-none focus:ring focus:border-indigo-500 placeholder:text-white placeholder:font-semibold"
           ></textarea>
           <Input

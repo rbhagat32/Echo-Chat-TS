@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import Button from "../components/Button";
@@ -15,27 +17,64 @@ interface LoginFormData {
   password: string;
 }
 
-const Login = () => {
-  const { handleSubmit, register, reset } = useForm<LoginFormData>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const dispatch = useDispatch();
+const schema = yup.object().shape({
+  username: yup
+    .string()
+    .required("Username is required")
+    .min(4, "Username must be at least 4 characters")
+    .max(12, "Username must not exceed 12 characters"),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(6, "Password must be at least 6 characters")
+    .max(16, "Password must not exceed 16 characters")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/,
+      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+    ),
+});
 
-  const login: SubmitHandler<LoginFormData> = (data) => {
+const Login = () => {
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const {
+    handleSubmit,
+    register,
+    reset,
+    trigger,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: yupResolver(schema),
+    mode: "onSubmit",
+  });
+
+  useEffect(() => {
+    if (errors.username) {
+      toast.error(errors.username.message);
+    } else if (errors.password) {
+      toast.error(errors.password.message);
+    }
+  }, [errors]);
+
+  const login: SubmitHandler<LoginFormData> = async (data) => {
     setLoading(true);
-    axios
-      .post("/auth/login", data)
-      .then(() => {
-        reset();
-        dispatch(setAuth(true));
-        dispatch(api.util.invalidateTags(["Auth"]));
-        dispatch(api.util.invalidateTags(["Chat"]));
-      })
-      .catch((error) => {
-        toast.error(error.response?.data?.message || "Unable to Sign In !");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      await axios.post("/auth/login", data);
+      reset();
+      dispatch(setAuth(true));
+      dispatch(api.util.invalidateTags(["Auth", "Chat"]));
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Unable to Sign In!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const validation = async (data: LoginFormData) => {
+    const isValid = await trigger();
+    if (!isValid) return;
+    login(data);
   };
 
   return (
@@ -74,7 +113,7 @@ const Login = () => {
           </h2>
         </div>
         <form
-          onSubmit={handleSubmit(login)}
+          onSubmit={handleSubmit(validation)}
           className="w-full flex flex-col gap-3"
         >
           <Input
