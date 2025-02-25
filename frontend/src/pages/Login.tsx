@@ -27,11 +27,11 @@ const schema = yup.object().shape({
     .string()
     .required("Password is required")
     .min(6, "Password must be at least 6 characters")
-    .max(16, "Password must not exceed 16 characters")
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/,
-      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
-    ),
+    .max(16, "Password must not exceed 16 characters"),
+  // .matches(
+  //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/,
+  //   "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+  // ),
 });
 
 const Login = () => {

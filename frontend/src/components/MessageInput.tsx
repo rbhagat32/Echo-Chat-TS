@@ -72,6 +72,7 @@ const MessageInput = () => {
       className="fixed bottom-2.5 w-full h-[60px] bg-zinc-900 p-2"
     >
       <input
+        name="message-input-box"
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}

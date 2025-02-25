@@ -38,7 +38,7 @@ const Chats = () => {
         </h1>
       </button>
 
-      <div>
+      <div id="chats">
         {!isLoading ? (
           data?.length ? (
             data?.map((chat) => (

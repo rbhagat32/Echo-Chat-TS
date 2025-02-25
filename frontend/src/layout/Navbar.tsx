@@ -54,6 +54,7 @@ const Navbar = () => {
       <div className="flex gap-4 items-center">
         {!activeChat.chatId && (
           <button
+            name="menu-icon"
             onClick={() => dispatch(toggleSideBar())}
             className="rounded-full text-3xl mt-0.5 border-2 p-1 duration-300 ease-in-out"
           >
