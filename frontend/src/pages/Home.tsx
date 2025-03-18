@@ -3,7 +3,7 @@ import Navbar from "../layout/Navbar";
 import Chats from "../layout/Sidebar";
 import SelectChat from "../components/SelectChat";
 import { useGetUserQuery } from "../store/api";
-import { getSocket } from "../socket";
+// import { getSocket } from "../socket";
 
 const Home = () => {
   const loc = useLocation();
@@ -11,7 +11,7 @@ const Home = () => {
   // save user in state
   useGetUserQuery();
 
-  const socket = getSocket();
+  // const socket = getSocket();
   // console.log(socket);
 
   return (
