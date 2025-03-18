@@ -49,7 +49,7 @@ const Navbar = () => {
           dispatch(toggleSideBar());
         }
       }}
-      className="w-full fixed px-2 py-2 flex justify-between"
+      className="z-50 w-full fixed px-2 py-2 flex justify-between"
     >
       <div className="flex gap-4 items-center">
         {!activeChat.chatId && (

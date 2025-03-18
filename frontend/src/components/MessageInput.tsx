@@ -53,7 +53,6 @@ const MessageInput = () => {
   };
 
   socket?.on("realtime", (msg: MessageTypes) => {
-    console.log(msg);
     dispatch(
       setMessages({
         messages: [...messages, msg],
