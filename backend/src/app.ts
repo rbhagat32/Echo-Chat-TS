@@ -16,6 +16,7 @@ import { app, server } from "./socket.js";
 
 // setup
 dotenv.config({ path: "./.env" });
+
 app.use(
   cors({
     origin: [
@@ -26,12 +27,15 @@ app.use(
     credentials: true,
   })
 );
+
 connectDB();
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
 const PORT = Number(process.env.PORT) || 3000;
 
 // middlewares

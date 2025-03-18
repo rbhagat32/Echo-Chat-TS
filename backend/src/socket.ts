@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import { socketAuthenticator } from "./config/socket-authenticator.js";
 import { AuthenticatedSocket } from "./types/socket.js";
 import { UserTypes } from "./types/user.js";
+
 dotenv.config({ path: "./.env" });
 
 const app = express();
