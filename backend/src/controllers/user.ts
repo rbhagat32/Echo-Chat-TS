@@ -5,7 +5,7 @@ import chatModel from "../models/chat.js";
 import { ChatTypes } from "../types/chat.js";
 
 const getUser = async (req: RequestWithUser, res: Response) => {
-  const { userId } = req.user;
+  const { userId } = req.user!;
 
   try {
     const user = await userModel.findById(userId);
@@ -19,14 +19,13 @@ const getUser = async (req: RequestWithUser, res: Response) => {
 };
 
 const searchUser = async (req: RequestWithUser, res: Response) => {
-  const { userId } = req.user;
+  const { userId } = req.user!;
   const { query } = req.query;
 
   try {
     const users = await userModel.find({
       _id: { $ne: userId },
-      username: { $regex: `^${query}`, $options: "i" },
-      // ^ ensures it matches the start of the string
+      username: { $regex: query, $options: "i" },
     });
 
     return res.status(200).json(users);
@@ -37,7 +36,7 @@ const searchUser = async (req: RequestWithUser, res: Response) => {
 
 const sendRequest = async (req: RequestWithUser, res: Response) => {
   const { id } = req.params;
-  const { userId } = req.user;
+  const { userId } = req.user!;
 
   try {
     const [loggedInUser, otherUser] = await Promise.all([
@@ -78,7 +77,7 @@ const sendRequest = async (req: RequestWithUser, res: Response) => {
 };
 
 const getRequests = async (req: RequestWithUser, res: Response) => {
-  const { userId } = req.user;
+  const { userId } = req.user!;
 
   try {
     const user = await userModel.findById(userId).populate("requests");
@@ -92,7 +91,7 @@ const getRequests = async (req: RequestWithUser, res: Response) => {
 };
 
 const respondRequest = async (req: RequestWithUser, res: Response) => {
-  const { userId } = req.user;
+  const { userId } = req.user!;
   const { id } = req.params;
   const { response } = req.query;
 
@@ -138,7 +137,7 @@ const respondRequest = async (req: RequestWithUser, res: Response) => {
 };
 
 const updateDetails = async (req: RequestWithUser, res: Response) => {
-  const { userId } = req.user;
+  const { userId } = req.user!;
   const { username, bio } = req.body;
 
   if (bio.trim().length > 100)

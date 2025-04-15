@@ -1,6 +1,7 @@
 import express from "express";
 import { deleteChat, getChats } from "../controllers/chat.js";
 import { isLoggedIn } from "../middlewares/auth.js";
+
 const router = express.Router();
 
 router.use(isLoggedIn);

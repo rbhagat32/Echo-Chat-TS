@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express";
-import { RequestWithUser } from "../types/user.js";
+import { RequestWithUser, UserTypes } from "../types/user.js";
 import jwt from "jsonwebtoken";
 import { cookieOptions } from "../constants/cookieOptions.js";
 
@@ -18,7 +18,7 @@ const isLoggedIn = async (
       process.env.JWT_SECRET_KEY as string
     );
 
-    req.user = loggedInUser;
+    req.user = loggedInUser as UserTypes;
     next();
   } catch (error) {
     return res

@@ -6,7 +6,7 @@ import messageModel from "../models/message.js";
 import { ChatTypes } from "../types/chat.js";
 
 const getChats = async (req: RequestWithUser, res: Response) => {
-  const { userId } = req.user;
+  const { userId } = req.user!;
 
   try {
     const user = await userModel.findById(userId).populate({
@@ -21,12 +21,13 @@ const getChats = async (req: RequestWithUser, res: Response) => {
       return res.status(500).json({ message: "Unable to fetch data!" });
     }
 
+    // remove the logged-in user from each chat's users array
     const chats = user.chats.map((chat: ChatTypes) => {
       const otherUsers = chat.users.filter(
-        (user: UserTypes) => user._id.toString() !== userId
+        (user) => user._id.toString() !== userId.toString()
       );
 
-      chat.users = otherUsers;
+      chat.users = otherUsers as UserTypes[];
       return chat;
     });
 
@@ -38,7 +39,7 @@ const getChats = async (req: RequestWithUser, res: Response) => {
 
 const deleteChat = async (req: RequestWithUser, res: Response) => {
   const { chatId } = req.params;
-  const { userId } = req.user;
+  const { userId } = req.user!;
 
   try {
     const chat = await chatModel.findById(chatId);

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const connectDB = (): Promise<void> =>
+const connectDB = (): Promise<typeof mongoose | void> =>
   mongoose
     .connect(`${process.env.MONGODB_URI}`)
     .then(() => {

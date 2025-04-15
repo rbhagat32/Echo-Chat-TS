@@ -1,9 +1,10 @@
 import jwt from "jsonwebtoken";
 import userModel from "../models/user.js";
 import dotenv from "dotenv";
-dotenv.config({ path: "./.env" });
 import { NextFunction } from "express";
 import { AuthenticatedSocket } from "../types/socket.js";
+
+dotenv.config({ path: "./.env" });
 
 interface DecodedData {
   userId: string;

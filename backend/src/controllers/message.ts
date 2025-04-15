@@ -12,9 +12,9 @@ const sendMessage = async (req: RequestWithUser, res: Response) => {
 
   try {
     const chat = await chatModel.findById(chatId);
-    const senderId = req.user.userId;
+    const senderId = req.user!.userId;
     const receiverId = chat.users
-      .find((id: string) => id.toString() !== senderId)
+      .find((id: string) => id.toString() !== senderId.toString())
       .toString();
 
     const newMessage = await messageModel.create({
