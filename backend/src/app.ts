@@ -36,8 +36,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const PORT = Number(process.env.PORT) || 3000;
-
 // middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -49,6 +47,7 @@ app.use("/api/user", userRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/message", messageRouter);
 
+const PORT = Number(process.env.PORT) || 3000;
 server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

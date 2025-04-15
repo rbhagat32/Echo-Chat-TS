@@ -34,7 +34,7 @@ io.use((socket, next) => {
 });
 
 io.on("connection", (socket: AuthenticatedSocket) => {
-  const user: UserTypes | any = socket.user;
+  const user = socket.user as UserTypes;
   userSocketsMap.set(user._id.toString(), socket.id);
 
   socket.on("message", async (message) => {
