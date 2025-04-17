@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { TiArrowLeft } from "react-icons/ti";
 
 interface ButtonAltProps {
   children?: React.ReactNode;
@@ -8,7 +7,7 @@ interface ButtonAltProps {
   route?: string;
 }
 
-const ButtonAlt = ({
+const CustomLink = ({
   children,
   absolute = false,
   side,
@@ -26,10 +25,9 @@ const ButtonAlt = ({
         }`
       } hover:bg-zinc-800 font-semibold px-4 py-2 rounded-lg duration-300 ease-in-out flex items-center`}
     >
-      <TiArrowLeft className="text-2xl mt-0.5" />
-      <p className="text-lg">{children}</p>
+      <p className="text-sm">{children}</p>
     </button>
   );
 };
 
-export default ButtonAlt;
+export default CustomLink;

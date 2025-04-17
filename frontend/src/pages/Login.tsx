@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import Button from "../components/custom/Button";
-import ButtonAlt from "../components/custom/ButtonAlt";
+import CustomLink from "../components/custom/CustomLink";
 import Input from "../components/custom/Input";
 import Spinner from "../partials/Spinner";
 import { api } from "../store/api";
@@ -103,9 +103,9 @@ const Login = () => {
       </div>
 
       <div className="relative px-20 lg:px-40 w-full h-full flex justify-center items-center flex-col text-center gap-2">
-        <ButtonAlt absolute={true} side="right" route="signup">
-          Sign Up
-        </ButtonAlt>
+        <CustomLink absolute={true} side="right" route="signup">
+          Sign Up Instead
+        </CustomLink>
         <div>
           <h1 className="font-bold text-2xl mb-1">Login to your account</h1>
           <h2 className="text-lg text-zinc-500">

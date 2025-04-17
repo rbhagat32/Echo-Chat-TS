@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import { SocketProvider } from "../Socket";
 import ProtectedRoutes from "./ProtectedRoutes";
@@ -6,6 +6,7 @@ import PageLoader from "@/partials/PageLoader";
 import NotFound from "@/partials/NotFound";
 import Login from "@/pages/Login";
 import SignUp from "@/pages/SignUp";
+import Layout from "@/layout/Layout";
 
 const Routing = ({ isLoggedIn = false }: { isLoggedIn: boolean }) => {
   return (
@@ -18,7 +19,7 @@ const Routing = ({ isLoggedIn = false }: { isLoggedIn: boolean }) => {
             </SocketProvider>
           }
         >
-          {/* <Route path="/" element={<Home />}></Route> */}
+          <Route path="/" element={<Layout />}></Route>
         </Route>
 
         <Route
