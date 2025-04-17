@@ -14,9 +14,11 @@ export default function Layout() {
 
         <SidebarInset>
           <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 h-4" />
-            <div>Echo.</div>
+            <SidebarTrigger className="-ml-1 mr-0.5" />
+            <Separator orientation="vertical" className="mr-2" />
+            <div className="text-2xl font-semibold">
+              Echo<span className="text-indigo-500">.</span>
+            </div>
           </header>
 
           <div className="flex flex-col gap-4 p-4">
