@@ -103,7 +103,7 @@ const SignUp = () => {
     <div className="w-screen h-screen flex">
       <div className="relative px-20 lg:px-40 w-full h-full flex justify-center items-center flex-col text-center gap-2">
         <CustomLink absolute={true} side="left" route="login">
-          Sign In Instead
+          Log In Instead
         </CustomLink>
         <div>
           <h1 className="font-bold text-2xl mb-1">Signup to a new account</h1>
@@ -120,26 +120,31 @@ const SignUp = () => {
             type="text"
             placeholder="Username"
           />
+
           <textarea
             {...register("bio")}
             placeholder="Bio (max 50 characters)"
             className="resize-none min-h-28 px-4 py-3 rounded-lg bg-zinc-800 text-white outline-none focus:ring focus:border-indigo-500 placeholder:text-white placeholder:font-semibold"
-          ></textarea>
+          />
+
           <Input
             register={register("password")}
             type="password"
             placeholder="Password"
           />
+
           <input
             {...register("avatar")}
             multiple={false}
             type="file"
             accept="image/*"
-            className="text-zinc-500 rounded-lg cursor-pointer"
+            className="px-4 py-3 rounded-lg bg-zinc-800 text-white outline-none focus:ring focus:border-indigo-500 placeholder:text-white placeholder:font-semibold"
           />
+
           <Button type="submit" width="w-full">
             {!loading ? "Sign Up" : <Spinner />}
           </Button>
+
           <p className="text-zinc-500">
             By continuing, you agree to our Terms of Service and Privacy Policy.
           </p>
