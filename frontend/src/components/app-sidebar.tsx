@@ -1,182 +1,123 @@
-import * as React from "react"
-
-import { SearchForm } from "@/components/search-form"
-import { VersionSwitcher } from "@/components/version-switcher"
+import * as React from "react";
 import {
   Sidebar,
   SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import { SearchForm } from "@/components/search-form";
+import { Bell, House, Search, Settings } from "lucide-react";
+import { Separator } from "./ui/separator";
+import { Skeleton } from "./ui/skeleton";
+import { useGetChatsQuery, useGetUserQuery } from "@/store/api";
 
-// This is sample data.
-const data = {
-  versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
-  navMain: [
-    {
-      title: "Getting Started",
-      url: "#",
-      items: [
-        {
-          title: "Installation",
-          url: "#",
-        },
-        {
-          title: "Project Structure",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Building Your Application",
-      url: "#",
-      items: [
-        {
-          title: "Routing",
-          url: "#",
-        },
-        {
-          title: "Data Fetching",
-          url: "#",
-          isActive: true,
-        },
-        {
-          title: "Rendering",
-          url: "#",
-        },
-        {
-          title: "Caching",
-          url: "#",
-        },
-        {
-          title: "Styling",
-          url: "#",
-        },
-        {
-          title: "Optimizing",
-          url: "#",
-        },
-        {
-          title: "Configuring",
-          url: "#",
-        },
-        {
-          title: "Testing",
-          url: "#",
-        },
-        {
-          title: "Authentication",
-          url: "#",
-        },
-        {
-          title: "Deploying",
-          url: "#",
-        },
-        {
-          title: "Upgrading",
-          url: "#",
-        },
-        {
-          title: "Examples",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "API Reference",
-      url: "#",
-      items: [
-        {
-          title: "Components",
-          url: "#",
-        },
-        {
-          title: "File Conventions",
-          url: "#",
-        },
-        {
-          title: "Functions",
-          url: "#",
-        },
-        {
-          title: "next.config.js Options",
-          url: "#",
-        },
-        {
-          title: "CLI",
-          url: "#",
-        },
-        {
-          title: "Edge Runtime",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Architecture",
-      url: "#",
-      items: [
-        {
-          title: "Accessibility",
-          url: "#",
-        },
-        {
-          title: "Fast Refresh",
-          url: "#",
-        },
-        {
-          title: "Next.js Compiler",
-          url: "#",
-        },
-        {
-          title: "Supported Browsers",
-          url: "#",
-        },
-        {
-          title: "Turbopack",
-          url: "#",
-        },
-      ],
-    },
-  ],
-}
+const navLinks = [
+  {
+    name: "Home",
+    icon: <House size="1rem" />,
+  },
+  {
+    name: "Search",
+    icon: <Search size="1rem" />,
+  },
+  {
+    name: "Notifications",
+    icon: <Bell size="1rem" />,
+  },
+];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const userData = useGetUserQuery();
+  const chatsData = useGetChatsQuery();
+
+  const user = userData.data;
+  const chats = chatsData.data;
+  const isLoading = userData.isLoading || chatsData.isLoading;
+
   return (
     <Sidebar {...props}>
-      <SidebarHeader>
-        <VersionSwitcher
-          versions={data.versions}
-          defaultVersion={data.versions[0]}
-        />
-        <SearchForm />
-      </SidebarHeader>
-      <SidebarContent>
-        {/* We create a SidebarGroup for each parent. */}
-        {data.navMain.map((item) => (
-          <SidebarGroup key={item.title}>
-            <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {item.items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={item.isActive}>
-                      <a href={item.url}>{item.title}</a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
+      {/* Sidebar Header -> User info + Search chats */}
+      {isLoading ? (
+        <div className="px-2 py-3.5 flex flex-col gap-1.5">
+          <Skeleton className="h-14" />
+          {[...Array(4)].map((_, index) => (
+            <Skeleton key={index} className="h-8" />
+          ))}
+          <Separator className="mt-2" />
+        </div>
+      ) : (
+        <SidebarHeader>
+          <header className="px-2 py-1 flex rounded-lg justify-center items-center gap-2 border bg-muted/50">
+            <div className="shrink-0 size-10 rounded-full overflow-hidden">
+              <img
+                src={user?.avatar.url || "/placeholder.jpeg"}
+                alt="User Profile Picture"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="w-full flex justify-between items-center">
+              <div className="py-2">
+                <h1 className="text-base">@{user?.username}</h1>
+                <p className="text-xs text-zinc-400">
+                  {user?.bio.slice(0, 20)}...
+                </p>
+              </div>
+              <button className="hover:bg-muted rounded-sm p-1 duration-300">
+                <Settings size="1rem" />
+              </button>
+            </div>
+          </header>
+
+          {/* Search chats field */}
+          <SearchForm />
+
+          {/* Navigation Links -> Home, Search, Notification */}
+          <div className="flex flex-col gap-1">
+            {navLinks.map((item, index) => (
+              <button
+                key={index}
+                className="flex items-center rounded-md px-2 py-1 hover:bg-muted/50 duration-300"
+              >
+                <span className="mr-2">{item.icon}</span>
+                <span>{item.name}</span>
+              </button>
+            ))}
+          </div>
+          <Separator className="mt-2" />
+        </SidebarHeader>
+      )}
+
+      <SidebarContent className="px-2">
+        <SidebarGroupLabel>Chats</SidebarGroupLabel>
+        {isLoading ? (
+          <div className="px-2 py-3.5 flex flex-col gap-1.5">
+            {[...Array(10)].map((_, index) => (
+              <Skeleton key={index} className="h-9" />
+            ))}
+          </div>
+        ) : (
+          <div className="pb-2">
+            {chats?.map((chat, index) => (
+              <button
+                key={index}
+                className="w-full flex items-center rounded-md p-2 hover:bg-muted/50 duration-300"
+              >
+                <div className="shrink-0 size-8 rounded-full overflow-hidden">
+                  <img
+                    src={chat.users[0].avatar.url || "/placeholder.jpeg"}
+                    alt="Chat Profile Picture"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <span className="ml-2">{chat.users[0].username}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </SidebarContent>
+
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

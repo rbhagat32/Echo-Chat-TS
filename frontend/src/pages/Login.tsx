@@ -63,9 +63,9 @@ const Login = () => {
       await axios.post("/auth/login", data);
       reset();
       dispatch(setAuth(true));
-      dispatch(api.util.invalidateTags(["Auth", "Chat"]));
+      dispatch(api.util.invalidateTags(["Auth", "Chats"]));
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Unable to Sign In!");
+      toast.error(error.response?.data?.message || "Unable to Login!");
     } finally {
       setLoading(false);
     }

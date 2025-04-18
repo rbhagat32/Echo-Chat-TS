@@ -10,7 +10,7 @@ export const api = createApi({
     baseUrl: `${import.meta.env.VITE_BACKEND_URL}`,
     credentials: "include",
   }),
-  tagTypes: ["Auth", "User", "Chat", "Message"],
+  tagTypes: ["Auth", "User", "Chats", "Message"],
 
   endpoints: (builder) => ({
     checkLogin: builder.query<{ isLoggedIn: boolean }, void>({
@@ -42,7 +42,7 @@ export const api = createApi({
 
     getChats: builder.query<ChatTypes[], void>({
       query: () => "chat/get-chats",
-      providesTags: ["Chat"],
+      providesTags: ["Chats"],
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;

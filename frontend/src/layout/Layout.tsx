@@ -22,7 +22,9 @@ export default function Layout() {
           </header>
 
           <div className="flex flex-col gap-4 p-4">
+            {/* Active Chat Info */}
             <div className="h-14 rounded-xl bg-muted/50">Active Chat Info</div>
+            {/* Message Container */}
             <div className="rounded-xl bg-muted/50">
               <div
                 style={{ height: "calc(100vh - 13.5rem - 1px)" }}

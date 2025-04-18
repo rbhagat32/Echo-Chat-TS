@@ -85,7 +85,7 @@ const SignUp = () => {
       );
       reset();
       dispatch(setAuth(true));
-      dispatch(api.util.invalidateTags(["Auth", "Chat"]));
+      dispatch(api.util.invalidateTags(["Auth", "Chats"]));
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Unable to Sign Up!");
     } finally {
