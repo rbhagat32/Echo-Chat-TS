@@ -11,6 +11,8 @@ import { Bell, House, Search, Settings } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { Skeleton } from "./ui/skeleton";
 import { useGetChatsQuery, useGetUserQuery } from "@/store/api";
+import { useDispatch } from "react-redux";
+import { setActiveChat } from "../store/reducers/ActiveChatSlice";
 
 const navLinks = [
   {
@@ -28,12 +30,20 @@ const navLinks = [
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  // Data Fetching
   const userData = useGetUserQuery();
   const chatsData = useGetChatsQuery();
 
+  // Destructure data and loading state
   const user = userData.data;
   const chats = chatsData.data;
   const isLoading = userData.isLoading || chatsData.isLoading;
+
+  // Set active chat into redux store
+  const dispatch = useDispatch();
+  const setActiveChatFunction = (chat: ChatTypes) => {
+    dispatch(setActiveChat(chat));
+  };
 
   return (
     <Sidebar {...props}>
@@ -90,6 +100,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       <SidebarContent className="px-2">
         <SidebarGroupLabel>Chats</SidebarGroupLabel>
+
+        {/* Render Chats */}
         {isLoading ? (
           <div className="px-2 py-3.5 flex flex-col gap-1.5">
             {[...Array(10)].map((_, index) => (
@@ -101,6 +113,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             {chats?.map((chat, index) => (
               <button
                 key={index}
+                onClick={() => setActiveChatFunction(chat)}
                 className="w-full flex items-center rounded-md p-2 hover:bg-muted/50 duration-300"
               >
                 <div className="shrink-0 size-8 rounded-full overflow-hidden">
