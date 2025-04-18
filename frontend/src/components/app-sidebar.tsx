@@ -7,12 +7,22 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { SearchForm } from "@/components/search-form";
-import { Bell, House, Settings, UserRoundPlus } from "lucide-react";
+import { Bell, House, LogOut, Settings, UserRoundPlus } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { Skeleton } from "./ui/skeleton";
-import { useGetChatsQuery, useGetUserQuery } from "@/store/api";
+import { api, useGetChatsQuery, useGetUserQuery } from "@/store/api";
 import { useDispatch } from "react-redux";
-import { setActiveChat } from "../store/reducers/ActiveChatSlice";
+import {
+  clearActiveChat,
+  setActiveChat,
+} from "../store/reducers/ActiveChatSlice";
+import { AlertDialog } from "./custom/AlertDialog";
+import { axios } from "@/utils/axios";
+import { toast } from "sonner";
+import { setAuth } from "@/store/reducers/AuthSlice";
+import { clearChats } from "@/store/reducers/ChatSlice";
+import { clearUser } from "@/store/reducers/UserSlice";
+import { clearMessages } from "@/store/reducers/MessageSlice";
 
 const navLinks = [
   {
@@ -45,6 +55,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     dispatch(setActiveChat(chat));
   };
 
+  // Logout function
+  const logout = () => {
+    axios
+      .get("/auth/logout")
+      .then(() => {
+        toast.success("Logged out successfully !");
+        dispatch(setAuth(false));
+        dispatch(api.util.invalidateTags(["Auth"]));
+        dispatch(clearUser());
+        dispatch(clearChats());
+        dispatch(clearActiveChat());
+        dispatch(clearMessages());
+      })
+      .catch(() => {
+        toast.error("Failed to logout !");
+      });
+  };
+
   return (
     <Sidebar {...props}>
       {/* Sidebar Header -> User info + Search chats */}
@@ -73,9 +101,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   {user?.bio.slice(0, 20)}...
                 </p>
               </div>
-              <button className="hover:bg-muted rounded-sm p-1 duration-300">
-                <Settings size="1rem" />
-              </button>
+              <div>
+                <button className="hover:bg-muted rounded-sm p-1 duration-300">
+                  <Settings size="1rem" />
+                </button>
+                <AlertDialog
+                  onConfirm={logout}
+                  title="Are you sure that you want to Logout ?"
+                  description="You will be logged out from your account and redirected to login page. To login again, you need to enter your credentials."
+                >
+                  <button className="hover:bg-muted rounded-sm p-1 duration-300">
+                    <LogOut size="1rem" />
+                  </button>
+                </AlertDialog>
+              </div>
             </div>
           </header>
 

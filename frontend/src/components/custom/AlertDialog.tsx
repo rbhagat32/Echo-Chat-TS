@@ -1,0 +1,43 @@
+import {
+  AlertDialog as AlertDialogShadCN,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
+interface PropTypes {
+  title?: string;
+  description?: string;
+  children: React.ReactNode;
+  onConfirm?: () => void;
+}
+
+export function AlertDialog({
+  title = "Are you absolutely sure?",
+  description = "",
+  children,
+  onConfirm,
+}: PropTypes) {
+  return (
+    <AlertDialogShadCN>
+      {/* pass the element which will trigger the alert pop-up as children */}
+      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
+
+      <AlertDialogContent className="bg-muted/30">
+        <AlertDialogHeader>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={onConfirm}>Continue</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialogShadCN>
+  );
+}
