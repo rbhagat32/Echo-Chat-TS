@@ -7,7 +7,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { SearchForm } from "@/components/search-form";
-import { Bell, House, Search, Settings } from "lucide-react";
+import { Bell, House, Settings, UserRoundPlus } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { Skeleton } from "./ui/skeleton";
 import { useGetChatsQuery, useGetUserQuery } from "@/store/api";
@@ -20,8 +20,8 @@ const navLinks = [
     icon: <House size="1rem" />,
   },
   {
-    name: "Search",
-    icon: <Search size="1rem" />,
+    name: "Add people",
+    icon: <UserRoundPlus size="1rem" />,
   },
   {
     name: "Notifications",
@@ -39,9 +39,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const chats = chatsData.data;
   const isLoading = userData.isLoading || chatsData.isLoading;
 
-  // Set active chat into redux store
+  // Set active chat into redux store and fetch messages for that chat
   const dispatch = useDispatch();
-  const setActiveChatFunction = (chat: ChatTypes) => {
+  const handleClickOnChat = (chat: ChatTypes) => {
     dispatch(setActiveChat(chat));
   };
 
@@ -113,7 +113,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             {chats?.map((chat, index) => (
               <button
                 key={index}
-                onClick={() => setActiveChatFunction(chat)}
+                onClick={() => handleClickOnChat(chat)}
                 className="w-full flex items-center rounded-md p-2 hover:bg-muted/50 duration-300"
               >
                 <div className="shrink-0 size-8 rounded-full overflow-hidden">
