@@ -28,7 +28,7 @@ export function AlertDialog({
       {/* pass the element which will trigger the alert pop-up as children */}
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
 
-      <AlertDialogContent className="bg-muted/30">
+      <AlertDialogContent className="bg-zinc-900">
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
