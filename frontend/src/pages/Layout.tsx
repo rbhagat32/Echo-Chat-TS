@@ -5,14 +5,19 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import ActiveChatInfo from "@/layout/ActiveChatInfo";
+import MessageContainer from "@/layout/MessageContainer";
 
 export default function Layout() {
   return (
     <main>
       <SidebarProvider>
+        {/* Sidebar */}
         <AppSidebar />
 
+        {/* Main Content -> right side of sidebar */}
         <SidebarInset>
+          {/* Header -> sidebar open/close button + Echo logo */}
           <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
             <SidebarTrigger className="size-9 -ml-1 mr-0.5" />
             <Separator orientation="vertical" className="mr-2" />
@@ -21,24 +26,13 @@ export default function Layout() {
             </div>
           </header>
 
+          {/* Chat content -> Chat info + messages */}
           <div className="flex flex-col gap-4 p-4">
             {/* Active Chat Info */}
-            <div className="h-14 rounded-xl bg-muted/50">Active Chat Info</div>
-            {/* Message Container */}
-            <div className="rounded-xl bg-muted/50">
-              <div
-                style={{ height: "calc(100vh - 13.5rem - 1px)" }}
-                className="overflow-y-auto"
-              >
-                {[...Array(80)].map(() => (
-                  <p>Message Container</p>
-                ))}
-              </div>
+            <ActiveChatInfo />
 
-              <Separator orientation="horizontal" />
-
-              <div className="h-14">Message Input</div>
-            </div>
+            {/* Message Container + Message Input */}
+            <MessageContainer />
           </div>
         </SidebarInset>
       </SidebarProvider>

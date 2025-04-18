@@ -6,7 +6,7 @@ import PageLoader from "@/partials/PageLoader";
 import NotFound from "@/partials/NotFound";
 import Login from "@/pages/Login";
 import SignUp from "@/pages/SignUp";
-import Layout from "@/layout/Layout";
+import Layout from "@/pages/Layout";
 
 const Routing = ({ isLoggedIn = false }: { isLoggedIn: boolean }) => {
   return (
