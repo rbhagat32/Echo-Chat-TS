@@ -19,7 +19,6 @@ export const api = createApi({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log("useCheckLoginQuery ->", data.isLoggedIn);
           dispatch(setAuth(data.isLoggedIn));
         } catch (error) {
           console.error("Failed to check login:", error);

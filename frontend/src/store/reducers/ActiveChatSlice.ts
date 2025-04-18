@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 const initialState: ChatTypes | {} = {};
 
 const ActiveChatSlice = createSlice({
-  name: "activechat",
+  name: "activeChat",
   initialState,
   reducers: {
     setActiveChat: (_, action: PayloadAction<ChatTypes | {}>) => {

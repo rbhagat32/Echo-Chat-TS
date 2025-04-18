@@ -4,7 +4,8 @@ interface StateTypes {
   auth: boolean;
   user: UserTypes;
   chats: ChatTypes[];
-  messages: MessageStateTypes;
+  activeChat: ChatTypes;
+  // messages: MessageStateTypes;
   // searchedUsers: UserTypes[];
 }
 
