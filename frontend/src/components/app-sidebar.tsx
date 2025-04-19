@@ -105,7 +105,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <header className="px-2 py-1 flex rounded-lg justify-center items-center gap-2 border bg-muted/50">
             <div className="shrink-0 size-10 rounded-full overflow-hidden">
               <img
-                src={user?.avatar.url || "/placeholder.jpeg"}
+                src={user?.avatar!.url || "/placeholder.jpeg"}
                 alt="User Profile Picture"
                 className="w-full h-full object-cover"
               />
@@ -114,7 +114,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <div className="py-2">
                 <h1 className="text-base">@{user?.username}</h1>
                 <p className="text-xs text-zinc-400">
-                  {user?.bio.slice(0, 20)}...
+                  {user?.bio!.slice(0, 20)}...
                 </p>
               </div>
               <div>

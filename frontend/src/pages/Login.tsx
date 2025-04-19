@@ -71,6 +71,7 @@ const Login = () => {
       // no need to navigate to home page as it is handled when auth is invalidated
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Unable to Log In!");
+      console.error("Failed to Login:", error);
     } finally {
       setLoading(false);
     }

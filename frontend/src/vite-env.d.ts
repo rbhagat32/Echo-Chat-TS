@@ -9,7 +9,7 @@ interface StateTypes {
   // searchedUsers: UserTypes[];
 }
 
-interface UserTypes extends Document {
+interface UserTypes {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
   username: string;
@@ -23,7 +23,7 @@ interface UserTypes extends Document {
   updatedAt: Date;
 }
 
-interface ChatTypes extends Document {
+interface ChatTypes {
   _id: Types.ObjectId;
   users: Types.ObjectId[] | UserTypes[];
   messages: Types.ObjectId[] | MessageTypes[];
@@ -36,7 +36,7 @@ interface MessageStateTypes {
   hasMore: boolean;
 }
 
-interface MessageTypes extends Document {
+interface MessageTypes {
   _id: Types.ObjectId;
   chatId: Types.ObjectId | ChatTypes;
   senderId: Types.ObjectId | UserTypes;
