@@ -31,6 +31,7 @@ import {
   clearMessages,
   setMessagesLoading,
 } from "@/store/reducers/MessageSlice";
+import { Tooltip } from "./custom/Tooltip";
 
 const navLinks: {
   name: string;
@@ -147,18 +148,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </p>
               </div>
               <div>
-                <button className="hover:bg-muted rounded-sm p-1 duration-300">
-                  <Settings size="1rem" />
-                </button>
-                <AlertDialog
-                  onConfirm={logout}
-                  title="Are you sure that you want to Logout ?"
-                  description="You will be logged out from your account and redirected to login page. To login again, you need to enter your credentials."
-                >
+                <Tooltip text="Settings">
                   <button className="hover:bg-muted rounded-sm p-1 duration-300">
-                    <LogOut size="1rem" />
+                    <Settings size="1rem" />
                   </button>
-                </AlertDialog>
+                </Tooltip>
+
+                <Tooltip text="Logout">
+                  <AlertDialog
+                    onConfirm={logout}
+                    title="Are you sure that you want to Logout ?"
+                    description="You will be logged out from your account and redirected to login page. To login again, you need to enter your credentials."
+                  >
+                    <button className="hover:bg-muted rounded-sm p-1 duration-300">
+                      <LogOut size="1rem" />
+                    </button>
+                  </AlertDialog>
+                </Tooltip>
               </div>
             </div>
           </header>

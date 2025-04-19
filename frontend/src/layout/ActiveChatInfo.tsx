@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useDeleteChatMutation } from "@/store/api";
 import { clearActiveChat } from "@/store/reducers/ActiveChatSlice";
 import { clearMessages } from "@/store/reducers/MessageSlice";
+import { Tooltip } from "@/components/custom/Tooltip";
 
 export default function ActiveChatInfo() {
   // fetch active chat from store
@@ -48,15 +49,17 @@ export default function ActiveChatInfo() {
             </h1>
           </div>
 
-          <AlertDialog
-            onConfirm={handleDeleteChat}
-            title="Are you sure that you want to delete this chat ?"
-            description="This action cannot be undone."
-          >
-            <button className="hover:bg-muted rounded-sm p-1 duration-300">
-              <Trash2 size="1rem" className="text-red-300" />
-            </button>
-          </AlertDialog>
+          <Tooltip text="Delete chat">
+            <AlertDialog
+              onConfirm={handleDeleteChat}
+              title="Are you sure that you want to delete this chat ?"
+              description="This action cannot be undone."
+            >
+              <button className="hover:bg-muted rounded-sm p-1 duration-300">
+                <Trash2 size="1rem" className="text-red-300" />
+              </button>
+            </AlertDialog>
+          </Tooltip>
         </div>
       )}
     </div>
