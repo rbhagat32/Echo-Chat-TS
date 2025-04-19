@@ -2,6 +2,7 @@ import { RequestWithUser } from "../types/user.js";
 import { Response } from "express";
 import chatModel from "../models/chat.js";
 import messageModel from "../models/message.js";
+import { MessageTypes } from "../types/message.js";
 
 const sendMessage = async (req: RequestWithUser, res: Response) => {
   const { chatId } = req.params;
@@ -17,7 +18,7 @@ const sendMessage = async (req: RequestWithUser, res: Response) => {
       .find((id: string) => id.toString() !== senderId.toString())
       .toString();
 
-    const newMessage = await messageModel.create({
+    const newMessage: MessageTypes = await messageModel.create({
       chatId,
       senderId,
       receiverId,
@@ -59,7 +60,7 @@ const getMessages = async (req: RequestWithUser, res: Response) => {
       getMessagesQuery = getMessagesQuery.skip((page - 1) * limit).limit(limit);
     }
 
-    const messages = await getMessagesQuery;
+    const messages: MessageTypes[] = await getMessagesQuery;
 
     const hasMore = limit !== -1 && page * limit < totalMessages;
 
