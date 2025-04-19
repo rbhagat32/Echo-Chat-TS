@@ -81,9 +81,10 @@ export default function MessageInput() {
         placeholder="Type your message here..."
         className="h-14 rounded-t-none rounded-b-xl"
       />
+
       <button
         onClick={handleSendMessage}
-        className="z-[100] absolute right-5 top-1/2 -translate-y-[50%]"
+        className="z-[100] absolute right-5 top-1/2 -translate-y-[50%] pl-1.5 pr-2 py-2 rounded-md hover:bg-zinc-700 duration-300"
       >
         <Send size="1rem" />
       </button>
