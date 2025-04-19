@@ -13,6 +13,8 @@ const ProtectedRoutes = ({
   redirect,
 }: ProtectedRoutesProps) => {
   if (!isLoggedIn) return <Navigate to={redirect} />;
+
+  // when children are passed, render them, else render Outlet (i.e. child routes)
   return children ? children : <Outlet />;
 };
 
