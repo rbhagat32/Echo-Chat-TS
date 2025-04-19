@@ -4,12 +4,12 @@ import Welcome from "@/components/custom/Welcome";
 import { useSelector } from "react-redux";
 import moment from "moment";
 import { useEffect, useRef } from "react";
+import PageLoader from "@/partials/PageLoader";
 
 export default function MessageContainer() {
   const loggedInUser = useSelector((state: StateTypes) => state.user);
   const activeChat = useSelector((state: StateTypes) => state.activeChat);
   const messagesData = useSelector((state: StateTypes) => state.messages);
-  console.log("messagesData", messagesData);
 
   // Scroll to bottom when messages are displayed
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -22,7 +22,7 @@ export default function MessageContainer() {
     if (messagesData?.messages?.length) {
       scrollToBottom();
     }
-  }, [messagesData?.messages]);
+  }, [messagesData]);
 
   return (
     // Container for messages and input box
@@ -32,15 +32,25 @@ export default function MessageContainer() {
         style={{ height: "calc(100vh - 13.5rem - 1px)" }}
         className="overflow-y-auto p-2"
       >
-        {/* Render content here */}
+        {/* check if any chat is selected or not */}
         {activeChat!._id === undefined ? (
           // if no chat is selected
           <div className="w-full h-full grid place-items-center">
             <Welcome />
           </div>
-        ) : messagesData?.messages?.length > 0 ? (
+        ) : // if some chat is selected, check if messages are loading or not
+        messagesData.isMessagesLoading ? (
+          // if messages are loading show PageLoader
+          <PageLoader fullScreen={false} />
+        ) : // else check no. of messages
+        messagesData?.messages?.length == 0 ? (
+          // if no. of messages =0
+          <div className="flex items-center justify-center h-full">
+            <p className="text-zinc-500">Start Chatting.</p>
+          </div>
+        ) : (
+          // if no. of messages is >0
           <>
-            {/* Render messages if no. of messages is >0 */}
             {messagesData?.messages?.map((message: MessageTypes) => (
               <div
                 key={message._id}
@@ -74,11 +84,6 @@ export default function MessageContainer() {
             {/* Scroll to bottom */}
             <div ref={scrollerRef} />
           </>
-        ) : (
-          // if no. of messages =0
-          <div className="flex items-center justify-center h-full">
-            <p className="text-zinc-500">Start Chatting.</p>
-          </div>
         )}
       </div>
 

@@ -11,7 +11,6 @@ interface StateTypes {
 
 interface UserTypes {
   _id: Types.ObjectId;
-  userId: Types.ObjectId;
   username: string;
   password: string;
   bio?: string;

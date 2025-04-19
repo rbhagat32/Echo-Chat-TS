@@ -1,18 +1,25 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialState: MessageStateTypes | {} = {};
+const initialState: MessageStateTypes = {
+  messages: [],
+  isMessagesLoading: false,
+  hasMore: false,
+};
 
 const MessageSlice = createSlice({
   name: "messages",
   initialState,
   reducers: {
-    setMessages: (state, action: PayloadAction<MessageStateTypes | {}>) => {
+    setMessages: (state, action: PayloadAction<MessageStateTypes>) => {
       return { ...state, ...action.payload };
     },
     clearMessages: () => {
       return initialState;
     },
-    setMessagesLoading: (state, action) => {
+    setMessagesLoading: (
+      state: MessageStateTypes,
+      action: PayloadAction<boolean>
+    ) => {
       state.isMessagesLoading = action.payload;
     },
   },
