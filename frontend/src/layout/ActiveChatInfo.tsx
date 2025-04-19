@@ -29,7 +29,9 @@ export default function ActiveChatInfo() {
     <div className="h-14 rounded-xl bg-muted/50">
       {activeChat._id === undefined ? (
         <div className="flex items-center justify-center h-full">
-          <p className="text-zinc-500">Select a chat to view details.</p>
+          <p className="text-zinc-500 text-sm">
+            Select a chat to view details.
+          </p>
         </div>
       ) : (
         <div className="flex items-center justify-between px-4 py-2">

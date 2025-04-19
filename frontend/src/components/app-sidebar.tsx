@@ -96,6 +96,27 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       });
   };
 
+  const [filteredChats, setFilteredChats] = React.useState<ChatTypes[]>(chats!);
+  // Set filtered chats when chats data is fetched
+  React.useEffect(() => {
+    if (chats) {
+      setFilteredChats(chats);
+    }
+  }, [chats]);
+  // Search chats by username
+  const searchChats = (query: string) => {
+    if (!query) {
+      setFilteredChats(chats!);
+      return;
+    }
+
+    if (chats) {
+      setFilteredChats(
+        chats.filter((chat) => chat.users[0].username.includes(query))
+      );
+    }
+  };
+
   return (
     <Sidebar {...props}>
       {/* Sidebar Header -> User info + Search chats + Navigation links */}
@@ -143,7 +164,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </header>
 
           {/* Search chats field */}
-          <SearchForm />
+          <SearchForm
+            onChange={(e) => searchChats((e.target as HTMLInputElement).value)}
+          />
 
           {/* Navigation Links -> Home, Search, Notification */}
           <div className="flex flex-col gap-1">
@@ -173,22 +196,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </div>
         ) : (
           <div className="pb-2">
-            {chats?.map((chat, index) => (
-              <button
-                key={index}
-                onClick={() => handleOpenChat(chat)}
-                className="w-full flex items-center rounded-md p-2 hover:bg-muted/50 duration-300"
-              >
-                <div className="shrink-0 size-8 rounded-full overflow-hidden">
-                  <img
-                    src={chat.users[0].avatar.url || "/placeholder.jpeg"}
-                    alt="Chat Profile Picture"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <p className="ml-2 text-sm">{chat.users[0].username}</p>
-              </button>
-            ))}
+            {filteredChats?.length == 0 ? (
+              <div className="w-full text-center text-zinc-500 text-sm">
+                No chats found.
+              </div>
+            ) : (
+              filteredChats?.map((chat, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleOpenChat(chat)}
+                  className="w-full flex items-center rounded-md p-2 hover:bg-muted/50 duration-300"
+                >
+                  <div className="shrink-0 size-8 rounded-full overflow-hidden">
+                    <img
+                      src={chat.users[0].avatar.url || "/placeholder.jpeg"}
+                      alt="Chat Profile Picture"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <p className="ml-2 text-sm">{chat.users[0].username}</p>
+                </button>
+              ))
+            )}
           </div>
         )}
       </SidebarContent>
