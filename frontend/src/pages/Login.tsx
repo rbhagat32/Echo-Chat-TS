@@ -36,6 +36,8 @@ const schema = yup.object().shape({
 
 const Login = () => {
   const dispatch = useDispatch();
+
+  // State for loading spinner
   const [loading, setLoading] = useState<boolean>(false);
 
   const {
@@ -49,6 +51,7 @@ const Login = () => {
     mode: "onSubmit",
   });
 
+  // Handle error messages for invalid inputs
   useEffect(() => {
     if (errors.username) {
       toast.error(errors.username.message);
@@ -63,22 +66,29 @@ const Login = () => {
       await axios.post("/auth/login", data);
       reset();
       dispatch(setAuth(true));
+      // Invalidate the Auth and Chats tags to refetch data after login
       dispatch(api.util.invalidateTags(["Auth", "Chats"]));
+      // no need to navigate to home page as it is handled when auth is invalidated
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Unable to Login!");
+      toast.error(error.response?.data?.message || "Unable to Log In!");
     } finally {
       setLoading(false);
     }
   };
 
+  // Validation function to check if the form is valid before submitting
+  // This is to prevent the form from submitting if there are validation errors
   const validation = async (data: LoginFormData) => {
     const isValid = await trigger();
+    // if form is not valid, do not submit the form
     if (!isValid) return;
+    // if form is valid, call the login function
     login(data);
   };
 
   return (
     <div className="w-screen h-screen flex">
+      {/* Left side */}
       <div
         style={{
           backgroundImage: `linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.9),rgba(0,0,0,1)), url(/background.jpeg)`,
@@ -92,7 +102,6 @@ const Login = () => {
           <img src="/logo-light.svg" alt="Logo" className="size-10" />
           <h1 className="text-3xl font-semibold">Echo.</h1>
         </div>
-
         <div>
           <h1 className="text-lg text-zinc-500">
             "Welcome back! Ready to dive into your conversations? Connect with
@@ -102,6 +111,7 @@ const Login = () => {
         </div>
       </div>
 
+      {/* Right side */}
       <div className="relative px-20 lg:px-40 w-full h-full flex justify-center items-center flex-col text-center gap-2">
         <CustomLink absolute={true} side="right" route="signup">
           Sign Up Instead
@@ -112,6 +122,7 @@ const Login = () => {
             Enter your username and password to sign in
           </h2>
         </div>
+
         <form
           onSubmit={handleSubmit(validation)}
           className="w-full flex flex-col gap-3"
@@ -129,6 +140,7 @@ const Login = () => {
           <Button type="submit" width="w-full">
             {!loading ? "Sign In" : <Spinner />}
           </Button>
+
           <p className="text-zinc-500">
             By continuing, you agree to our Terms of Service and Privacy Policy.
           </p>

@@ -52,6 +52,8 @@ const schema = yup.object().shape({
 
 const SignUp = () => {
   const dispatch = useDispatch();
+
+  // State for loading spinner
   const [loading, setLoading] = useState<boolean>(false);
 
   const {
@@ -65,6 +67,7 @@ const SignUp = () => {
     mode: "onSubmit",
   });
 
+  // Handle error messages for invalid inputs
   useEffect(() => {
     if (errors.username) {
       toast.error(errors.username.message);
@@ -82,10 +85,13 @@ const SignUp = () => {
         "/auth/signup",
         { ...data, avatar: data.avatar ? data.avatar[0] : undefined },
         { headers: { "Content-Type": "multipart/form-data" } }
+        // headers required for image upload
       );
       reset();
       dispatch(setAuth(true));
+      // Invalidate the Auth and Chats tags to refetch data after login
       dispatch(api.util.invalidateTags(["Auth", "Chats"]));
+      // no need to navigate to home page as it is handled when auth is invalidated
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Unable to Sign Up!");
     } finally {
@@ -93,14 +99,19 @@ const SignUp = () => {
     }
   };
 
+  // Validation function to check if the form is valid before submitting
+  // This is to prevent the form from submitting if there are validation errors
   const validation = async (data: SignupFormData) => {
     const isValid = await trigger();
+    // if form is not valid, do not submit the form
     if (!isValid) return;
+    // if form is valid, call the signup function
     signup(data);
   };
 
   return (
     <div className="w-screen h-screen flex">
+      {/* Left side */}
       <div className="relative px-20 lg:px-40 w-full h-full flex justify-center items-center flex-col text-center gap-2">
         <CustomLink absolute={true} side="left" route="login">
           Log In Instead
@@ -111,6 +122,7 @@ const SignUp = () => {
             Enter your details to create a new account
           </h2>
         </div>
+
         <form
           onSubmit={handleSubmit(validation)}
           className="w-full flex flex-col gap-3"
@@ -120,19 +132,16 @@ const SignUp = () => {
             type="text"
             placeholder="Username"
           />
-
           <textarea
             {...register("bio")}
             placeholder="Bio (max 50 characters)"
             className="resize-none min-h-28 px-4 py-3 rounded-lg bg-zinc-800 text-white outline-none focus:ring focus:border-indigo-500 placeholder:text-white placeholder:font-semibold"
           />
-
           <Input
             register={register("password")}
             type="password"
             placeholder="Password"
           />
-
           <input
             {...register("avatar")}
             multiple={false}
@@ -140,7 +149,6 @@ const SignUp = () => {
             accept="image/*"
             className="px-4 py-3 rounded-lg bg-zinc-800 text-white outline-none focus:ring focus:border-indigo-500 placeholder:text-white placeholder:font-semibold"
           />
-
           <Button type="submit" width="w-full">
             {!loading ? "Sign Up" : <Spinner />}
           </Button>
@@ -151,6 +159,7 @@ const SignUp = () => {
         </form>
       </div>
 
+      {/* Right side */}
       <div
         style={{
           backgroundImage: `linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.9),rgba(0,0,0,1)), url(/background.jpeg)`,

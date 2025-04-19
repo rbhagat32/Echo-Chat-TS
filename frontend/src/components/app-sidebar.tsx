@@ -51,7 +51,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   // Set active chat into redux store and fetch messages for that chat
   const dispatch = useDispatch();
-  const handleClickOnChat = (chat: ChatTypes) => {
+  const handleOpenChat = (chat: ChatTypes) => {
     dispatch(setActiveChat(chat));
   };
 
@@ -152,7 +152,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             {chats?.map((chat, index) => (
               <button
                 key={index}
-                onClick={() => handleClickOnChat(chat)}
+                onClick={() => handleOpenChat(chat)}
                 className="w-full flex items-center rounded-md p-2 hover:bg-muted/50 duration-300"
               >
                 <div className="shrink-0 size-8 rounded-full overflow-hidden">
