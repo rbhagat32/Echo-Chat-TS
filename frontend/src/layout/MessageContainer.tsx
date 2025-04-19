@@ -1,10 +1,10 @@
-import { Separator } from "@/components/ui/separator";
 import MessageInput from "./MessageInput";
 import Welcome from "@/components/custom/Welcome";
 import { useSelector } from "react-redux";
 import moment from "moment";
 import { useEffect, useRef } from "react";
 import PageLoader from "@/partials/PageLoader";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MessageContainer() {
   const loggedInUser = useSelector((state: StateTypes) => state.user);
@@ -87,10 +87,12 @@ export default function MessageContainer() {
         )}
       </div>
 
-      <Separator orientation="horizontal" />
-
       {/* Message Input */}
-      <MessageInput />
+      {activeChat!._id === undefined ? (
+        <Skeleton className="h-14 rounded-t-none rounded-b-xl" />
+      ) : (
+        <MessageInput />
+      )}
     </div>
   );
 }

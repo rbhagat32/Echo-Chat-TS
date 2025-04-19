@@ -37,7 +37,7 @@ const Routing = ({ isLoggedIn = false }: { isLoggedIn: boolean }) => {
         <Route path="/signup" element={<SignUp />} />
       </Route>
 
-      {/* Alternate way: by passing children (each route has to be wrapped with ProtectedRoutes) */}
+      {/* Alternate way: by passing children (each route has to be wrapped with ProtectedRoutes individually) */}
       {/* <Route
         path="/login"
         element={

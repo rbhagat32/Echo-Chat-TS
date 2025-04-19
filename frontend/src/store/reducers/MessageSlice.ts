@@ -2,8 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: MessageStateTypes = {
   messages: [],
-  isMessagesLoading: false,
   hasMore: false,
+  isMessagesLoading: false,
 };
 
 const MessageSlice = createSlice({
