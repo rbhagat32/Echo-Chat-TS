@@ -56,7 +56,7 @@ export default function ActiveChatInfo() {
               description="This action cannot be undone."
             >
               <div className="hover:bg-zinc-700 rounded-sm p-2 duration-300">
-                <Trash2 size="1rem" className="text-red-300" />
+                <Trash2 size="1rem" className="text-rose-400" />
               </div>
             </AlertDialog>
           </Tooltip>

@@ -119,7 +119,7 @@ const SignUp = () => {
           Log In Instead
         </CustomLink>
         <div>
-          <h1 className="font-bold text-2xl mb-1">Signup to a new account</h1>
+          <h1 className="font-bold text-2xl mb-1">Sign Up to a new account</h1>
           <h2 className="text-lg text-zinc-500">
             Enter your details to create a new account
           </h2>
@@ -164,7 +164,7 @@ const SignUp = () => {
       {/* Right side */}
       <div
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.9),rgba(0,0,0,1)), url(/background.jpeg)`,
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.7),rgba(0,0,0,0.9)), url(/background.jpeg)`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",

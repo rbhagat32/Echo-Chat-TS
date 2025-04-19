@@ -10,9 +10,7 @@ export default function Header() {
 
       <div className="flex items-center gap-2">
         <img src="/logo-light.svg" alt="Logo" className="size-6" />
-        <div className="text-2xl font-semibold mb-0.5">
-          Echo<span className="text-indigo-500">.</span>
-        </div>
+        <div className="text-2xl font-semibold mb-0.5">Echo.</div>
       </div>
     </header>
   );
