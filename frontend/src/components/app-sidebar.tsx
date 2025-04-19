@@ -16,7 +16,7 @@ import {
   useGetUserQuery,
   useLazyGetMessagesQuery,
 } from "@/store/api";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   clearActiveChat,
   setActiveChat,
@@ -54,6 +54,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   // Data Fetching hooks
   const userData = useGetUserQuery();
   const chatsData = useGetChatsQuery();
+  const activeChat = useSelector((state: StateTypes) => state.activeChat);
   const [trigger] = useLazyGetMessagesQuery();
 
   // Destructure data and loading state
@@ -64,14 +65,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   // Set active chat into redux store and fetch messages for that chat
   const dispatch = useDispatch();
   const handleOpenChat = async (chat: ChatTypes) => {
-    dispatch(setActiveChat(chat));
-    // fetch messages when chat is opened
-    try {
-      dispatch(setMessagesLoading(true));
-      await trigger({ chatId: chat._id });
-      dispatch(setMessagesLoading(false));
-    } catch (error) {
-      console.error("Failed to fetch messages:", error);
+    if (chat._id !== activeChat._id) {
+      dispatch(setActiveChat(chat));
+      // fetch messages when chat is opened
+      try {
+        dispatch(setMessagesLoading(true));
+        await trigger({ chatId: chat._id });
+        dispatch(setMessagesLoading(false));
+      } catch (error) {
+        console.error("Failed to fetch messages:", error);
+      }
     }
   };
 
