@@ -27,7 +27,10 @@ import { toast } from "sonner";
 import { setAuth } from "@/store/reducers/AuthSlice";
 import { clearChats } from "@/store/reducers/ChatSlice";
 import { clearUser } from "@/store/reducers/UserSlice";
-import { clearMessages } from "@/store/reducers/MessageSlice";
+import {
+  clearMessages,
+  setMessagesLoading,
+} from "@/store/reducers/MessageSlice";
 
 const navLinks: {
   name: string;
@@ -64,7 +67,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     dispatch(setActiveChat(chat));
     // fetch messages when chat is opened
     try {
+      dispatch(setMessagesLoading(true));
       await trigger({ chatId: chat._id });
+      dispatch(setMessagesLoading(false));
     } catch (error) {
       console.error("Failed to fetch messages:", error);
     }
@@ -83,8 +88,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         dispatch(clearActiveChat());
         dispatch(clearMessages());
       })
-      .catch(() => {
-        toast.error("Failed to logout !");
+      .catch((error) => {
+        toast.error(error.response.data.message || "Failed to logout !");
       });
   };
 

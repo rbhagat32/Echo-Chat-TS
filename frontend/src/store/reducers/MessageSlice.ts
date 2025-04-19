@@ -6,14 +6,18 @@ const MessageSlice = createSlice({
   name: "messages",
   initialState,
   reducers: {
-    setMessages: (_, action: PayloadAction<MessageStateTypes | {}>) => {
-      return action.payload;
+    setMessages: (state, action: PayloadAction<MessageStateTypes | {}>) => {
+      return { ...state, ...action.payload };
     },
     clearMessages: () => {
       return initialState;
+    },
+    setMessagesLoading: (state, action) => {
+      state.isMessagesLoading = action.payload;
     },
   },
 });
 
 export { MessageSlice };
-export const { setMessages, clearMessages } = MessageSlice.actions;
+export const { setMessages, clearMessages, setMessagesLoading } =
+  MessageSlice.actions;
