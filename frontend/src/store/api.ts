@@ -54,9 +54,9 @@ export const api = createApi({
 
     getMessages: builder.query<
       MessageStateTypes,
-      { chatId: string | undefined; page: number; limit: number }
+      { chatId: string | undefined; page?: number; limit?: number }
     >({
-      query: ({ chatId, page = 1, limit = 10 }) =>
+      query: ({ chatId, page = 1, limit = Infinity }) =>
         `message/get-messages/${chatId}?page=${page}&limit=${limit}`,
       providesTags: ["Message"],
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
@@ -75,5 +75,5 @@ export const {
   useCheckLoginQuery,
   useGetUserQuery,
   useGetChatsQuery,
-  useGetMessagesQuery,
+  useLazyGetMessagesQuery,
 } = api;

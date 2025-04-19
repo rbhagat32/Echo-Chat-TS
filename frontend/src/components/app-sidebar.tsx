@@ -10,7 +10,12 @@ import { SearchForm } from "@/components/search-form";
 import { Bell, House, LogOut, Settings, UserRoundPlus } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { Skeleton } from "./ui/skeleton";
-import { api, useGetChatsQuery, useGetUserQuery } from "@/store/api";
+import {
+  api,
+  useGetChatsQuery,
+  useGetUserQuery,
+  useLazyGetMessagesQuery,
+} from "@/store/api";
 import { useDispatch } from "react-redux";
 import {
   clearActiveChat,
@@ -24,7 +29,10 @@ import { clearChats } from "@/store/reducers/ChatSlice";
 import { clearUser } from "@/store/reducers/UserSlice";
 import { clearMessages } from "@/store/reducers/MessageSlice";
 
-const navLinks = [
+const navLinks: {
+  name: string;
+  icon: React.JSX.Element;
+}[] = [
   {
     name: "Home",
     icon: <House size="1rem" />,
@@ -40,9 +48,10 @@ const navLinks = [
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  // Data Fetching
+  // Data Fetching hooks
   const userData = useGetUserQuery();
   const chatsData = useGetChatsQuery();
+  const [trigger] = useLazyGetMessagesQuery();
 
   // Destructure data and loading state
   const user = userData.data;
@@ -51,8 +60,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   // Set active chat into redux store and fetch messages for that chat
   const dispatch = useDispatch();
-  const handleOpenChat = (chat: ChatTypes) => {
+  const handleOpenChat = async (chat: ChatTypes) => {
     dispatch(setActiveChat(chat));
+    // fetch messages when chat is opened
+    try {
+      await trigger({ chatId: chat._id });
+    } catch (error) {
+      console.error("Failed to fetch messages:", error);
+    }
   };
 
   // Logout function
@@ -75,7 +90,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar {...props}>
-      {/* Sidebar Header -> User info + Search chats */}
+      {/* Sidebar Header -> User info + Search chats + Navigation links */}
       {isLoading ? (
         <div className="px-2 py-3.5 flex flex-col gap-1.5">
           <Skeleton className="h-14" />
@@ -86,6 +101,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </div>
       ) : (
         <SidebarHeader>
+          {/* Logged in user info */}
           <header className="px-2 py-1 flex rounded-lg justify-center items-center gap-2 border bg-muted/50">
             <div className="shrink-0 size-10 rounded-full overflow-hidden">
               <img
@@ -126,10 +142,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             {navLinks.map((item, index) => (
               <button
                 key={index}
-                className="flex items-center rounded-md px-2 py-1 hover:bg-muted/50 duration-300"
+                className="flex items-center rounded-md p-2 hover:bg-muted/50 duration-300"
               >
-                <span className="mr-2">{item.icon}</span>
-                <span>{item.name}</span>
+                <p className="mr-2">{item.icon}</p>
+                <p className="text-sm">{item.name}</p>
               </button>
             ))}
           </div>
@@ -162,7 +178,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <span className="ml-2">{chat.users[0].username}</span>
+                <p className="ml-2 text-sm">{chat.users[0].username}</p>
               </button>
             ))}
           </div>
