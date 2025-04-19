@@ -64,6 +64,10 @@ export const api = createApi({
       async onQueryStarted(chatId, { dispatch, queryFulfilled }) {
         // Optimistically update the cache
         const patchResult = dispatch(
+          // update the cache for the "getChats" query
+          // undefined means no arguments for "getChats" query
+          // draft is the current state of the cache
+          // remove the chat with the given chatId from the cache
           api.util.updateQueryData("getChats", undefined, (draft: any) => {
             return draft.filter((chat: any) => chat._id !== chatId);
           })
