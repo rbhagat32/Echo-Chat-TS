@@ -114,15 +114,6 @@
   width: 0px;
 }
 
-/* .dark ::-webkit-scrollbar {
-  width: 4px;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  background-color: oklch(0.705 0.015 286.067);
-  border-radius: 8px;
-} */
-
 button {
   @apply cursor-pointer;
 }

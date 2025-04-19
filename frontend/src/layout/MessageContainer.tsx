@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 import { useEffect, useRef } from "react";
 import PageLoader from "@/partials/PageLoader";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MessageContainer() {
   const loggedInUser = useSelector((state: StateTypes) => state.user);
@@ -62,7 +61,7 @@ export default function MessageContainer() {
               >
                 <div
                   className={
-                    "max-w-[85%] md:max-w-[70%] lg:max-w-[60%] text-sm px-3 py-2 rounded-md bg-zinc-800"
+                    "max-w-[85%] md:max-w-[70%] lg:max-w-[60%] text-sm px-4 py-2 rounded-md bg-zinc-800"
                   }
                 >
                   <p>{message.content}</p>
@@ -89,7 +88,7 @@ export default function MessageContainer() {
 
       {/* Message Input */}
       {activeChat!._id === undefined ? (
-        <Skeleton className="h-14 rounded-t-none rounded-b-xl" />
+        <div className="h-14 rounded-t-none rounded-b-xl" />
       ) : (
         <MessageInput />
       )}
