@@ -54,7 +54,7 @@ export const api = createApi({
 
     getMessages: builder.query<
       MessageStateTypes,
-      { chatId: string | undefined; page?: number; limit?: number }
+      { chatId: string; page?: number; limit?: number }
     >({
       query: ({
         chatId,

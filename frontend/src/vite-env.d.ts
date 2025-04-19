@@ -5,27 +5,28 @@ interface StateTypes {
   user: UserTypes;
   chats: ChatTypes[];
   activeChat: ChatTypes;
-  // messages: MessageStateTypes;
+  messages: MessageStateTypes;
   // searchedUsers: UserTypes[];
 }
 
-interface UserTypes {
-  _id: string;
+interface UserTypes extends Document {
+  _id: Types.ObjectId;
+  userId: Types.ObjectId;
   username: string;
-  bio: string;
-  avatar: {
-    public_id: string | null;
-    url: string | null;
-  };
-  chats: string[];
-  requests: string[];
+  password: string;
+  bio?: string;
+  avatar?: { public_id?: string; url?: string };
+  chats: Types.ObjectId[] | ChatTypes[];
+  requests: Types.ObjectId[] | UserTypes[];
+  matchPassword(enteredPassword: string): Promise<boolean>;
   createdAt: Date;
   updatedAt: Date;
 }
 
-interface ChatTypes {
-  _id: string;
-  users: UserTypes[];
+interface ChatTypes extends Document {
+  _id: Types.ObjectId;
+  users: Types.ObjectId[] | UserTypes[];
+  messages: Types.ObjectId[] | MessageTypes[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -35,11 +36,11 @@ interface MessageStateTypes {
   hasMore: boolean;
 }
 
-interface MessageTypes {
-  _id: string;
-  chatId: string;
-  senderId: string;
-  receiverId: string;
+interface MessageTypes extends Document {
+  _id: Types.ObjectId;
+  chatId: Types.ObjectId | ChatTypes;
+  senderId: Types.ObjectId | UserTypes;
+  receiverId: Types.ObjectId | UserTypes;
   content: string;
   createdAt: Date;
   updatedAt: Date;

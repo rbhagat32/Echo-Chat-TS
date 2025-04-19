@@ -5,6 +5,8 @@ import Welcome from "@/components/custom/Welcome";
 
 export default function MessageContainer() {
   const activeChat = useSelector((state: StateTypes) => state.activeChat);
+  const messagesData = useSelector((state: StateTypes) => state.messages);
+  console.log("Messages Data: ", messagesData);
 
   return (
     // Container for messages and input box
@@ -22,7 +24,7 @@ export default function MessageContainer() {
         ) : (
           <div>
             {[...Array(80)].map((_, index) => (
-              <p key={index}>Message Container</p>
+              <p key={index}>Message</p>
             ))}
           </div>
         )}
