@@ -55,9 +55,9 @@ export default function ActiveChatInfo() {
               title="Are you sure that you want to delete this chat ?"
               description="This action cannot be undone."
             >
-              <button className="hover:bg-zinc-700 rounded-sm p-2 duration-300">
+              <div className="hover:bg-zinc-700 rounded-sm p-2 duration-300">
                 <Trash2 size="1rem" className="text-red-300" />
-              </button>
+              </div>
             </AlertDialog>
           </Tooltip>
         </div>

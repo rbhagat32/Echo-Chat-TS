@@ -149,9 +149,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </div>
               <div>
                 <Tooltip text="Settings">
-                  <button className="hover:bg-zinc-700 rounded-sm p-1.5 duration-300">
+                  <div className="hover:bg-zinc-700 rounded-sm p-1.5 duration-300">
                     <Settings size="1rem" />
-                  </button>
+                  </div>
                 </Tooltip>
 
                 <Tooltip text="Logout">
@@ -160,9 +160,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     title="Are you sure that you want to Logout ?"
                     description="You will be logged out from your account and redirected to login page. To login again, you need to enter your credentials."
                   >
-                    <button className="hover:bg-zinc-700 rounded-sm p-1.5 duration-300">
+                    <div className="hover:bg-zinc-700 rounded-sm p-1.5 duration-300">
                       <LogOut size="1rem" />
-                    </button>
+                    </div>
                   </AlertDialog>
                 </Tooltip>
               </div>
