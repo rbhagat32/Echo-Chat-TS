@@ -1,3 +1,4 @@
+import { SidebarInput } from "@/components/ui/sidebar";
 import { Send } from "lucide-react";
 import { useState } from "react";
 
@@ -9,7 +10,7 @@ export default function MessageInput() {
 
   return (
     <div className="relative h-14">
-      <input
+      <SidebarInput
         name="message-input-box"
         type="text"
         value={inputMessage}
@@ -20,7 +21,7 @@ export default function MessageInput() {
           }
         }}
         placeholder="Type your message here..."
-        className="w-full h-full bg-zinc-800 px-4 rounded-b-xl placeholder:text-zinc-500"
+        className="h-14 rounded-t-none rounded-b-xl"
       />
       <button
         onClick={sendMessage}
