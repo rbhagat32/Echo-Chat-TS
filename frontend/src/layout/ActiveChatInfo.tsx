@@ -51,7 +51,7 @@ export default function ActiveChatInfo() {
           <AlertDialog
             onConfirm={handleDeleteChat}
             title="Are you sure that you want to delete this chat ?"
-            description="This action cannot be undone ."
+            description="This action cannot be undone."
           >
             <button className="hover:bg-muted rounded-sm p-1 duration-300">
               <Trash2 size="1rem" className="text-red-300" />
