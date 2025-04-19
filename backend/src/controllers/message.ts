@@ -39,35 +39,36 @@ const sendMessage = async (req: RequestWithUser, res: Response) => {
 
 const getMessages = async (req: RequestWithUser, res: Response) => {
   const { chatId } = req.params;
-
-  interface QueryParams {
-    page?: number;
-    limit?: number;
-  }
-  const { page = 1, limit = 10 }: QueryParams = req.query;
+  const page = parseInt(req.query.page as string) || 1;
+  let limit = parseInt(req.query.limit as string) || 10;
+  // treat limit = -1 as fetch all messages
 
   try {
-    const chat = await chatModel.findById(chatId).populate({
-      path: "messages",
-      options: {
-        // Pagination
-        skip: (page - 1) * limit,
-        limit,
-      },
-    });
-
-    if (!chat) {
+    // ensure chat exists
+    const chatExists = await chatModel.findById(chatId);
+    if (!chatExists) {
       return res.status(404).json({ message: "Chat not found!" });
     }
 
-    const messages = chat.messages;
-    const hasMore = messages.length === limit;
+    const totalMessages = await messageModel.countDocuments({ chatId });
+    let getMessagesQuery = messageModel
+      .find({ chatId })
+      .sort({ createdAt: -1 }); // newest messages first
+
+    if (limit !== -1) {
+      getMessagesQuery = getMessagesQuery.skip((page - 1) * limit).limit(limit);
+    }
+
+    const messages = await getMessagesQuery;
+
+    const hasMore = limit !== -1 && page * limit < totalMessages;
 
     return res.status(200).json({
       messages,
       hasMore,
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({ message: "Internal server error!" });
   }
 };

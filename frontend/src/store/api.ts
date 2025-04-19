@@ -56,8 +56,11 @@ export const api = createApi({
       MessageStateTypes,
       { chatId: string | undefined; page?: number; limit?: number }
     >({
-      query: ({ chatId, page = 1, limit = Infinity }) =>
-        `message/get-messages/${chatId}?page=${page}&limit=${limit}`,
+      query: ({
+        chatId,
+        page = 1,
+        limit = -1, // limit = -1 means fetch all messages (default value)
+      }) => `message/get-messages/${chatId}?page=${page}&limit=${limit}`,
       providesTags: ["Message"],
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
