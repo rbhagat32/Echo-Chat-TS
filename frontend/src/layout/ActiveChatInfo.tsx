@@ -19,8 +19,8 @@ export default function ActiveChatInfo() {
       toast.success("Chat deleted successfully.");
       dispatch(clearActiveChat());
       dispatch(clearMessages());
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to delete chat.");
+    } catch (error) {
+      toast.error("Failed to delete chat.");
       console.error("Failed to delete chat:", error);
     }
   };

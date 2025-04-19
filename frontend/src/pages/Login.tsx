@@ -64,13 +64,14 @@ const Login = () => {
     setLoading(true);
     try {
       await axios.post("/auth/login", data);
+
       reset();
       dispatch(setAuth(true));
       // Invalidate the Auth and Chats tags to refetch data after login
       dispatch(api.util.invalidateTags(["Auth", "Chats"]));
       // no need to navigate to home page as it is handled when auth is invalidated
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Unable to Log In!");
+      toast.error(error.response?.data?.message || "Failed to Log In!");
       console.error("Failed to Login:", error);
     } finally {
       setLoading(false);

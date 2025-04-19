@@ -7,6 +7,7 @@ import { MessageTypes } from "../types/message.js";
 const sendMessage = async (req: RequestWithUser, res: Response) => {
   const { chatId } = req.params;
   const { content } = req.body;
+
   if (!content) {
     return res.status(400).json({ message: "Message must not be empty !" });
   }
@@ -52,9 +53,7 @@ const getMessages = async (req: RequestWithUser, res: Response) => {
     }
 
     const totalMessages = await messageModel.countDocuments({ chatId });
-    let getMessagesQuery = messageModel
-      .find({ chatId })
-      .sort({ createdAt: -1 }); // newest messages first
+    let getMessagesQuery = messageModel.find({ chatId });
 
     if (limit !== -1) {
       getMessagesQuery = getMessagesQuery.skip((page - 1) * limit).limit(limit);

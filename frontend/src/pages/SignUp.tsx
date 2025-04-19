@@ -87,13 +87,14 @@ const SignUp = () => {
         { headers: { "Content-Type": "multipart/form-data" } }
         // headers required for image upload
       );
+
       reset();
       dispatch(setAuth(true));
       // Invalidate the Auth and Chats tags to refetch data after login
       dispatch(api.util.invalidateTags(["Auth", "Chats"]));
       // no need to navigate to home page as it is handled when auth is invalidated
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Unable to Sign Up!");
+      toast.error(error.response?.data?.message || "Failed to Sign Up!");
       console.error("Failed to Sign Up:", error);
     } finally {
       setLoading(false);

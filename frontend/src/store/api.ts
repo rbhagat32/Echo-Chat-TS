@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setAuth } from "./reducers/AuthSlice";
 import { setUser } from "./reducers/UserSlice";
 import { setChats } from "./reducers/ChatSlice";
-import { setMessages } from "./reducers/MessageSlice";
+import { appendMessage, setMessages } from "./reducers/MessageSlice";
 import { toast } from "sonner";
 import { Draft } from "@reduxjs/toolkit";
 
@@ -67,13 +67,13 @@ export const api = createApi({
         const patchResult = dispatch(
           // update the cache for the "getChats" query
           // undefined means no arguments for "getChats" query
-          // draft is the current state of the cache
+          // we get access to the cached data and can modify it directly
           // remove the chat with the given chatId from the cache
           api.util.updateQueryData(
             "getChats",
             undefined,
-            (draft: Draft<ChatTypes[]>) => {
-              return draft.filter((chat: ChatTypes) => chat._id !== chatId);
+            (chats: Draft<ChatTypes[]>) => {
+              return chats.filter((chat: ChatTypes) => chat._id !== chatId);
             }
           )
         );
@@ -82,8 +82,49 @@ export const api = createApi({
           await queryFulfilled; // wait for API call to finish
         } catch {
           patchResult.undo(); // rollback if API fails
-          toast.error("Failed to delete chat. Please try again later.");
+          toast.error("Failed to delete chat!");
         }
+      },
+    }),
+
+    sendMessage: builder.mutation<void, MessageTypes>({
+      query: (newMessage) => ({
+        url: `message/send-message/${newMessage.chatId}`,
+        method: "POST",
+        body: { content: newMessage.content },
+      }),
+      // cannot perform optimistic update here because
+      // when we do so, data in api gets updated.
+      // but in messageContainer.tsx, we are fetching messages from store using useSelector
+      // and not from api using useGetMessagesQuery
+      // so we have to manualy update the store using dispatch
+
+      // ❌
+      // async onQueryStarted(newMessage, { dispatch, queryFulfilled }) {
+      //   const patchResult = dispatch(
+      //     api.util.updateQueryData(
+      //       "getMessages",
+      //       { chatId: newMessage.chatId },
+      //       (draft: Draft<MessageStateTypes>) => {
+      //         draft.messages.push(newMessage);
+      //         draft.hasMore = false;
+      //         draft.isMessagesLoading = false;
+      //         return draft;
+      //       }
+      //     )
+      //   );
+
+      //   try {
+      //     await queryFulfilled;
+      //   } catch {
+      //     patchResult.undo();
+      //     toast.error("Failed to send message!");
+      //   }
+      // },
+
+      // ✅
+      async onQueryStarted(newMessage, { dispatch }) {
+        dispatch(appendMessage(newMessage));
       },
     }),
 
@@ -116,4 +157,5 @@ export const {
   useGetChatsQuery,
   useDeleteChatMutation,
   useLazyGetMessagesQuery,
+  useSendMessageMutation,
 } = api;

@@ -42,6 +42,6 @@ interface MessageTypes {
   senderId: Types.ObjectId | UserTypes;
   receiverId: Types.ObjectId | UserTypes;
   content: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | string;
+  updatedAt: Date | string;
 }
