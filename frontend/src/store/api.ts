@@ -2,7 +2,11 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setAuth } from "./reducers/AuthSlice";
 import { setUser } from "./reducers/UserSlice";
 import { setChats } from "./reducers/ChatSlice";
-import { appendMessage, setMessages } from "./reducers/MessageSlice";
+import {
+  appendMessage,
+  removeMessage,
+  setMessages,
+} from "./reducers/MessageSlice";
 import { toast } from "sonner";
 import { Draft } from "@reduxjs/toolkit";
 
@@ -123,8 +127,17 @@ export const api = createApi({
       // },
 
       // ✅
-      async onQueryStarted(newMessage, { dispatch }) {
+      async onQueryStarted(newMessage, { dispatch, queryFulfilled }) {
+        // add the new message to the store optimistically
         dispatch(appendMessage(newMessage));
+
+        try {
+          await queryFulfilled;
+        } catch (error) {
+          // if the API call fails, remove the message from the store
+          dispatch(removeMessage(newMessage));
+          toast.error("Failed to send message!");
+        }
       },
     }),
 

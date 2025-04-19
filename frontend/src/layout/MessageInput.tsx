@@ -44,7 +44,7 @@ export default function MessageInput() {
 
     // emit the message to the server for realtime communication
     if (socket?.connected) socket!.emit("message", newMessage);
-    else toast.error("WebSocket connection failed !");
+    else console.error("WebSocket connection failed !");
 
     // send message api call
     try {
