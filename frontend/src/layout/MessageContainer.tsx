@@ -1,11 +1,28 @@
 import MessageInput from "./MessageInput";
 import Welcome from "@/components/custom/Welcome";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { useEffect, useRef } from "react";
 import PageLoader from "@/partials/PageLoader";
+import { getSocket } from "@/Socket";
+import { setMessages } from "@/store/reducers/MessageSlice";
 
 export default function MessageContainer() {
+  const socket = getSocket();
+  const dispatch = useDispatch();
+
+  // socket listener for incoming realtime messages
+  socket?.on("realtime", (msg: MessageTypes) => {
+    dispatch(
+      setMessages({
+        messages: [...messagesData.messages, msg],
+        hasMore: false,
+        isMessagesLoading: false,
+      })
+    );
+  });
+
+  // fetching required data
   const loggedInUser = useSelector((state: StateTypes) => state.user);
   const activeChat = useSelector((state: StateTypes) => state.activeChat);
   const messagesData = useSelector((state: StateTypes) => state.messages);

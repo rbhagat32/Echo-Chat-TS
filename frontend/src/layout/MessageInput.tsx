@@ -1,22 +1,19 @@
 import { SidebarInput } from "@/components/ui/sidebar";
 import { getSocket } from "@/Socket";
 import { useSendMessageMutation } from "@/store/api";
-import { setMessages } from "@/store/reducers/MessageSlice";
 import { Send } from "lucide-react";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { v4 as uuid } from "uuid";
 
 export default function MessageInput() {
   const socket = getSocket();
-  const dispatch = useDispatch();
   const [sendMessage] = useSendMessageMutation();
 
   // fetching required data
   const loggedInUser = useSelector((state: StateTypes) => state.user);
   const activeChat = useSelector((state: StateTypes) => state.activeChat);
-  const messages = useSelector((state: StateTypes) => state.messages.messages);
 
   // extracting receiverId from activeChat
   const receiverId = activeChat.users.find(
@@ -54,17 +51,6 @@ export default function MessageInput() {
       console.error("Failed to send message:", error);
     }
   };
-
-  // socket listener for incoming realtime messages
-  socket?.on("realtime", (msg: MessageTypes) => {
-    dispatch(
-      setMessages({
-        messages: [...messages, msg],
-        hasMore: false,
-        isMessagesLoading: false,
-      })
-    );
-  });
 
   return (
     <div className="relative h-14">
