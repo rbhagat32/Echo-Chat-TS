@@ -1,7 +1,7 @@
 import { Separator } from "@/components/ui/separator";
 import MessageInput from "./MessageInput";
-import { useSelector } from "react-redux";
 import Welcome from "@/components/custom/Welcome";
+import { useSelector } from "react-redux";
 
 export default function MessageContainer() {
   const activeChat = useSelector((state: StateTypes) => state.activeChat);

@@ -4,6 +4,7 @@ import { setUser } from "./reducers/UserSlice";
 import { setChats } from "./reducers/ChatSlice";
 import { setMessages } from "./reducers/MessageSlice";
 import { toast } from "sonner";
+import { Draft } from "@reduxjs/toolkit";
 
 export const api = createApi({
   reducerPath: "api",
@@ -61,16 +62,20 @@ export const api = createApi({
         url: `chat/delete-chat/${chatId}`,
         method: "DELETE",
       }),
+      // Optimistically update chats in the cache
       async onQueryStarted(chatId, { dispatch, queryFulfilled }) {
-        // Optimistically update the cache
         const patchResult = dispatch(
           // update the cache for the "getChats" query
           // undefined means no arguments for "getChats" query
           // draft is the current state of the cache
           // remove the chat with the given chatId from the cache
-          api.util.updateQueryData("getChats", undefined, (draft: any) => {
-            return draft.filter((chat: any) => chat._id !== chatId);
-          })
+          api.util.updateQueryData(
+            "getChats",
+            undefined,
+            (draft: Draft<ChatTypes[]>) => {
+              return draft.filter((chat: ChatTypes) => chat._id !== chatId);
+            }
+          )
         );
 
         try {
