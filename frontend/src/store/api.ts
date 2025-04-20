@@ -27,7 +27,7 @@ export const api = createApi({
           const { data } = await queryFulfilled;
           dispatch(setAuth(data.isLoggedIn));
         } catch (error) {
-          toast.error("Failed to check login status. Please try again.");
+          toast.error("Failed to check login status !");
           console.error("Failed to check login:", error);
         }
       },
@@ -41,7 +41,7 @@ export const api = createApi({
           const { data } = await queryFulfilled;
           dispatch(setUser(data));
         } catch (error) {
-          toast.error("Failed to fetch user data. Please try again.");
+          toast.error("Failed to fetch user data !");
           console.error("Failed to fetch user:", error);
         }
       },
@@ -55,7 +55,7 @@ export const api = createApi({
           const { data } = await queryFulfilled;
           dispatch(setChats(data));
         } catch (error) {
-          toast.error("Failed to fetch chats. Please try again.");
+          toast.error("Failed to fetch chats !");
           console.error("Failed to fetch chats:", error);
         }
       },
@@ -86,7 +86,7 @@ export const api = createApi({
           await queryFulfilled; // wait for API call to finish
         } catch {
           patchResult.undo(); // rollback if API fails
-          toast.error("Failed to delete chat!");
+          toast.error("Failed to delete chat !");
         }
       },
     }),
@@ -122,7 +122,7 @@ export const api = createApi({
       //     await queryFulfilled;
       //   } catch {
       //     patchResult.undo();
-      //     toast.error("Failed to send message!");
+      //     toast.error("Failed to send message !");
       //   }
       // },
 
@@ -136,7 +136,7 @@ export const api = createApi({
         } catch (error) {
           // if the API call fails, remove the message from the store
           dispatch(removeMessage(newMessage));
-          toast.error("Failed to send message!");
+          toast.error("Failed to send message !");
         }
       },
     }),
@@ -156,7 +156,7 @@ export const api = createApi({
           const { data } = await queryFulfilled;
           dispatch(setMessages(data));
         } catch (error) {
-          toast.error("Failed to fetch messages. Please try again.");
+          toast.error("Failed to fetch messages !");
           console.error("Failed to fetch messages:", error);
         }
       },

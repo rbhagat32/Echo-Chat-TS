@@ -40,8 +40,7 @@ export default function MessageInput() {
     setInputMessage("");
 
     // emit the message to the server for realtime communication
-    if (socket?.connected) socket!.emit("message", newMessage);
-    else console.error("WebSocket connection failed !");
+    if (socket?.connected) socket.emit("message", newMessage);
 
     // send message api call
     try {

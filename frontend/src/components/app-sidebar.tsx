@@ -32,6 +32,7 @@ import {
   setMessagesLoading,
 } from "@/store/reducers/MessageSlice";
 import { Tooltip } from "./custom/Tooltip";
+import { getSocket } from "@/Socket";
 
 const navLinks: {
   name: string;
@@ -52,6 +53,8 @@ const navLinks: {
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const socket = getSocket();
+
   // Data Fetching hooks
   const userData = useGetUserQuery();
   const chatsData = useGetChatsQuery();
@@ -91,6 +94,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         dispatch(clearChats());
         dispatch(clearActiveChat());
         dispatch(clearMessages());
+
+        socket!.disconnect();
       })
       .catch((error) => {
         toast.error(error.response.data.message || "Failed to logout !");

@@ -8,10 +8,10 @@ import { getSocket } from "@/Socket";
 import { setMessages } from "@/store/reducers/MessageSlice";
 
 export default function MessageContainer() {
-  const socket = getSocket();
   const dispatch = useDispatch();
 
   // socket listener for incoming realtime messages
+  const socket = getSocket();
   socket?.on("realtime", (msg: MessageTypes) => {
     dispatch(
       setMessages({

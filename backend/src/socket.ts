@@ -35,19 +35,25 @@ io.use((socket, next) => {
 
 io.on("connection", (socket: AuthenticatedSocket) => {
   const user = socket.user as UserTypes;
-  userSocketsMap.set(user._id.toString(), socket.id);
+  const userId = user._id.toString();
 
-  socket.on("message", async (message) => {
+  userSocketsMap.set(userId, socket.id);
+
+  socket.on("message", (message) => {
     const receiverSocketId = userSocketsMap.get(message.receiverId.toString());
     if (receiverSocketId) {
       socket.to(receiverSocketId).emit("realtime", message);
+      console.log(
+        `Realtime message sent to ${message.receiverId} : ${message.content}`
+      );
     } else {
-      // console.log("Other User is not Online !");
+      console.log(`Other user: ${message.receiverId} is not online`);
     }
   });
 
-  socket.on("disconnect", () => {
-    userSocketsMap.delete(user._id.toString());
+  socket.on("disconnect", (reason) => {
+    console.log(`User ${user.username} disconnected: ${reason}`);
+    userSocketsMap.delete(userId);
   });
 });
 
