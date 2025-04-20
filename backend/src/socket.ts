@@ -51,8 +51,10 @@ io.on("connection", (socket: AuthenticatedSocket) => {
     }
   });
 
-  socket.on("disconnect", (reason) => {
-    console.log(`User: ${user.username}, Disconnected: ${reason}`);
+  // when socket.disconnect() is called on client side, this event is triggered
+  // reason for disconnect is received as a parameter is place of _
+  socket.on("disconnect", (_) => {
+    // console.log(`User: ${user.username}, Disconnected: ${reason}`);
     userSocketsMap.delete(userId);
   });
 });
