@@ -56,8 +56,8 @@ const getChats = async (req: RequestWithUser, res: Response) => {
 
     // Comparator - sort chats by latest message timestamp
     chats.sort((chat_a: PopulatesChatTypes, chat_b: PopulatesChatTypes) => {
-      const aTime = chat_a.messages[0]?.createdAt;
-      const bTime = chat_b.messages[0]?.createdAt;
+      const aTime = chat_a.messages[0]?.createdAt || new Date(0);
+      const bTime = chat_b.messages[0]?.createdAt || new Date(0);
       return new Date(bTime).getTime() - new Date(aTime).getTime();
     });
 
