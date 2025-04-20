@@ -85,7 +85,6 @@ function MessageInputComponent() {
       <SidebarInput
         name="message-input-box"
         type="text"
-        autoComplete="off"
         value={inputMessage}
         onChange={(e) => setInputMessage(e.target.value)}
         onKeyDown={(e) => {

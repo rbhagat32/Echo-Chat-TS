@@ -6,11 +6,12 @@ import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import Button from "../components/custom/Button";
 import CustomLink from "../components/custom/CustomLink";
-import Input from "../components/custom/Input";
+// import Input from "../components/custom/Input";
 import Spinner from "../partials/Spinner";
 import { api } from "../store/api";
 import { setAuth } from "../store/reducers/AuthSlice";
 import { axios } from "../utils/axios";
+import { Input } from "@/components/ui/input";
 
 interface LoginFormData {
   username: string;
@@ -133,11 +134,13 @@ const Login = () => {
             register={register("username")}
             type="text"
             placeholder="Username"
+            className="h-10"
           />
           <Input
             register={register("password")}
             type="password"
             placeholder="Password"
+            className="h-10"
           />
           <Button type="submit" width="w-full">
             {!loading ? "Sign In" : <Spinner />}

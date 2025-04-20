@@ -7,7 +7,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { SearchForm } from "@/components/search-form";
-import { Bell, House, LogOut, Settings, UserRoundPlus } from "lucide-react";
+import { LogOut, Settings } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { Skeleton } from "./ui/skeleton";
 import { api, useGetChatsQuery, useGetUserQuery } from "@/store/api";
@@ -29,24 +29,8 @@ import {
   clearLatestChats,
   removeLatestChat,
 } from "@/store/reducers/LatestChatSlice";
-
-const navLinks: {
-  name: string;
-  icon: React.JSX.Element;
-}[] = [
-  {
-    name: "Home",
-    icon: <House size="1rem" />,
-  },
-  {
-    name: "Add people",
-    icon: <UserRoundPlus size="1rem" />,
-  },
-  {
-    name: "Notifications",
-    icon: <Bell size="1rem" />,
-  },
-];
+import { Dialog } from "./custom/Dialog";
+import { navLinks, SettingsComponent } from "./data";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const socket = getSocket();
@@ -144,9 +128,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </div>
               <div>
                 <Tooltip text="Settings">
-                  <div className="hover:bg-zinc-700 rounded-sm p-1.5 duration-300">
-                    <Settings size="1rem" />
-                  </div>
+                  <Dialog component={<SettingsComponent />}>
+                    <div className="hover:bg-zinc-700 rounded-sm p-1.5 duration-300">
+                      <Settings size="1rem" />
+                    </div>
+                  </Dialog>
                 </Tooltip>
 
                 <Tooltip text="Logout">
@@ -171,15 +157,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
           {/* Navigation Links -> Home, Search, Notification */}
           <div className="flex flex-col gap-1">
-            {navLinks.map((item, index) => (
-              <button
-                key={index}
-                className="flex items-center rounded-md p-2 hover:bg-muted/50 duration-300"
-              >
-                <p className="mr-2">{item.icon}</p>
-                <p className="text-sm">{item.name}</p>
-              </button>
-            ))}
+            {navLinks.map((item, index) =>
+              !item.dialog ? (
+                <div
+                  key={index}
+                  onClick={item.onClick}
+                  className="cursor-pointer flex items-center rounded-md p-2 hover:bg-muted/50 duration-300"
+                >
+                  <p className="mr-2">{item.icon}</p>
+                  <p className="text-sm">{item.name}</p>
+                </div>
+              ) : (
+                <Dialog key={index} component={item.component}>
+                  <div className="cursor-pointer flex items-center rounded-md p-2 hover:bg-muted/50 duration-300">
+                    <p className="mr-2">{item.icon}</p>
+                    <p className="text-sm">{item.name}</p>
+                  </div>
+                </Dialog>
+              )
+            )}
           </div>
           <Separator className="mt-2" />
         </SidebarHeader>

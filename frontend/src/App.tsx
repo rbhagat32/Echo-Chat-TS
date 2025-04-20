@@ -10,7 +10,7 @@ export default function App() {
     <PageLoader fullScreen />
   ) : (
     <>
-      <Toaster richColors position="top-center" duration={2000} />
+      <Toaster richColors position="top-center" duration={5000} />
       <Routing isLoggedIn={data?.isLoggedIn!} />
     </>
   );

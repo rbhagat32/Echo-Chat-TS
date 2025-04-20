@@ -7,10 +7,10 @@ import {
 
 interface PropTypes {
   children: React.ReactNode;
-  text?: string;
+  text: string;
 }
 
-export function Tooltip({ children, text = "Tooltip" }: PropTypes) {
+export function Tooltip({ children, text }: PropTypes) {
   return (
     <TooltipProvider>
       <TooltipShadCN>

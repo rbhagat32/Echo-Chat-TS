@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import Button from "../components/custom/Button";
 import CustomLink from "../components/custom/CustomLink";
-import Input from "../components/custom/Input";
+import { Input } from "@/components/ui/input";
 import Spinner from "../partials/Spinner";
 import { api } from "../store/api";
 import { setAuth } from "../store/reducers/AuthSlice";
@@ -22,29 +22,35 @@ interface SignupFormData {
 const schema = yup.object().shape({
   username: yup
     .string()
-    .required("Username is required")
-    .min(4, "Username must be at least 4 characters")
-    .max(12, "Username must not exceed 12 characters"),
-  bio: yup.string().max(50, "Bio must not exceed 50 characters").optional(),
+    .required("Username is required !")
+    .min(4, "Username must be at least 4 characters !")
+    .max(12, "Username must not exceed 12 characters !"),
+  bio: yup.string().max(50, "Bio must not exceed 50 characters !").optional(),
   password: yup
     .string()
-    .required("Password is required")
-    .min(6, "Password must be at least 6 characters")
-    .max(16, "Password must not exceed 16 characters")
+    .required("Password is required !")
+    .min(6, "Password must be at least 6 characters !")
+    .max(16, "Password must not exceed 16 characters !")
     .matches(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/,
-      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character !"
     ),
   avatar: yup
     .mixed<FileList>()
-    .test("fileSize", "Avatar must be less than 5MB", (value) => {
+    .test(
+      "fileType",
+      "Only jpg, jpeg, png and webp images are accepted !",
+      (value) => {
+        return value && value.length > 0
+          ? ["image/jpg", "image/jpeg", "image/png", "image/webp"].includes(
+              value[0].type
+            )
+          : true;
+      }
+    )
+    .test("fileSize", "Avatar must be less than 5MB !", (value) => {
       return value && value.length > 0
         ? value[0].size <= 5 * 1024 * 1024
-        : true;
-    })
-    .test("fileType", "Only images are allowed", (value) => {
-      return value && value.length > 0
-        ? ["image/jpeg", "image/png", "image/webp"].includes(value[0].type)
         : true;
     })
     .optional(),
@@ -67,7 +73,7 @@ const SignUp = () => {
     mode: "onSubmit",
   });
 
-  // Handle error messages for invalid inputs
+  // toast error messages for invalid inputs
   useEffect(() => {
     if (errors.username) {
       toast.error(errors.username.message);
@@ -75,6 +81,8 @@ const SignUp = () => {
       toast.error(errors.bio.message);
     } else if (errors.password) {
       toast.error(errors.password.message);
+    } else if (errors.avatar) {
+      toast.error(errors.avatar.message);
     }
   }, [errors]);
 
@@ -84,8 +92,8 @@ const SignUp = () => {
       await axios.post(
         "/auth/signup",
         { ...data, avatar: data.avatar ? data.avatar[0] : undefined },
+        // headers are required for image upload
         { headers: { "Content-Type": "multipart/form-data" } }
-        // headers required for image upload
       );
 
       reset();
@@ -133,23 +141,27 @@ const SignUp = () => {
             register={register("username")}
             type="text"
             placeholder="Username"
+            className="h-10"
           />
-          <textarea
-            {...register("bio")}
+          <Input
+            register={register("bio")}
+            type="text"
             placeholder="Bio (max 50 characters)"
-            className="resize-none min-h-28 px-4 py-3 rounded-lg bg-zinc-800 text-white outline-none focus:ring focus:border-indigo-500 placeholder:text-white placeholder:font-semibold"
+            className="h-10"
           />
           <Input
             register={register("password")}
             type="password"
             placeholder="Password"
+            className="h-10"
           />
-          <input
-            {...register("avatar")}
+          <Input
+            register={register("avatar")}
             multiple={false}
             type="file"
-            accept="image/*"
-            className="px-4 py-3 rounded-lg bg-zinc-800 text-white outline-none focus:ring focus:border-indigo-500 placeholder:text-white placeholder:font-semibold"
+            accept=".jpg, .jpeg, .png, .webp"
+            placeholder="Password"
+            className="h-10"
           />
           <Button type="submit" width="w-full">
             {!loading ? "Sign Up" : <Spinner />}
