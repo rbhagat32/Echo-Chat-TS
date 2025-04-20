@@ -11,6 +11,7 @@ const Input = ({ type, placeholder, register }: InputProps) => {
     <input
       {...register}
       type={type}
+      autoComplete="off"
       placeholder={placeholder}
       className="px-4 py-3 rounded-lg bg-zinc-800 text-white outline-none focus:ring focus:border-indigo-500 placeholder:text-white placeholder:font-semibold"
     />
