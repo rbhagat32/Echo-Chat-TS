@@ -55,8 +55,6 @@ function MessageInputComponent() {
   };
 
   // socket listener for realtime messages
-  // on cleanup, remove the listener to prevent memory leaks
-
   useEffect(() => {
     const handleRealtimeMessage = (msg: MessageTypes) => {
       // check if the message belongs to the active chat
@@ -75,6 +73,7 @@ function MessageInputComponent() {
     socket?.on("realtime", handleRealtimeMessage);
 
     return () => {
+      // on cleanup, remove the socket listener
       socket?.off("realtime", handleRealtimeMessage);
     };
 
