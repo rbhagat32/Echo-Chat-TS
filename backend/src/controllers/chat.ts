@@ -11,10 +11,18 @@ const getChats = async (req: RequestWithUser, res: Response) => {
   try {
     const user = await userModel.findById(userId).populate({
       path: "chats",
-      select: "-messages",
-      populate: {
-        path: "users", // Populate the users inside each chat
-      },
+      populate: [
+        {
+          // Populate the users inside each chat
+          path: "users",
+        },
+        {
+          // Populate the messages inside each chat
+          path: "messages",
+          // sort messages by createdAt in descending order and populate only the latest message
+          options: { sort: { createdAt: -1 }, limit: 1 },
+        },
+      ],
     });
 
     if (!user) {
@@ -31,8 +39,31 @@ const getChats = async (req: RequestWithUser, res: Response) => {
       return chat;
     });
 
+    type PopulatesChatTypes = {
+      _id: string;
+      user: UserTypes;
+      // messages array will contain only 1 latest message
+      messages: {
+        _id: string;
+        chatId: string;
+        senderId: string;
+        receiverId: string;
+        content: string;
+        createdAt: Date;
+        updatedAt: Date;
+      }[];
+    };
+
+    // Comparator - sort chats by latest message timestamp
+    chats.sort((chat_a: PopulatesChatTypes, chat_b: PopulatesChatTypes) => {
+      const aTime = chat_a.messages[0].createdAt;
+      const bTime = chat_b.messages[0].createdAt;
+      return new Date(bTime).getTime() - new Date(aTime).getTime();
+    });
+
     return res.status(200).json(chats);
   } catch (error) {
+    console.error(error);
     return res.status(500).json({ message: "Internal server error!" });
   }
 };
