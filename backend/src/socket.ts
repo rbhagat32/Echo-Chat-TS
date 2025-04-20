@@ -43,16 +43,16 @@ io.on("connection", (socket: AuthenticatedSocket) => {
     const receiverSocketId = userSocketsMap.get(message.receiverId.toString());
     if (receiverSocketId) {
       socket.to(receiverSocketId).emit("realtime", message);
-      console.log(
-        `Realtime message sent to ${message.receiverId} : ${message.content}`
-      );
+      // console.log(
+      //   `Realtime message sent to ${message.receiverId}: ${message.content}`
+      // );
     } else {
-      console.log(`Other user: ${message.receiverId} is not online`);
+      // console.log(`Other user: ${message.receiverId} is not online`);
     }
   });
 
   socket.on("disconnect", (reason) => {
-    console.log(`User ${user.username} disconnected: ${reason}`);
+    console.log(`User: ${user.username}, Disconnected: ${reason}`);
     userSocketsMap.delete(userId);
   });
 });

@@ -33,7 +33,6 @@ interface ChatTypes {
 interface MessageStateTypes {
   messages: MessageTypes[];
   hasMore: boolean;
-  isMessagesLoading: boolean;
 }
 
 interface MessageTypes {

@@ -4,28 +4,34 @@ import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { useEffect, useRef } from "react";
 import PageLoader from "@/partials/PageLoader";
-import { getSocket } from "@/Socket";
-import { setMessages } from "@/store/reducers/MessageSlice";
+import { useLazyGetMessagesQuery } from "@/store/api";
+import { clearMessages } from "@/store/reducers/MessageSlice";
 
 export default function MessageContainer() {
   const dispatch = useDispatch();
 
-  // socket listener for incoming realtime messages
-  const socket = getSocket();
-  socket?.on("realtime", (msg: MessageTypes) => {
-    dispatch(
-      setMessages({
-        messages: [...messagesData.messages, msg],
-        hasMore: false,
-        isMessagesLoading: false,
-      })
-    );
-  });
-
-  // fetching required data
+  // fetching required data from redux store
   const loggedInUser = useSelector((state: StateTypes) => state.user);
   const activeChat = useSelector((state: StateTypes) => state.activeChat);
   const messagesData = useSelector((state: StateTypes) => state.messages);
+
+  // fetching messages for the active chat
+  const [trigger, state] = useLazyGetMessagesQuery();
+  useEffect(() => {
+    if (activeChat._id === undefined) return;
+    const fetchMessages = async () => {
+      try {
+        await trigger({ chatId: activeChat._id });
+      } catch (error) {
+        console.error("Failed to fetch messages:", error);
+      }
+    };
+    fetchMessages();
+    return () => {
+      // clear messages from redux store when activeChat is changed
+      dispatch(clearMessages());
+    };
+  }, [activeChat]);
 
   // Scroll to bottom when messages are displayed
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -55,7 +61,7 @@ export default function MessageContainer() {
             <Welcome />
           </div>
         ) : // if some chat is selected, check if messages are loading or not
-        messagesData.isMessagesLoading ? (
+        state.isFetching ? (
           // if messages are loading show PageLoader
           <PageLoader fullScreen={false} />
         ) : // else check no. of messages

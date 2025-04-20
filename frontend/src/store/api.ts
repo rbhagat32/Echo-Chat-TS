@@ -112,7 +112,6 @@ export const api = createApi({
       //       (draft: Draft<MessageStateTypes>) => {
       //         draft.messages.push(newMessage);
       //         draft.hasMore = false;
-      //         draft.isMessagesLoading = false;
       //         return draft;
       //       }
       //     )

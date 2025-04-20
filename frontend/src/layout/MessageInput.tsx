@@ -1,13 +1,15 @@
+import { memo, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
+import { v4 as uuid } from "uuid";
+import { Send } from "lucide-react";
 import { SidebarInput } from "@/components/ui/sidebar";
 import { getSocket } from "@/Socket";
 import { useSendMessageMutation } from "@/store/api";
-import { Send } from "lucide-react";
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { toast } from "sonner";
-import { v4 as uuid } from "uuid";
+import { appendMessage } from "@/store/reducers/MessageSlice";
 
-export default function MessageInput() {
+function MessageInputComponent() {
+  const dispatch = useDispatch();
   const socket = getSocket();
   const [sendMessage] = useSendMessageMutation();
 
@@ -51,6 +53,25 @@ export default function MessageInput() {
     }
   };
 
+  useEffect(() => {
+    const handleRealtimeMessage = (msg: MessageTypes) => {
+      console.log("Realtime message received:", msg);
+      console.log("Active chat:", activeChat);
+      if (msg.senderId === activeChat.users[0]._id) {
+        console.log("Message belongs to active chat, appending to messages.");
+        dispatch(appendMessage(msg));
+      } else {
+        console.log("Message does not belong to active chat, ignoring.");
+      }
+    };
+
+    socket?.on("realtime", handleRealtimeMessage);
+
+    return () => {
+      socket?.off("realtime", handleRealtimeMessage);
+    };
+  }, [activeChat, socket, dispatch]);
+
   return (
     <div className="relative h-14">
       <SidebarInput
@@ -76,3 +97,6 @@ export default function MessageInput() {
     </div>
   );
 }
+
+const MessageInput = memo(MessageInputComponent);
+export default MessageInput;

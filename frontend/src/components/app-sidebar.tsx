@@ -10,12 +10,7 @@ import { SearchForm } from "@/components/search-form";
 import { Bell, House, LogOut, Settings, UserRoundPlus } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { Skeleton } from "./ui/skeleton";
-import {
-  api,
-  useGetChatsQuery,
-  useGetUserQuery,
-  useLazyGetMessagesQuery,
-} from "@/store/api";
+import { api, useGetChatsQuery, useGetUserQuery } from "@/store/api";
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearActiveChat,
@@ -27,10 +22,7 @@ import { toast } from "sonner";
 import { setAuth } from "@/store/reducers/AuthSlice";
 import { clearChats } from "@/store/reducers/ChatSlice";
 import { clearUser } from "@/store/reducers/UserSlice";
-import {
-  clearMessages,
-  setMessagesLoading,
-} from "@/store/reducers/MessageSlice";
+import { clearMessages } from "@/store/reducers/MessageSlice";
 import { Tooltip } from "./custom/Tooltip";
 import { getSocket } from "@/Socket";
 
@@ -59,7 +51,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const userData = useGetUserQuery();
   const chatsData = useGetChatsQuery();
   const activeChat = useSelector((state: StateTypes) => state.activeChat);
-  const [trigger] = useLazyGetMessagesQuery();
 
   // Destructure data and loading state
   const user = userData.data;
@@ -69,17 +60,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   // Set active chat into redux store and fetch messages for that chat
   const dispatch = useDispatch();
   const handleOpenChat = async (chat: ChatTypes) => {
-    if (chat._id !== activeChat._id) {
-      dispatch(setActiveChat(chat));
-      // fetch messages when chat is opened
-      try {
-        dispatch(setMessagesLoading(true));
-        await trigger({ chatId: chat._id });
-        dispatch(setMessagesLoading(false));
-      } catch (error) {
-        console.error("Failed to fetch messages:", error);
-      }
-    }
+    if (chat._id !== activeChat._id) dispatch(setActiveChat(chat));
   };
 
   // Logout function
