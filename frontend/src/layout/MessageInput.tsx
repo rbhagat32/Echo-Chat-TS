@@ -90,7 +90,7 @@ function MessageInputComponent() {
           }
         }}
         placeholder="Type your message here..."
-        className="h-14 rounded-t-none rounded-b-xl"
+        className="h-14 rounded-t-none rounded-b-xl pr-16 break-words"
       />
 
       <button

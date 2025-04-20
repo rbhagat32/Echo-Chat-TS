@@ -84,10 +84,11 @@ export default function MessageContainer() {
               >
                 <div
                   className={
-                    "max-w-[85%] md:max-w-[70%] lg:max-w-[60%] text-sm px-4 py-2 rounded-md bg-zinc-800"
+                    "max-w-[40ch] md:max-w-[50ch] lg:max-w-[80ch] xl:max-w-[100ch] text-sm px-4 py-2 rounded-md bg-zinc-800"
                   }
                 >
-                  <p>{message.content}</p>
+                  {/* break-words ensures long messages don't overflow out of div */}
+                  <p className="break-words">{message.content}</p>
                   <p
                     className={`text-[10px] text-zinc-500 flex gap-1 items-center mt-1 ${
                       loggedInUser._id === message.senderId
