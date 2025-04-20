@@ -3,8 +3,9 @@ import { api } from "./api";
 import { AuthSlice } from "./reducers/AuthSlice";
 import { UserSlice } from "./reducers/UserSlice";
 import { ChatSlice } from "./reducers/ChatSlice";
-import { MessageSlice } from "./reducers/MessageSlice";
 import { ActiveChatSlice } from "./reducers/ActiveChatSlice";
+import { LatestChatSlice } from "./reducers/LatestChatSlice";
+import { MessageSlice } from "./reducers/MessageSlice";
 // import { SearchSlice } from "./reducers/SearchSlice";
 
 export const store = configureStore({
@@ -13,8 +14,9 @@ export const store = configureStore({
     [AuthSlice.name]: AuthSlice.reducer,
     [UserSlice.name]: UserSlice.reducer,
     [ChatSlice.name]: ChatSlice.reducer,
-    [MessageSlice.name]: MessageSlice.reducer,
     [ActiveChatSlice.name]: ActiveChatSlice.reducer,
+    [LatestChatSlice.name]: LatestChatSlice.reducer,
+    [MessageSlice.name]: MessageSlice.reducer,
     // [SearchSlice.name]: SearchSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

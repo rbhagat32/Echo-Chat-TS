@@ -7,6 +7,7 @@ import { SidebarInput } from "@/components/ui/sidebar";
 import { getSocket } from "@/Socket";
 import { useSendMessageMutation } from "@/store/api";
 import { appendMessage } from "@/store/reducers/MessageSlice";
+import { appendLatestChat } from "@/store/reducers/LatestChatSlice";
 
 function MessageInputComponent() {
   const dispatch = useDispatch();
@@ -16,6 +17,7 @@ function MessageInputComponent() {
   // fetching required data
   const loggedInUser = useSelector((state: StateTypes) => state.user);
   const activeChat = useSelector((state: StateTypes) => state.activeChat);
+  const chats = useSelector((state: StateTypes) => state.chats);
 
   // extracting receiverId from activeChat
   const receiverId = activeChat.users.find(
@@ -57,13 +59,16 @@ function MessageInputComponent() {
 
   useEffect(() => {
     const handleRealtimeMessage = (msg: MessageTypes) => {
-      console.log("Realtime message received:", msg);
-      console.log("Active chat:", activeChat);
+      // check if the message belongs to the active chat
       if (msg.senderId === activeChat.users[0]._id) {
-        console.log("Message belongs to active chat, appending to messages.");
         dispatch(appendMessage(msg));
       } else {
-        console.log("Message does not belong to active chat, ignoring.");
+        // if the message does not belong to the active chat, append it to the latest chats
+        chats.forEach((chat: ChatTypes) => {
+          if (chat._id === msg.chatId) {
+            dispatch(appendLatestChat(chat));
+          }
+        });
       }
     };
 

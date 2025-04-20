@@ -5,6 +5,7 @@ interface StateTypes {
   user: UserTypes;
   chats: ChatTypes[];
   activeChat: ChatTypes;
+  latestChats: ChatTypes[];
   messages: MessageStateTypes;
   // searchedUsers: UserTypes[];
 }

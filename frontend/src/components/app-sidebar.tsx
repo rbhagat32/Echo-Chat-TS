@@ -25,6 +25,10 @@ import { clearUser } from "@/store/reducers/UserSlice";
 import { clearMessages } from "@/store/reducers/MessageSlice";
 import { Tooltip } from "./custom/Tooltip";
 import { getSocket } from "@/Socket";
+import {
+  clearLatestChats,
+  removeLatestChat,
+} from "@/store/reducers/LatestChatSlice";
 
 const navLinks: {
   name: string;
@@ -46,21 +50,25 @@ const navLinks: {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const socket = getSocket();
+  const dispatch = useDispatch();
 
   // Data Fetching hooks
   const userData = useGetUserQuery();
   const chatsData = useGetChatsQuery();
   const activeChat = useSelector((state: StateTypes) => state.activeChat);
+  const latestChats = useSelector((state: StateTypes) => state.latestChats);
 
   // Destructure data and loading state
   const user = userData.data;
   const chats = chatsData.data;
   const isLoading = userData.isLoading || chatsData.isLoading;
 
-  // Set active chat into redux store and fetch messages for that chat
-  const dispatch = useDispatch();
   const handleOpenChat = async (chat: ChatTypes) => {
+    // set active chat if that chat is not already active
     if (chat._id !== activeChat._id) dispatch(setActiveChat(chat));
+
+    // remove all instances of the clicked chat from latest chats
+    dispatch(removeLatestChat(chat));
   };
 
   // Logout function
@@ -74,6 +82,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         dispatch(clearUser());
         dispatch(clearChats());
         dispatch(clearActiveChat());
+        dispatch(clearLatestChats());
         dispatch(clearMessages());
 
         socket!.disconnect();
@@ -193,22 +202,48 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 No chats found.
               </div>
             ) : (
-              filteredChats?.map((chat, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleOpenChat(chat)}
-                  className="w-full flex items-center rounded-md p-2 hover:bg-muted/50 duration-300"
-                >
-                  <div className="shrink-0 size-8 rounded-full overflow-hidden">
-                    <img
-                      src={chat.users[0].avatar.url || "/placeholder.jpeg"}
-                      alt="Chat Profile Picture"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <p className="ml-2 text-sm">{chat.users[0].username}</p>
-                </button>
-              ))
+              filteredChats?.map((chat: ChatTypes, index: number) => {
+                // check if chat is present in latest chats array
+                const isLatest =
+                  latestChats?.some(
+                    (latestChat) =>
+                      latestChat._id === chat._id &&
+                      latestChat._id !== activeChat._id
+                  ) || false;
+
+                // count the no. of times chat is present in latest chats array
+                const count =
+                  latestChats?.filter(
+                    (latestChat) => latestChat._id === chat._id
+                  ).length || 0;
+
+                return (
+                  <button
+                    key={index}
+                    onClick={() => handleOpenChat(chat)}
+                    className="w-full flex justify-between items-center rounded-md p-2 hover:bg-muted/50 duration-300"
+                  >
+                    <div className="flex items-center">
+                      <div className="relative shrink-0 size-8 rounded-full overflow-hidden">
+                        <img
+                          src={chat.users[0].avatar.url || "/placeholder.jpeg"}
+                          alt="Chat Profile Picture"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <p className="ml-2 text-sm">{chat.users[0].username}</p>
+                    </div>
+
+                    {isLatest && (
+                      <div className="rounded-full size-5 bg-green-400">
+                        <p className="text-sm text-black font-bold">
+                          {count > 0 && count}
+                        </p>
+                      </div>
+                    )}
+                  </button>
+                );
+              })
             )}
           </div>
         )}
