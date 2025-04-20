@@ -16,7 +16,7 @@ export default function MessageContainer() {
   const messagesData = useSelector((state: StateTypes) => state.messages);
 
   // fetching messages for the active chat
-  const [trigger, state] = useLazyGetMessagesQuery();
+  const [trigger, remainingData] = useLazyGetMessagesQuery();
   useEffect(() => {
     if (activeChat._id === undefined) return;
     const fetchMessages = async () => {
@@ -61,7 +61,7 @@ export default function MessageContainer() {
             <Welcome />
           </div>
         ) : // if some chat is selected, check if messages are loading or not
-        state.isFetching ? (
+        remainingData.isFetching ? (
           // if messages are loading show PageLoader
           <PageLoader fullScreen={false} />
         ) : // else check no. of messages

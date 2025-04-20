@@ -24,7 +24,6 @@ function MessageInputComponent() {
 
   // send message functionality
   const [inputMessage, setInputMessage] = useState<string>("");
-
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return toast.error("Message cannot be empty !");
 
@@ -42,7 +41,7 @@ function MessageInputComponent() {
     setInputMessage("");
 
     // emit the message to the server for realtime communication
-    if (socket?.connected) socket.emit("message", newMessage);
+    socket?.emit("message", newMessage);
 
     // send message api call
     try {
@@ -52,6 +51,9 @@ function MessageInputComponent() {
       console.error("Failed to send message:", error);
     }
   };
+
+  // socket listener for realtime messages
+  // on cleanup, remove the listener to prevent memory leaks
 
   useEffect(() => {
     const handleRealtimeMessage = (msg: MessageTypes) => {
@@ -70,6 +72,8 @@ function MessageInputComponent() {
     return () => {
       socket?.off("realtime", handleRealtimeMessage);
     };
+
+    // re-render when activeChat changes so that we can append the messages to the correct chat
   }, [activeChat, socket, dispatch]);
 
   return (
@@ -98,5 +102,6 @@ function MessageInputComponent() {
   );
 }
 
+// Memoizing the component to prevent unnecessary re-renders
 const MessageInput = memo(MessageInputComponent);
 export default MessageInput;
