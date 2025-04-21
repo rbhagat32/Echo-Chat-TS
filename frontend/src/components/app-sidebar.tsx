@@ -10,7 +10,12 @@ import { SearchForm } from "@/components/search-form";
 import { LogOut, Settings } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { Skeleton } from "./ui/skeleton";
-import { api, useGetChatsQuery, useGetUserQuery } from "@/store/api";
+import {
+  api,
+  useGetChatsQuery,
+  useGetRequestsQuery,
+  useGetUserQuery,
+} from "@/store/api";
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearActiveChat,
@@ -32,6 +37,7 @@ import {
 import { Dialog } from "./custom/Dialog";
 import { SettingsComponent } from "./sidebar/Settings";
 import { useNavLinks } from "@/hooks/useNavLinks";
+import { appendRequest, clearRequests } from "@/store/reducers/RequestsSlice";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const socket = getSocket();
@@ -43,6 +49,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const chatsData = useGetChatsQuery();
   const activeChat = useSelector((state: StateTypes) => state.activeChat);
   const latestChats = useSelector((state: StateTypes) => state.latestChats);
+  const requests = useSelector((state: StateTypes) => state.requests);
+  useGetRequestsQuery();
 
   // Destructure data and loading state
   const user = userData.data;
@@ -73,6 +81,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         dispatch(clearActiveChat());
         dispatch(clearLatestChats());
         dispatch(clearMessages());
+        dispatch(clearRequests());
 
         socket!.disconnect();
       })
@@ -102,6 +111,45 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     }
   };
 
+  // socket listener for realtime request
+  React.useEffect(() => {
+    socket?.on("realtimeRequest", (user: UserTypes) => {
+      // append this user to requests in redux store
+      dispatch(appendRequest(user));
+    });
+
+    socket?.on("realtimeDeleteChat", (user: UserTypes) => {
+      toast.warning(`${user.username} deleted the chat !`, {
+        description: "Refetching chats in 3..2..1..",
+      });
+
+      setTimeout(() => {
+        dispatch(api.util.invalidateTags(["User", "Chats"]));
+      }, 5000);
+    });
+
+    socket?.on("realtimeAccept", (user: UserTypes) => {
+      toast.success(`${user.username} accepted your request !`, {
+        description: "Refetching chats in 3..2..1..",
+      });
+
+      setTimeout(() => {
+        dispatch(api.util.invalidateTags(["User", "Chats"]));
+      }, 5000);
+    });
+
+    socket?.on("realtimeReject", (user: UserTypes) => {
+      toast.warning(`${user.username} rejected your request !`);
+    });
+
+    return () => {
+      socket?.off("realtimeRequest");
+      socket?.off("realtimeDeleteChat");
+      socket?.off("realtimeAccept");
+      socket?.off("realtimeReject");
+    };
+  }, [socket, user, chats]);
+
   return (
     <Sidebar {...props}>
       {/* Sidebar Header -> User info + Search chats + Navigation links */}
@@ -109,7 +157,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <div className="px-2 py-3.5 flex flex-col gap-1.5">
           <Skeleton className="h-14" />
           {[...Array(4)].map((_, index) => (
-            <Skeleton key={index} className="h-8" />
+            <Skeleton key={index} className="h-10" />
           ))}
           <Separator className="mt-2" />
         </div>
@@ -167,16 +215,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <div
                   key={index}
                   onClick={item.onClick}
-                  className="cursor-pointer flex items-center rounded-md p-2 hover:bg-muted/50 duration-300"
+                  className="cursor-pointer flex items-center rounded-md p-3 hover:bg-muted/50 duration-300"
                 >
                   <p className="mr-2">{item.icon}</p>
                   <p className="text-sm">{item.name}</p>
                 </div>
               ) : (
                 <Dialog key={index} component={item.component}>
-                  <div className="cursor-pointer flex items-center rounded-md p-2 hover:bg-muted/50 duration-300">
-                    <p className="mr-2">{item.icon}</p>
-                    <p className="text-sm">{item.name}</p>
+                  <div className="cursor-pointer flex justify-between items-center rounded-md p-3 hover:bg-muted/50 duration-300">
+                    <div className="flex items-center">
+                      <p className="mr-2">{item.icon}</p>
+                      <p className="text-sm">{item.name}</p>
+                    </div>
+                    {requests.length > 0 && item.name === "Requests" && (
+                      <div className="flex items-center gap-1">
+                        <div className="size-1.5 rounded-full bg-green-500 mt-0.5" />
+                        <p className="text-xs text-zinc-600">new</p>
+                      </div>
+                    )}
                   </div>
                 </Dialog>
               )
@@ -233,14 +289,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
                     {isLatest && (
                       <div className="flex items-center gap-1">
-                        <div
-                          // style={{
-                          //   backgroundColor: "oklch(78.5% 0.115 274.713)",
-                          //   boxShadow:
-                          //     "0 0 2px 1px oklch(78.5% 0.115 274.713), 0 0 6px 0px oklch(78.5% 0.115 274.713)",
-                          // }}
-                          className="size-1.5 rounded-full bg-green-500 mt-0.5"
-                        />
+                        <div className="size-1.5 rounded-full bg-green-500 mt-0.5" />
                         <p className="text-xs text-zinc-600">new</p>
                       </div>
                     )}

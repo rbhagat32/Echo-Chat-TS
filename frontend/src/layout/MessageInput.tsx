@@ -46,12 +46,7 @@ function MessageInputComponent() {
     socket?.emit("message", newMessage);
 
     // send message api call
-    try {
-      sendMessage(newMessage);
-    } catch (error) {
-      toast.error("Failed to send message !");
-      console.error("Failed to send message:", error);
-    }
+    sendMessage(newMessage);
   };
 
   // socket listener for realtime messages

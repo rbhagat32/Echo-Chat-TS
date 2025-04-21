@@ -18,8 +18,10 @@ import useDebounce from "@/hooks/useDebounce";
 import PageLoader from "@/partials/PageLoader";
 import { Tooltip } from ".././custom/Tooltip";
 import { useDispatch, useSelector } from "react-redux";
+import { getSocket } from "@/Socket";
 
 export const AddPeopleComponent = () => {
+  const socket = getSocket();
   const dispatch = useDispatch();
   const loggedInUser = useSelector((state: StateTypes) => state.user);
 
@@ -30,6 +32,9 @@ export const AddPeopleComponent = () => {
 
   // trigger search when debouncedQuery changes
   useEffect(() => {
+    // refetch user data on initial render and when search query changes so that the latest requests data is available
+    dispatch(api.util.invalidateTags(["User", "Chats"]));
+
     const handleSearch = () => {
       if (debouncedQuery.length > 0) {
         trigger(debouncedQuery);
@@ -38,9 +43,6 @@ export const AddPeopleComponent = () => {
       }
     };
     handleSearch();
-
-    // refetch user data on initial render and when search query changes so that the latest requests data is available
-    dispatch(api.util.invalidateTags(["User"]));
   }, [debouncedQuery]);
 
   // send request functionality
@@ -69,7 +71,9 @@ export const AddPeopleComponent = () => {
         ) : // if nothing is typed in search bar
         debouncedQuery.length == 0 ? (
           <div className="w-full text-center text-zinc-500 text-sm">
-            <h1 className="font-semibold">Search for users to send request.</h1>
+            <h1 className="font-semibold">
+              Search for users to send request !
+            </h1>
             <p className="text-zinc-600">
               Type a username in the search bar above.
             </p>
@@ -77,7 +81,7 @@ export const AddPeopleComponent = () => {
         ) : // if no users are found
         remainingData?.data?.length == 0 ? (
           <div className="w-full text-center text-zinc-500 text-sm">
-            <h1 className="font-semibold">No users found.</h1>
+            <h1 className="font-semibold">No users found !</h1>
             <p className="text-zinc-600">
               Try searching for a different username.
             </p>
@@ -119,6 +123,7 @@ export const AddPeopleComponent = () => {
                       <Tooltip text="Reject request">
                         <div
                           onClick={() => {
+                            socket?.emit("reject", loggedInUser, user);
                             respondRequest({
                               userId: user._id,
                               response: "reject",
@@ -134,6 +139,7 @@ export const AddPeopleComponent = () => {
                       <Tooltip text="Accept request">
                         <div
                           onClick={() => {
+                            socket?.emit("accept", loggedInUser, user);
                             respondRequest({
                               userId: user._id,
                               response: "accept",
@@ -157,14 +163,18 @@ export const AddPeopleComponent = () => {
                     // else you can send request
                     <Tooltip text="Send request">
                       <div
-                        onClick={() =>
+                        onClick={() => {
+                          // for realtime notification
+                          socket?.emit("request", loggedInUser, user);
+
+                          // for api request
                           sendRequest({
                             userId: user._id,
                             loggedInUserId: loggedInUser._id,
                             // original debouncedQuery is reqd as argument for "searchUser" query
                             debouncedQuery: debouncedQuery,
-                          })
-                        }
+                          });
+                        }}
                         className="hover:bg-zinc-700 rounded-sm p-2 duration-300"
                       >
                         <UserRoundPlus size="1rem" />

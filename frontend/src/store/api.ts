@@ -9,6 +9,7 @@ import {
 } from "./reducers/MessageSlice";
 import { toast } from "sonner";
 import { Draft } from "@reduxjs/toolkit";
+import { setRequests } from "./reducers/RequestsSlice";
 
 export const api = createApi({
   reducerPath: "api",
@@ -242,6 +243,15 @@ export const api = createApi({
     getRequests: builder.query<UserTypes[], void>({
       query: () => `user/get-requests`,
       providesTags: ["Requests"],
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setRequests(data));
+        } catch (error) {
+          toast.error("Failed to fetch requests !");
+          console.error("Failed to fetch requests:", error);
+        }
+      },
     }),
   }),
 });

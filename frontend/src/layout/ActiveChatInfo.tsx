@@ -6,15 +6,22 @@ import { useDeleteChatMutation } from "@/store/api";
 import { clearActiveChat } from "@/store/reducers/ActiveChatSlice";
 import { clearMessages } from "@/store/reducers/MessageSlice";
 import { Tooltip } from "@/components/custom/Tooltip";
+import { getSocket } from "@/Socket";
 
 export default function ActiveChatInfo() {
+  const socket = getSocket();
+  const dispatch = useDispatch();
+
   // fetch active chat from store
+  const loggedInUser = useSelector((state: StateTypes) => state.user);
   const activeChat = useSelector((state: StateTypes) => state.activeChat);
 
   // delete chat + clear active chat and messages from store
-  const dispatch = useDispatch();
   const [deleteChat] = useDeleteChatMutation();
   const handleDeleteChat = () => {
+    // for real time notification
+    socket?.emit("deleteChat", loggedInUser, activeChat.users[0]);
+
     try {
       deleteChat(activeChat._id);
       toast.success("Chat deleted successfully.");

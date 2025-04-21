@@ -7,6 +7,7 @@ interface StateTypes {
   activeChat: ChatTypes;
   latestChats: ChatTypes[];
   messages: MessageStateTypes;
+  requests: UserTypes[];
 }
 
 interface UserTypes {
