@@ -110,14 +110,6 @@
   --sidebar-ring: oklch(0.552 0.016 285.938);
 }
 
-::-webkit-scrollbar {
-  width: 0px;
-}
-
-button {
-  @apply cursor-pointer;
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -125,4 +117,17 @@ button {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* custom css */
+* {
+  user-select: none;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+button {
+  @apply cursor-pointer;
 }
