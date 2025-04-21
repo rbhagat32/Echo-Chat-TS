@@ -6,8 +6,8 @@ const AddPeopleComponent = () => {
   return <div>Add People</div>;
 };
 
-const NotificationComponent = () => {
-  return <div>Notifications</div>;
+const RequestsComponent = () => {
+  return <div>Requests</div>;
 };
 
-export { SettingsComponent, AddPeopleComponent, NotificationComponent };
+export { SettingsComponent, AddPeopleComponent, RequestsComponent };

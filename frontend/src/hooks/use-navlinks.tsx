@@ -1,11 +1,11 @@
 import * as React from "react";
-import { Bell, House, UserRoundPlus } from "lucide-react";
+import { BellPlus, House, UserRoundPlus } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { clearActiveChat } from "@/store/reducers/ActiveChatSlice";
 import { clearMessages } from "@/store/reducers/MessageSlice";
 import {
   AddPeopleComponent,
-  NotificationComponent,
+  RequestsComponent,
 } from "@/components/sidebar-components";
 
 interface NavLink {
@@ -36,10 +36,10 @@ export const useNavLinks = (): NavLink[] => {
       component: <AddPeopleComponent />,
     },
     {
-      name: "Notifications",
-      icon: <Bell size="1rem" />,
+      name: "Requests",
+      icon: <BellPlus size="1rem" />,
       dialog: true,
-      component: <NotificationComponent />,
+      component: <RequestsComponent />,
     },
   ];
 };

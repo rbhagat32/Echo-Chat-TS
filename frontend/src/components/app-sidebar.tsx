@@ -160,7 +160,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             onChange={(e) => searchChats((e.target as HTMLInputElement).value)}
           />
 
-          {/* Navigation Links -> Home, Search, Notification */}
+          {/* Navigation Links -> Home, Search, Requests */}
           <div className="flex flex-col gap-1">
             {navLinksData.map((item, index) =>
               !item.dialog ? (
