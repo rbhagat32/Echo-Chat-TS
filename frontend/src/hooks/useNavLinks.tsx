@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BellPlus, House, UserRoundPlus } from "lucide-react";
+import { Bell, House, UserRoundPlus } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { clearActiveChat } from "@/store/reducers/ActiveChatSlice";
 import { clearMessages } from "@/store/reducers/MessageSlice";
@@ -35,7 +35,7 @@ export const useNavLinks = (): NavLink[] => {
     },
     {
       name: "Requests",
-      icon: <BellPlus size="1rem" />,
+      icon: <Bell size="1rem" />,
       dialog: true,
       component: <RequestsComponent />,
     },
