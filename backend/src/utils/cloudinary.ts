@@ -54,8 +54,30 @@ const uploadToCloudinary = async (
   }
 };
 
-const deleteFromCloudinary = async (public_id: string) => {
-  console.log("public_id", public_id);
+const deleteFromCloudinary = async (public_id: string): Promise<boolean> => {
+  if (!public_id) {
+    return false;
+  }
+
+  const deletePromise = new Promise<boolean>((resolve, reject) => {
+    cloudinary.uploader.destroy(
+      public_id,
+      { resource_type: "image" },
+      (error, result) => {
+        if (error) return reject(error);
+        if (result.result === "ok") return resolve(true);
+        return resolve(false);
+      }
+    );
+  });
+
+  try {
+    const success = await deletePromise;
+    return success;
+  } catch (error) {
+    console.log("Error deleting from Cloudinary:", error);
+    return false;
+  }
 };
 
 export { uploadToCloudinary, deleteFromCloudinary };
