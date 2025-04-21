@@ -56,11 +56,11 @@ const login = async (req: Request, res: Response) => {
     const user = await userModel.findOne({ username }).select("+password");
 
     if (!user)
-      return res.status(404).json({ message: "Invalid credentials !" });
+      return res.status(404).json({ message: "User does not exist !" });
 
     const result = await user.matchPassword(password);
     if (!result) {
-      return res.status(400).json({ message: "Invalid credentials !" });
+      return res.status(400).json({ message: "Wrong password !" });
     }
 
     generateToken(res, user);
