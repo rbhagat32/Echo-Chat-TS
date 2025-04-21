@@ -16,7 +16,7 @@ export const api = createApi({
     baseUrl: `${import.meta.env.VITE_BACKEND_URL}`,
     credentials: "include",
   }),
-  tagTypes: ["Auth", "User", "Chats", "Message"],
+  tagTypes: ["Auth", "User", "Chats", "Messages"],
 
   endpoints: (builder) => ({
     checkLogin: builder.query<{ isLoggedIn: boolean }, void>({
@@ -97,6 +97,9 @@ export const api = createApi({
         method: "POST",
         body: { content: newMessage.content },
       }),
+      // refetch chats after sending a message as it will update chats in order of latest message
+      invalidatesTags: ["Chats"],
+
       // cannot perform optimistic update here because
       // when we do so, data in api gets updated.
       // but in messageContainer.tsx, we are fetching messages from store using useSelector
@@ -149,7 +152,7 @@ export const api = createApi({
         page = 1,
         limit = -1, // limit = -1 means fetch all messages (default value)
       }) => `message/get-messages/${chatId}?page=${page}&limit=${limit}`,
-      providesTags: ["Message"],
+      providesTags: ["Messages"],
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;

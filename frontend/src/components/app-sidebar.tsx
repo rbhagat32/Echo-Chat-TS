@@ -50,6 +50,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const isLoading = userData.isLoading || chatsData.isLoading;
 
   const handleOpenChat = async (chat: ChatTypes) => {
+    // refetch chats to order by latest message
+    dispatch(api.util.invalidateTags(["Chats"]));
+
     // set active chat if that chat is not already active
     if (chat._id !== activeChat._id) dispatch(setActiveChat(chat));
 
@@ -209,12 +212,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       latestChat._id !== activeChat._id
                   ) || false;
 
-                // count the no. of times chat is present in latest chats array
-                const count =
-                  latestChats?.filter(
-                    (latestChat) => latestChat._id === chat._id
-                  ).length || 0;
-
                 return (
                   <button
                     key={index}
@@ -235,11 +232,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     </div>
 
                     {isLatest && (
-                      <div className="rounded-full size-5 bg-green-400">
-                        <p className="text-sm text-black font-bold">
-                          {count > 0 && count}
-                        </p>
-                      </div>
+                      <div
+                        style={{
+                          backgroundColor: "#a3b3ff",
+                          boxShadow: "0 0 2px 1px #a3b3ff, 0 0 6px 2px #a3b3ff",
+                        }}
+                        className="rounded-full size-1 mr-2 bg-indigo-400"
+                      />
                     )}
                   </button>
                 );

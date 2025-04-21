@@ -4,11 +4,14 @@ import ActiveChatInfo from "@/layout/ActiveChatInfo";
 import Header from "@/layout/Header";
 import MessageContainer from "@/layout/MessageContainer";
 import { getSocket } from "@/Socket";
+import { api } from "@/store/api";
 import { useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 
 export default function Layout() {
   const socket = getSocket();
+  const dispatch = useDispatch();
   const offlineToastId = useRef<string | null>(null);
 
   useEffect(() => {
@@ -34,6 +37,9 @@ export default function Layout() {
       }
 
       socket?.connect();
+
+      // refetch all queries when back online
+      dispatch(api.util.invalidateTags(["Auth", "User", "Chats", "Messages"]));
     };
 
     window.addEventListener("offline", handleOffline);
