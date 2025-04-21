@@ -94,8 +94,10 @@ const AddPeopleComponent = () => {
 
                 {/* rendering buttons */}
                 {
-                  // if user is already added to chats
-                  loggedInUser.chats.includes(user.chats[0]) ? (
+                  // if loggedin user and this user are already in same chat
+                  user.chats.some((chatId) =>
+                    loggedInUser.chats.includes(chatId)
+                  ) ? (
                     <Tooltip text="Already added">
                       <div className="cursor-not-allowed hover:bg-zinc-700 rounded-sm p-2 duration-300">
                         <CheckCheck size="1rem" />
@@ -119,14 +121,14 @@ const AddPeopleComponent = () => {
                     </div>
                   ) : // if loggedin user has already sent request to this user
                   user.requests.includes(loggedInUser._id) ? (
-                    <Tooltip text="Request Sent">
+                    <Tooltip text="Request pending">
                       <div className="cursor-not-allowed hover:bg-zinc-700 rounded-sm p-2 duration-300">
                         <Loader size="1rem" />
                       </div>
                     </Tooltip>
                   ) : (
                     // else you can send request
-                    <Tooltip text="Send Request">
+                    <Tooltip text="Send request">
                       <div className="hover:bg-zinc-700 rounded-sm p-2 duration-300">
                         <UserRoundPlus size="1rem" />
                       </div>
