@@ -122,6 +122,7 @@
 /* custom css */
 * {
   user-select: none;
+  -webkit-user-drag: none;
 }
 
 ::-webkit-scrollbar {

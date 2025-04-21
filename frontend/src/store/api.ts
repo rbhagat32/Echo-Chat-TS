@@ -16,7 +16,7 @@ export const api = createApi({
     baseUrl: `${import.meta.env.VITE_BACKEND_URL}`,
     credentials: "include",
   }),
-  tagTypes: ["Auth", "User", "Chats", "Messages", "Searches"],
+  tagTypes: ["Auth", "User", "Chats", "Messages", "Searches", "Requests"],
 
   endpoints: (builder) => ({
     checkLogin: builder.query<{ isLoggedIn: boolean }, void>({
@@ -221,18 +221,27 @@ export const api = createApi({
         url: `user/respond-request/${userId}?response=${response}`,
         method: "POST",
       }),
-      invalidatesTags: ["User", "Chats"],
-      async onQueryStarted({ response }, { queryFulfilled }) {
+      async onQueryStarted({ response }, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
-          response === "accept"
-            ? toast.success("Request accepted successfully !")
-            : toast.warning("Request rejected successfully !");
+
+          if (response === "accept") {
+            dispatch(api.util.invalidateTags(["User", "Chats", "Requests"]));
+            toast.success("Request accepted successfully!");
+          } else {
+            dispatch(api.util.invalidateTags(["User", "Requests"]));
+            toast.warning("Request rejected successfully!");
+          }
         } catch (error) {
           toast.error("Failed to fetch chats !");
           console.error("Failed to fetch chats:", error);
         }
       },
+    }),
+
+    getRequests: builder.query<UserTypes[], void>({
+      query: () => `user/get-requests`,
+      providesTags: ["Requests"],
     }),
   }),
 });
@@ -247,4 +256,5 @@ export const {
   useLazySearchUserQuery,
   useSendRequestMutation,
   useRespondRequestMutation,
+  useGetRequestsQuery,
 } = api;
