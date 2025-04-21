@@ -30,11 +30,13 @@ import {
   removeLatestChat,
 } from "@/store/reducers/LatestChatSlice";
 import { Dialog } from "./custom/Dialog";
-import { navLinks, SettingsComponent } from "./data";
+import { SettingsComponent } from "./sidebar-components";
+import { useNavLinks } from "@/hooks/use-navlinks";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const socket = getSocket();
   const dispatch = useDispatch();
+  const navLinksData = useNavLinks();
 
   // Data Fetching hooks
   const userData = useGetUserQuery();
@@ -157,7 +159,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
           {/* Navigation Links -> Home, Search, Notification */}
           <div className="flex flex-col gap-1">
-            {navLinks.map((item, index) =>
+            {navLinksData.map((item, index) =>
               !item.dialog ? (
                 <div
                   key={index}
