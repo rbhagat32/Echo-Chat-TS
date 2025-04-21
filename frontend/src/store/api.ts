@@ -168,6 +168,72 @@ export const api = createApi({
       query: (username) => `user/search-user?query=${username}`,
       providesTags: ["Searches"],
     }),
+
+    sendRequest: builder.mutation<
+      void,
+      { userId: string; loggedInUserId: string; debouncedQuery: string }
+    >({
+      query: ({ userId }) => ({
+        url: `user/send-request/${userId}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["User"],
+      // Optimistically update user to whom request is sent
+      async onQueryStarted(
+        { userId, loggedInUserId, debouncedQuery },
+        { dispatch, queryFulfilled }
+      ) {
+        const patchResult = dispatch(
+          // update the cache for the "searchUser" query
+          // original debouncedQuery is reqd as argument for "searchUser" query
+          api.util.updateQueryData(
+            "searchUser",
+            debouncedQuery,
+            (searches: Draft<UserTypes[]>) => {
+              const targetUser = searches.find((u) => u._id === userId);
+              if (targetUser) {
+                // Add loggedInUserId to the requests array of tergetUser if not already present
+                if (!targetUser.requests.includes(loggedInUserId)) {
+                  targetUser.requests.push(loggedInUserId);
+                }
+              }
+
+              return searches;
+            }
+          )
+        );
+
+        try {
+          toast.success("Request sent successfully !");
+          await queryFulfilled; // wait for API call to finish
+        } catch {
+          patchResult.undo(); // rollback if API fails
+          toast.error("Failed to send request !");
+        }
+      },
+    }),
+
+    respondRequest: builder.mutation<
+      void,
+      { userId: string; response: string }
+    >({
+      query: ({ userId, response }) => ({
+        url: `user/respond-request/${userId}?response=${response}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["User", "Chats"],
+      async onQueryStarted({ response }, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          response === "accept"
+            ? toast.success("Request accepted successfully !")
+            : toast.warning("Request rejected successfully !");
+        } catch (error) {
+          toast.error("Failed to fetch chats !");
+          console.error("Failed to fetch chats:", error);
+        }
+      },
+    }),
   }),
 });
 
@@ -179,4 +245,6 @@ export const {
   useLazyGetMessagesQuery,
   useSendMessageMutation,
   useLazySearchUserQuery,
+  useSendRequestMutation,
+  useRespondRequestMutation,
 } = api;

@@ -6,39 +6,48 @@ import {
   Loader,
   CheckCheck,
 } from "lucide-react";
-import { SidebarInput } from "./ui/sidebar";
-import { useLazySearchUserQuery } from "@/store/api";
+import { SidebarInput } from ".././ui/sidebar";
+import {
+  api,
+  useLazySearchUserQuery,
+  useRespondRequestMutation,
+  useSendRequestMutation,
+} from "@/store/api";
 import { useEffect, useState } from "react";
 import useDebounce from "@/hooks/useDebounce";
 import PageLoader from "@/partials/PageLoader";
-import { Tooltip } from "./custom/Tooltip";
-import { useSelector } from "react-redux";
+import { Tooltip } from ".././custom/Tooltip";
+import { useDispatch, useSelector } from "react-redux";
 
-const SettingsComponent = () => {
-  return <div>Settings</div>;
-};
-
-const AddPeopleComponent = () => {
+export const AddPeopleComponent = () => {
+  const dispatch = useDispatch();
   const loggedInUser = useSelector((state: StateTypes) => state.user);
-  const [trigger, remainingData] = useLazySearchUserQuery();
 
+  // search functionality
+  const [trigger, remainingData] = useLazySearchUserQuery();
   const [query, setQuery] = useState<string>("");
   const debouncedQuery = useDebounce(query, 250);
 
-  const [searchData, setSearchData] = useState<UserTypes[]>([]);
+  useEffect(() => {
+    dispatch(api.util.invalidateTags(["User"]));
+  }, [debouncedQuery]);
 
   useEffect(() => {
-    const handleSearch = async () => {
+    const handleSearch = () => {
       if (debouncedQuery.length > 0) {
-        const result = await trigger(debouncedQuery);
-        setSearchData(result.data as UserTypes[]);
+        trigger(debouncedQuery);
       } else {
-        setSearchData([]);
+        trigger("");
       }
     };
-
     handleSearch();
   }, [debouncedQuery]);
+
+  // send request functionality
+  const [sendRequest] = useSendRequestMutation();
+
+  // respond to request functionality
+  const [respondRequest] = useRespondRequestMutation();
 
   return (
     <div className="relative h-[60vh]">
@@ -66,7 +75,7 @@ const AddPeopleComponent = () => {
             </p>
           </div>
         ) : // if no users are found
-        searchData.length == 0 ? (
+        remainingData?.data?.length == 0 ? (
           <div className="w-full text-center text-zinc-500 text-sm">
             <h1 className="font-semibold">No users found.</h1>
             <p className="text-zinc-600">
@@ -75,7 +84,7 @@ const AddPeopleComponent = () => {
           </div>
         ) : (
           // if users are found, render them
-          searchData?.map((user: UserTypes, index) => {
+          remainingData.data?.map((user: UserTypes, index) => {
             return (
               <div
                 key={index}
@@ -96,7 +105,7 @@ const AddPeopleComponent = () => {
                 {
                   // if loggedin user and this user are already in same chat
                   user.chats.some((chatId) =>
-                    loggedInUser.chats.includes(chatId)
+                    loggedInUser?.chats?.includes(chatId)
                   ) ? (
                     <Tooltip text="Already added">
                       <div className="cursor-not-allowed hover:bg-zinc-700 rounded-sm p-2 duration-300">
@@ -104,23 +113,41 @@ const AddPeopleComponent = () => {
                       </div>
                     </Tooltip>
                   ) : // if loggedin user has pending request from this user
-                  loggedInUser.requests.includes(user._id) ? (
+                  loggedInUser?.requests?.includes(user._id) ? (
                     <div className="flex gap-1">
                       {/* reject request */}
                       <Tooltip text="Reject request">
-                        <div className="hover:bg-zinc-700 rounded-sm p-2 duration-300">
+                        <div
+                          onClick={() => {
+                            respondRequest({
+                              userId: user._id,
+                              response: "reject",
+                            });
+                            setQuery("");
+                          }}
+                          className="hover:bg-zinc-700 rounded-sm p-2 duration-300"
+                        >
                           <RejectIcon size="1rem" className="text-rose-400" />
                         </div>
                       </Tooltip>
                       {/* accept request */}
                       <Tooltip text="Accept request">
-                        <div className="hover:bg-zinc-700 rounded-sm p-2 duration-300">
+                        <div
+                          onClick={() => {
+                            respondRequest({
+                              userId: user._id,
+                              response: "accept",
+                            });
+                            setQuery("");
+                          }}
+                          className="hover:bg-zinc-700 rounded-sm p-2 duration-300"
+                        >
                           <Check size="1rem" />
                         </div>
                       </Tooltip>
                     </div>
                   ) : // if loggedin user has already sent request to this user
-                  user.requests.includes(loggedInUser._id) ? (
+                  user?.requests?.includes(loggedInUser._id) ? (
                     <Tooltip text="Request pending">
                       <div className="cursor-not-allowed hover:bg-zinc-700 rounded-sm p-2 duration-300">
                         <Loader size="1rem" />
@@ -129,7 +156,17 @@ const AddPeopleComponent = () => {
                   ) : (
                     // else you can send request
                     <Tooltip text="Send request">
-                      <div className="hover:bg-zinc-700 rounded-sm p-2 duration-300">
+                      <div
+                        onClick={() =>
+                          sendRequest({
+                            userId: user._id,
+                            loggedInUserId: loggedInUser._id,
+                            // original debouncedQuery is reqd as argument for "searchUser" query
+                            debouncedQuery: debouncedQuery,
+                          })
+                        }
+                        className="hover:bg-zinc-700 rounded-sm p-2 duration-300"
+                      >
                         <UserRoundPlus size="1rem" />
                       </div>
                     </Tooltip>
@@ -143,9 +180,3 @@ const AddPeopleComponent = () => {
     </div>
   );
 };
-
-const RequestsComponent = () => {
-  return <div>Requests</div>;
-};
-
-export { SettingsComponent, AddPeopleComponent, RequestsComponent };

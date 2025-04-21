@@ -30,7 +30,7 @@ import {
   removeLatestChat,
 } from "@/store/reducers/LatestChatSlice";
 import { Dialog } from "./custom/Dialog";
-import { SettingsComponent } from "./sidebar-components";
+import { SettingsComponent } from "./sidebar/Settings";
 import { useNavLinks } from "@/hooks/useNavLinks";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {

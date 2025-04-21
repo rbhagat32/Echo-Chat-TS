@@ -95,6 +95,10 @@ const respondRequest = async (req: RequestWithUser, res: Response) => {
   const { id } = req.params;
   const { response } = req.query;
 
+  if (response !== "accept" && response !== "reject") {
+    return res.status(400).json({ message: "Invalid response !" });
+  }
+
   try {
     const [loggedInUser, otherUser] = await Promise.all([
       userModel.findById(userId),
@@ -124,7 +128,9 @@ const respondRequest = async (req: RequestWithUser, res: Response) => {
       loggedInUser.chats.push(newChat._id);
       otherUser.chats.push(newChat._id);
       await Promise.all([loggedInUser.save(), otherUser.save()]);
-    } else {
+    } else if (response === "reject") {
+      // if request is rejected, just save the loggedInUser
+      // as request has been already removed from requests array
       await loggedInUser.save();
     }
 
