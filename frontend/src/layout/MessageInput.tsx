@@ -5,7 +5,7 @@ import { v4 as uuid } from "uuid";
 import { Send } from "lucide-react";
 import { SidebarInput } from "@/components/ui/sidebar";
 import { getSocket } from "@/Socket";
-import { useSendMessageMutation } from "@/store/api";
+import { api, useSendMessageMutation } from "@/store/api";
 import { appendMessage } from "@/store/reducers/MessageSlice";
 import { appendLatestChat } from "@/store/reducers/LatestChatSlice";
 
@@ -56,17 +56,25 @@ function MessageInputComponent() {
 
   // socket listener for realtime messages
   useEffect(() => {
-    const handleRealtimeMessage = (msg: MessageTypes) => {
+    const handleRealtimeMessage = async (msg: MessageTypes) => {
       // check if the message belongs to the active chat
       if (msg.senderId === activeChat.users[0]._id) {
         dispatch(appendMessage(msg));
       } else {
-        // if the message does not belong to the active chat, append it to the latest chats
-        chats.forEach((chat: ChatTypes) => {
-          if (chat._id === msg.chatId) {
-            dispatch(appendLatestChat(chat));
-          }
-        });
+        // if the message does not belong to the active chat,
+
+        // refetch chats in order of latest message when realtime message is received
+        const refetchChatsPromise = dispatch(
+          api.util.invalidateTags(["Chats"])
+        );
+
+        // append the chat to latest chats
+        const appendLatestChatPromise = chats
+          .filter((chat: ChatTypes) => chat._id === msg.chatId)
+          .map((chat) => dispatch(appendLatestChat(chat)));
+
+        // wait for all dispatches to complete
+        await Promise.all([refetchChatsPromise, appendLatestChatPromise]);
       }
     };
 

@@ -1,4 +1,5 @@
 import { getSocket } from "@/Socket";
+import { api } from "@/store/api";
 import { appendLatestChat } from "@/store/reducers/LatestChatSlice";
 import { memo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,12 +12,23 @@ function WelcomeComponent() {
 
   // socket listener for realtime messages
   useEffect(() => {
-    const handleRealtimeMessage = (msg: MessageTypes) => {
-      chats.forEach((chat: ChatTypes) => {
-        if (chat._id === msg.chatId) {
-          dispatch(appendLatestChat(chat));
-        }
-      });
+    const handleRealtimeMessage = async (msg: MessageTypes) => {
+      try {
+        // refetch chats in order of latest message when realtime message is received
+        const refetchChatsPromise = dispatch(
+          api.util.invalidateTags(["Chats"])
+        );
+
+        // append the chat to latest chats
+        const appendLatestChatPromise = chats
+          .filter((chat: ChatTypes) => chat._id === msg.chatId)
+          .map((chat) => dispatch(appendLatestChat(chat)));
+
+        // wait for all dispatches to complete
+        await Promise.all([refetchChatsPromise, appendLatestChatPromise]);
+      } catch (err) {
+        console.error("Failed to handle real-time message:", err);
+      }
     };
 
     socket?.on("realtime", handleRealtimeMessage);

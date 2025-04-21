@@ -98,8 +98,8 @@ const SignUp = () => {
 
       reset();
       dispatch(setAuth(true));
-      // Invalidate the Auth and Chats tags to refetch data after login
-      dispatch(api.util.invalidateTags(["Auth", "Chats"]));
+      // Invalidate the Auth, User and Chats tags to refetch data after login
+      dispatch(api.util.invalidateTags(["Auth", "User", "Chats"]));
       // no need to navigate to home page as it is handled when auth is invalidated
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Failed to Sign Up!");
