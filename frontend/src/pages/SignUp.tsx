@@ -93,7 +93,7 @@ const SignUp = () => {
   const signup: SubmitHandler<SignupFormData> = async (data) => {
     setLoading(true);
     try {
-      await axios.post(
+      const response = await axios.post<{ message: string }>(
         "/auth/signup",
         { ...data, avatar: data.avatar ? data.avatar[0] : undefined },
         // headers are required for image upload
@@ -105,6 +105,7 @@ const SignUp = () => {
       // Invalidate the Auth, User and Chats tags to refetch data after login
       dispatch(api.util.invalidateTags(["Auth", "User", "Chats"]));
       // no need to navigate to home page as it is handled when auth is invalidated
+      toast.success(response.data.message);
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Failed to Sign Up!");
       console.error("Failed to Sign Up:", error);

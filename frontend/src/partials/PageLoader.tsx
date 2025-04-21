@@ -1,6 +1,6 @@
 import styles from "./PageLoader.module.css";
 
-const PageLoader = ({ fullScreen }: { fullScreen: boolean }) => {
+const PageLoader = ({ fullScreen = false }: { fullScreen?: boolean }) => {
   return (
     <div
       className={`z-50 ${

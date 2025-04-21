@@ -6,7 +6,6 @@ import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import Button from "../components/custom/Button";
 import CustomLink from "../components/custom/CustomLink";
-// import Input from "../components/custom/Input";
 import Spinner from "../partials/Spinner";
 import { api } from "../store/api";
 import { setAuth } from "../store/reducers/AuthSlice";
@@ -64,13 +63,16 @@ const Login = () => {
   const login: SubmitHandler<LoginFormData> = async (data) => {
     setLoading(true);
     try {
-      await axios.post("/auth/login", data);
-
+      const response = await axios.post<{ message: string }>(
+        "/auth/login",
+        data
+      );
       reset();
       dispatch(setAuth(true));
       // Invalidate the Auth, User and Chats tags to refetch data after login
       dispatch(api.util.invalidateTags(["Auth", "User", "Chats"]));
       // no need to navigate to home page as it is handled when auth is invalidated
+      toast.success(response.data.message);
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Failed to Log In!");
       console.error("Failed to Login:", error);

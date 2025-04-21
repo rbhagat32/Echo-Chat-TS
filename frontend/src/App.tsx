@@ -7,7 +7,7 @@ export default function App() {
   const { isLoading, data } = useCheckLoginQuery();
 
   return isLoading ? (
-    <PageLoader fullScreen />
+    <PageLoader fullScreen={true} />
   ) : (
     <>
       <Toaster richColors position="top-center" duration={5000} />

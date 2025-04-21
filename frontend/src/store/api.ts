@@ -16,7 +16,7 @@ export const api = createApi({
     baseUrl: `${import.meta.env.VITE_BACKEND_URL}`,
     credentials: "include",
   }),
-  tagTypes: ["Auth", "User", "Chats", "Messages"],
+  tagTypes: ["Auth", "User", "Chats", "Messages", "Searches"],
 
   endpoints: (builder) => ({
     checkLogin: builder.query<{ isLoggedIn: boolean }, void>({
@@ -91,6 +91,27 @@ export const api = createApi({
       },
     }),
 
+    getMessages: builder.query<
+      MessageStateTypes,
+      { chatId: string; page?: number; limit?: number }
+    >({
+      query: ({
+        chatId,
+        page = 1,
+        limit = -1, // limit = -1 means fetch all messages (default value)
+      }) => `message/get-messages/${chatId}?page=${page}&limit=${limit}`,
+      providesTags: ["Messages"],
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setMessages(data));
+        } catch (error) {
+          toast.error("Failed to fetch messages !");
+          console.error("Failed to fetch messages:", error);
+        }
+      },
+    }),
+
     sendMessage: builder.mutation<void, MessageTypes>({
       query: (newMessage) => ({
         url: `message/send-message/${newMessage.chatId}`,
@@ -143,25 +164,9 @@ export const api = createApi({
       },
     }),
 
-    getMessages: builder.query<
-      MessageStateTypes,
-      { chatId: string; page?: number; limit?: number }
-    >({
-      query: ({
-        chatId,
-        page = 1,
-        limit = -1, // limit = -1 means fetch all messages (default value)
-      }) => `message/get-messages/${chatId}?page=${page}&limit=${limit}`,
-      providesTags: ["Messages"],
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(setMessages(data));
-        } catch (error) {
-          toast.error("Failed to fetch messages !");
-          console.error("Failed to fetch messages:", error);
-        }
-      },
+    searchUser: builder.query<UserTypes[], string>({
+      query: (username) => `user/search-user?query=${username}`,
+      providesTags: ["Searches"],
     }),
   }),
 });
@@ -173,4 +178,5 @@ export const {
   useDeleteChatMutation,
   useLazyGetMessagesQuery,
   useSendMessageMutation,
+  useLazySearchUserQuery,
 } = api;

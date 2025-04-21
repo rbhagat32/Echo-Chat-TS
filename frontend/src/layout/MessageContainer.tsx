@@ -63,7 +63,7 @@ export default function MessageContainer() {
         ) : // if some chat is selected, check if messages are loading or not
         remainingData.isFetching ? (
           // if messages are loading show PageLoader
-          <PageLoader fullScreen={false} />
+          <PageLoader />
         ) : // else check no. of messages
         messagesData?.messages?.length == 0 ? (
           // if no. of messages =0

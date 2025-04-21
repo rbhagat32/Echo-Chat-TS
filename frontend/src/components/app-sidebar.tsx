@@ -31,7 +31,7 @@ import {
 } from "@/store/reducers/LatestChatSlice";
 import { Dialog } from "./custom/Dialog";
 import { SettingsComponent } from "./sidebar-components";
-import { useNavLinks } from "@/hooks/use-navlinks";
+import { useNavLinks } from "@/hooks/useNavLinks";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const socket = getSocket();
@@ -232,13 +232,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     </div>
 
                     {isLatest && (
-                      <div
-                        style={{
-                          backgroundColor: "#a3b3ff",
-                          boxShadow: "0 0 2px 1px #a3b3ff, 0 0 6px 2px #a3b3ff",
-                        }}
-                        className="rounded-full size-1 mr-2 bg-indigo-400"
-                      />
+                      <div className="flex items-center gap-1">
+                        <div
+                          // style={{
+                          //   backgroundColor: "oklch(78.5% 0.115 274.713)",
+                          //   boxShadow:
+                          //     "0 0 2px 1px oklch(78.5% 0.115 274.713), 0 0 6px 0px oklch(78.5% 0.115 274.713)",
+                          // }}
+                          className="size-1.5 rounded-full bg-green-500 mt-0.5"
+                        />
+                        <p className="text-xs text-zinc-600">new</p>
+                      </div>
                     )}
                   </button>
                 );
