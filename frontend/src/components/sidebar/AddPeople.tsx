@@ -28,12 +28,7 @@ export const AddPeopleComponent = () => {
   const [query, setQuery] = useState<string>("");
   const debouncedQuery = useDebounce(query, 250);
 
-  // refetch user data on initial render and when search query changes
-  // so that the latest requests data is available
-  useEffect(() => {
-    dispatch(api.util.invalidateTags(["User"]));
-  }, [debouncedQuery]);
-
+  // trigger search when debouncedQuery changes
   useEffect(() => {
     const handleSearch = () => {
       if (debouncedQuery.length > 0) {
@@ -43,6 +38,9 @@ export const AddPeopleComponent = () => {
       }
     };
     handleSearch();
+
+    // refetch user data on initial render and when search query changes so that the latest requests data is available
+    dispatch(api.util.invalidateTags(["User"]));
   }, [debouncedQuery]);
 
   // send request functionality
