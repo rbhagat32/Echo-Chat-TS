@@ -128,7 +128,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       "realtimeDeleteChat",
       (user: UserTypes, deletedChat: ChatTypes) => {
         toast.warning(`${user.username} deleted the chat !`, {
-          description: "Refetching chats in 3..2..1..",
+          description: "Refreshing in 3..2..1..",
         });
 
         if (activeChat._id === deletedChat._id) {
@@ -149,7 +149,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
     socket?.on("realtimeAccept", (user: UserTypes) => {
       toast.success(`${user.username} accepted your request !`, {
-        description: "Refetching chats in 3..2..1..",
+        description: "Refreshing in 3..2..1..",
       });
 
       setTimeout(() => {
