@@ -20,7 +20,7 @@ export default function ActiveChatInfo() {
   const [deleteChat] = useDeleteChatMutation();
   const handleDeleteChat = () => {
     // for real time notification
-    socket?.emit("deleteChat", loggedInUser, activeChat.users[0]);
+    socket?.emit("deleteChat", loggedInUser, activeChat);
 
     try {
       deleteChat(activeChat._id);

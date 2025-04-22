@@ -15,6 +15,8 @@ interface NavLink {
 }
 
 export const useNavLinks = (): NavLink[] => {
+  // beacuse a hook call is reqd, we are creating a custom hook here
+  // otherwise we could have directly exported an object with navlinks data
   const dispatch = useDispatch();
 
   return [

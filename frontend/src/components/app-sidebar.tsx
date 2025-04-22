@@ -47,10 +47,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   // Data Fetching hooks
   const userData = useGetUserQuery();
   const chatsData = useGetChatsQuery();
+  useGetRequestsQuery();
+
+  // data from redux store
   const activeChat = useSelector((state: StateTypes) => state.activeChat);
   const latestChats = useSelector((state: StateTypes) => state.latestChats);
   const requests = useSelector((state: StateTypes) => state.requests);
-  useGetRequestsQuery();
 
   // Destructure data and loading state
   const user = userData.data;
@@ -90,20 +92,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       });
   };
 
-  const [filteredChats, setFilteredChats] = React.useState<ChatTypes[]>(chats!);
+  // search chat functionality
+  const [filteredChats, setFilteredChats] = React.useState<ChatTypes[]>([]);
   // Set filtered chats when chats data is fetched
   React.useEffect(() => {
     if (chats) {
       setFilteredChats(chats);
     }
   }, [chats]);
+
   // Search chats by username
   const searchChats = (query: string) => {
+    // if query is empty, set filtered chats to all chats
     if (!query) {
       setFilteredChats(chats!);
       return;
     }
 
+    // if query is not empty, filter chats by what is typed in query
     if (chats) {
       setFilteredChats(
         chats.filter((chat) => chat.users[0].username.includes(query))
@@ -118,15 +124,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       dispatch(appendRequest(user));
     });
 
-    socket?.on("realtimeDeleteChat", (user: UserTypes) => {
-      toast.warning(`${user.username} deleted the chat !`, {
-        description: "Refetching chats in 3..2..1..",
-      });
+    socket?.on(
+      "realtimeDeleteChat",
+      (user: UserTypes, deletedChat: ChatTypes) => {
+        toast.warning(`${user.username} deleted the chat !`, {
+          description: "Refetching chats in 3..2..1..",
+        });
 
-      setTimeout(() => {
-        dispatch(api.util.invalidateTags(["User", "Chats"]));
-      }, 5000);
-    });
+        if (activeChat._id === deletedChat._id) {
+          // if active chat is deleted by other user, clear active chat and messages
+          dispatch(clearActiveChat());
+          dispatch(clearMessages());
+        } else {
+          // if non active chat is deleted, remove it from latest chats and clear messages
+          dispatch(removeLatestChat(deletedChat));
+          dispatch(clearMessages());
+        }
+
+        setTimeout(() => {
+          dispatch(api.util.invalidateTags(["User", "Chats"]));
+        }, 3000);
+      }
+    );
 
     socket?.on("realtimeAccept", (user: UserTypes) => {
       toast.success(`${user.username} accepted your request !`, {
@@ -134,12 +153,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       });
 
       setTimeout(() => {
-        dispatch(api.util.invalidateTags(["User", "Chats"]));
-      }, 5000);
+        dispatch(
+          api.util.invalidateTags(["User", "Chats", "Searches", "Requests"])
+        );
+      }, 3000);
     });
 
     socket?.on("realtimeReject", (user: UserTypes) => {
       toast.warning(`${user.username} rejected your request !`);
+
+      setTimeout(() => {
+        dispatch(api.util.invalidateTags(["User", "Searches", "Requests"]));
+      }, 3000);
     });
 
     return () => {
@@ -148,7 +173,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       socket?.off("realtimeAccept");
       socket?.off("realtimeReject");
     };
-  }, [socket, user, chats]);
+  }, [socket, user, activeChat]);
 
   return (
     <Sidebar {...props}>
@@ -260,7 +285,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </div>
             ) : (
               filteredChats?.map((chat: ChatTypes, index: number) => {
-                // check if chat is present in latest chats array
+                // check if chat is present in latest chats array and it is not active currently
+                // if yes, then show (. new) notification
                 const isLatest =
                   latestChats?.some(
                     (latestChat) =>

@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import { socketAuthenticator } from "./config/socket-authenticator.js";
 import { AuthenticatedSocket } from "./types/socket.js";
 import { UserTypes } from "./types/user.js";
+import { ChatTypes } from "./types/chat.js";
 
 dotenv.config({ path: "./.env" });
 
@@ -51,15 +52,24 @@ io.on("connection", (socket: AuthenticatedSocket) => {
     }
   });
 
-  socket.on("deleteChat", async (loggedInUser: UserTypes, user: UserTypes) => {
-    const receiverSocketId = userSocketsMap.get(user._id.toString());
-    if (receiverSocketId) {
-      socket.to(receiverSocketId).emit("realtimeDeleteChat", loggedInUser);
-      // console.log(`${loggedInUserId} deleted chat with ${userId}`);
-    } else {
-      // console.log(`Other user: ${data.userId} is not online`);
+  socket.on(
+    "deleteChat",
+    async (loggedInUser: UserTypes, deletedChat: ChatTypes) => {
+      const receiverSocketId = userSocketsMap.get(
+        deletedChat.users[0]._id.toString()
+      );
+      if (receiverSocketId) {
+        socket
+          .to(receiverSocketId)
+          .emit("realtimeDeleteChat", loggedInUser, deletedChat);
+        // console.log(
+        //   `${loggedInUser._id} deleted chat with ${deletedChat.users[0]._id}`
+        // );
+      } else {
+        // console.log(`Other user: ${deletedChat.users[0]._id} is not online`);
+      }
     }
-  });
+  );
 
   socket.on("request", (loggedInUser: UserTypes, user: UserTypes) => {
     const receiverSocketId = userSocketsMap.get(user._id.toString());
