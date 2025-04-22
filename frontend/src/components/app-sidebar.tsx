@@ -281,7 +281,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <div className="pb-2">
             {filteredChats?.length == 0 ? (
               <div className="w-full text-center text-zinc-500 text-sm">
-                No chats found.
+                <h1 className="font-semibold">No chats found !</h1>
+                <p className="text-zinc-600">
+                  Connect with friends to start chatting.
+                </p>
               </div>
             ) : (
               filteredChats?.map((chat: ChatTypes, index: number) => {
