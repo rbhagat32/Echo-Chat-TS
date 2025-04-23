@@ -9,6 +9,9 @@ import { Input } from "@/components/ui/input";
 import Spinner from "../../partials/Spinner";
 import { api } from "../../store/api";
 import { axios } from "../../utils/axios";
+import { Tooltip } from "../custom/Tooltip";
+import { AlertDialog } from "../custom/AlertDialog";
+import { Trash2 } from "lucide-react";
 
 interface UpdateFormData {
   bio?: string;
@@ -114,6 +117,42 @@ const SettingsComponent = () => {
     updateDetails(data);
   };
 
+  const handleDeleteBio = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.delete<{ message: string }>(
+        "/user/delete-bio"
+      );
+      reset();
+      // Invalidate the User to refetch updated user's data after login
+      dispatch(api.util.invalidateTags(["User"]));
+      toast.success(response.data.message);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to delete bio !");
+      console.error("Failed to delete bio:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteAvatar = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.delete<{ message: string }>(
+        "/user/delete-avatar"
+      );
+      reset();
+      // Invalidate the User to refetch updated user's data after login
+      dispatch(api.util.invalidateTags(["User"]));
+      toast.success(response.data.message);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to delete avatar !");
+      console.error("Failed to delete avatar:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="py-10 relative px-4 flex justify-center items-center flex-col gap-5 text-center">
       <div>
@@ -123,29 +162,56 @@ const SettingsComponent = () => {
         </h2>
       </div>
 
-      <form
-        onSubmit={handleSubmit(validation)}
-        className="w-full flex flex-col gap-3"
-      >
-        <Input
-          register={register("bio")}
-          type="text"
-          placeholder={`Current Bio: ${loggedInUser.bio}`}
-          className="h-10"
-        />
+      <div className="relative w-full flex">
+        <form
+          onSubmit={handleSubmit(validation)}
+          className="w-full flex flex-col gap-3"
+        >
+          <Input
+            register={register("bio")}
+            type="text"
+            placeholder={loggedInUser.bio}
+            className="h-10"
+          />
 
-        <Input
-          register={register("avatar")}
-          multiple={false}
-          type="file"
-          accept=".jpg, .jpeg, .png, .webp"
-          placeholder="Password"
-          className="h-10"
-        />
-        <Button type="submit" width="w-full">
-          {!loading ? "Update" : <Spinner />}
-        </Button>
-      </form>
+          <Input
+            register={register("avatar")}
+            multiple={false}
+            type="file"
+            accept=".jpg, .jpeg, .png, .webp"
+            placeholder="Password"
+            className="h-10"
+          />
+
+          <Button type="submit" width="w-full">
+            {!loading ? "Update" : <Spinner />}
+          </Button>
+        </form>
+
+        <div className="absolute top-1 right-1 flex flex-col gap-5">
+          <Tooltip text="Delete bio">
+            <AlertDialog
+              onConfirm={handleDeleteBio}
+              title="Are you sure that you want to remove the bio ?"
+            >
+              <div className="hover:bg-zinc-700 rounded-sm p-2 duration-300">
+                <Trash2 size="1rem" className="text-rose-400" />
+              </div>
+            </AlertDialog>
+          </Tooltip>
+
+          <Tooltip text="Delete avatar">
+            <AlertDialog
+              onConfirm={handleDeleteAvatar}
+              title="Are you sure that you want to remove the avatar ?"
+            >
+              <div className="hover:bg-zinc-700 rounded-sm p-2 duration-300">
+                <Trash2 size="1rem" className="text-rose-400" />
+              </div>
+            </AlertDialog>
+          </Tooltip>
+        </div>
+      </div>
     </div>
   );
 };

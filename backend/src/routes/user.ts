@@ -7,6 +7,8 @@ import {
   respondRequest,
   sendRequest,
   updateDetails,
+  deleteBio,
+  deleteAvatar,
 } from "../controllers/user.js";
 import { multerUpload } from "../config/multer.js";
 
@@ -19,5 +21,7 @@ router.post("/send-request/:id", sendRequest);
 router.get("/get-requests", getRequests);
 router.post("/respond-request/:id", respondRequest);
 router.put("/update-details", multerUpload.single("avatar"), updateDetails);
+router.delete("/delete-bio", deleteBio);
+router.delete("/delete-avatar", deleteAvatar);
 
 export default router;
