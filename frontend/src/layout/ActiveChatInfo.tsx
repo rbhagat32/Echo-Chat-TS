@@ -24,12 +24,11 @@ export default function ActiveChatInfo() {
 
     try {
       deleteChat(activeChat._id);
-      toast.success("Chat deleted successfully.");
+      toast.success("Chat deleted successfully !");
       dispatch(clearActiveChat());
       dispatch(clearMessages());
     } catch (error) {
-      toast.error("Failed to delete chat.");
-      console.error("Failed to delete chat:", error);
+      toast.error("Failed to delete chat !");
     }
   };
 

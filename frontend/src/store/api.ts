@@ -3,9 +3,9 @@ import { setAuth } from "./reducers/AuthSlice";
 import { setUser } from "./reducers/UserSlice";
 import { setChats } from "./reducers/ChatSlice";
 import {
+  setMessages,
   appendMessage,
   removeMessage,
-  setMessages,
 } from "./reducers/MessageSlice";
 import { toast } from "sonner";
 import { Draft } from "@reduxjs/toolkit";
@@ -165,6 +165,22 @@ export const api = createApi({
       },
     }),
 
+    deleteMessage: builder.mutation<void, MessageTypes>({
+      query: (deletedMessage) => ({
+        url: `message/delete-message/${deletedMessage._id}`,
+        method: "DELETE",
+      }),
+      async onQueryStarted(deletedMessage, { dispatch, queryFulfilled }) {
+        dispatch(removeMessage(deletedMessage));
+
+        try {
+          await queryFulfilled;
+        } catch (error) {
+          toast.error("Failed to delete message !");
+        }
+      },
+    }),
+
     searchUser: builder.query<UserTypes[], string>({
       query: (username) => `user/search-user?query=${username}`,
       providesTags: ["Searches"],
@@ -214,6 +230,20 @@ export const api = createApi({
       },
     }),
 
+    getRequests: builder.query<UserTypes[], void>({
+      query: () => `user/get-requests`,
+      providesTags: ["Requests"],
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setRequests(data));
+        } catch (error) {
+          toast.error("Failed to fetch requests !");
+          console.error("Failed to fetch requests:", error);
+        }
+      },
+    }),
+
     respondRequest: builder.mutation<
       void,
       { userId: string; response: string }
@@ -239,20 +269,6 @@ export const api = createApi({
         }
       },
     }),
-
-    getRequests: builder.query<UserTypes[], void>({
-      query: () => `user/get-requests`,
-      providesTags: ["Requests"],
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(setRequests(data));
-        } catch (error) {
-          toast.error("Failed to fetch requests !");
-          console.error("Failed to fetch requests:", error);
-        }
-      },
-    }),
   }),
 });
 
@@ -263,8 +279,9 @@ export const {
   useDeleteChatMutation,
   useLazyGetMessagesQuery,
   useSendMessageMutation,
+  useDeleteMessageMutation,
   useLazySearchUserQuery,
   useSendRequestMutation,
-  useRespondRequestMutation,
   useGetRequestsQuery,
+  useRespondRequestMutation,
 } = api;

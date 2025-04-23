@@ -7,6 +7,7 @@ import { socketAuthenticator } from "./config/socket-authenticator.js";
 import { AuthenticatedSocket } from "./types/socket.js";
 import { UserTypes } from "./types/user.js";
 import { ChatTypes } from "./types/chat.js";
+import { MessageTypes } from "./types/message.js";
 
 dotenv.config({ path: "./.env" });
 
@@ -98,6 +99,18 @@ io.on("connection", (socket: AuthenticatedSocket) => {
       // console.log(`Realtime reject from ${loggedInUser._id} to ${user._id}`);
     } else {
       // console.log(`Other user: ${user._id} is not online`);
+    }
+  });
+
+  socket.on("deleteMessage", (message: MessageTypes) => {
+    const receiverSocketId = userSocketsMap.get(message.receiverId.toString());
+    if (receiverSocketId) {
+      socket.to(receiverSocketId).emit("realtimeDeleteMessage", message);
+      // console.log(
+      //   `${message.senderId} deleted message with ${message.receiverId}`
+      // );
+    } else {
+      // console.log(`Other user: ${message.receiverId} is not online`);
     }
   });
 

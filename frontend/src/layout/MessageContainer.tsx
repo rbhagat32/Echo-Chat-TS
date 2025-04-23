@@ -5,9 +5,13 @@ import moment from "moment";
 import { useEffect, useRef } from "react";
 import PageLoader from "@/partials/PageLoader";
 import { useLazyGetMessagesQuery } from "@/store/api";
-import { clearMessages } from "@/store/reducers/MessageSlice";
+import { clearMessages, removeMessage } from "@/store/reducers/MessageSlice";
+import { RightClickMenu } from "@/components/custom/RightClickMenu";
+import { getSocket } from "@/Socket";
+import { toast } from "sonner";
 
 export default function MessageContainer() {
+  const socket = getSocket();
   const dispatch = useDispatch();
 
   // fetching required data from redux store
@@ -46,6 +50,23 @@ export default function MessageContainer() {
     }
   }, [messagesData]);
 
+  // socket listener for realtime delete message
+  useEffect(() => {
+    const handleRealtimeDeleteMessage = async (
+      deletedMessage: MessageTypes
+    ) => {
+      toast.warning(`${activeChat.users[0].username} deleted a message`);
+      dispatch(removeMessage(deletedMessage));
+    };
+
+    socket?.on("realtimeDeleteMessage", handleRealtimeDeleteMessage);
+
+    return () => {
+      // on cleanup, remove the socket listener
+      socket?.off("realtimeDeleteMessage", handleRealtimeDeleteMessage);
+    };
+  }, [socket, dispatch]);
+
   return (
     // Container for messages and input box
     <div className="rounded-xl bg-muted/50">
@@ -74,34 +95,40 @@ export default function MessageContainer() {
           // if no. of messages is >0
           <>
             {messagesData?.messages?.map((message: MessageTypes) => (
-              <div
+              // actual message
+              <RightClickMenu
                 key={message._id}
-                className={`flex gap-2 mb-2 ${
-                  loggedInUser._id === message.senderId
-                    ? "justify-end"
-                    : "justify-start"
-                }`}
+                myMessage={message.senderId === loggedInUser._id}
+                message={message}
               >
                 <div
-                  className={
-                    "max-w-[40ch] md:max-w-[50ch] lg:max-w-[80ch] xl:max-w-[100ch] text-sm px-4 py-2 rounded-md bg-zinc-800"
-                  }
+                  className={`flex gap-2 mb-2 ${
+                    message.senderId === loggedInUser._id
+                      ? "justify-end"
+                      : "justify-start"
+                  }`}
                 >
-                  {/* break-words ensures long messages don't overflow out of div */}
-                  <p className="break-words">{message.content}</p>
-                  <p
-                    className={`text-[10px] text-zinc-500 flex gap-1 items-center mt-1 ${
-                      loggedInUser._id === message.senderId
-                        ? "justify-end"
-                        : "justify-start"
-                    }`}
+                  <div
+                    className={
+                      "max-w-[40ch] md:max-w-[50ch] lg:max-w-[80ch] xl:max-w-[100ch] text-sm px-4 py-2 rounded-md bg-zinc-800"
+                    }
                   >
-                    <span>{moment(message.createdAt).format("hh:mm A")}</span>
-                    <span className="mt-px mx-0.5 size-[3px] rounded-full bg-zinc-500"></span>
-                    <span>{moment(message.createdAt).fromNow()}</span>
-                  </p>
+                    {/* break-words ensures long messages don't overflow out of div */}
+                    <p className="break-words">{message.content}</p>
+                    <p
+                      className={`text-[10px] text-zinc-500 flex gap-1 items-center mt-1 ${
+                        message.senderId === loggedInUser._id
+                          ? "justify-end"
+                          : "justify-start"
+                      }`}
+                    >
+                      <span>{moment(message.createdAt).format("hh:mm A")}</span>
+                      <span className="mt-px mx-0.5 size-[3px] rounded-full bg-zinc-500"></span>
+                      <span>{moment(message.createdAt).fromNow()}</span>
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </RightClickMenu>
             ))}
 
             {/* Scroll to bottom */}
