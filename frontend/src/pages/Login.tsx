@@ -11,6 +11,7 @@ import { api } from "../store/api";
 import { setAuth } from "../store/reducers/AuthSlice";
 import { axios } from "../utils/axios";
 import { Input } from "@/components/ui/input";
+import { useDimension } from "@/hooks/useDimension";
 
 interface LoginFormData {
   username: string;
@@ -40,6 +41,7 @@ const schema = yup.object().shape({
 
 const Login = () => {
   const dispatch = useDispatch();
+  const { width } = useDimension();
 
   // State for loading spinner
   const [loading, setLoading] = useState<boolean>(false);
@@ -121,7 +123,19 @@ const Login = () => {
       </div>
 
       {/* Right side */}
-      <div className="relative px-20 lg:px-40 w-full h-full flex justify-center items-center flex-col text-center gap-2">
+      <div
+        style={
+          width <= 640
+            ? {
+                backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,1), rgba(0,0,0,0.8)), url(/background.jpeg)`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }
+            : {}
+        }
+        className="relative px-20 lg:px-40 w-full h-full flex justify-center items-center flex-col text-center gap-2"
+      >
         <CustomLink absolute={true} side="right" route="signup">
           Sign Up Instead
         </CustomLink>
