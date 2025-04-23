@@ -201,7 +201,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <div className="py-2">
                 <h1 className="text-base">@{user?.username}</h1>
                 <p className="text-xs text-zinc-400">
-                  {user?.bio!.slice(0, 20)}...
+                  {user?.bio?.length! > 20
+                    ? user?.bio!.slice(0, 20) + "..."
+                    : user?.bio}
                 </p>
               </div>
               <div>

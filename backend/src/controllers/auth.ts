@@ -19,6 +19,11 @@ const signUp = async (req: Request, res: Response) => {
   if (!username.trim() || !password.trim())
     return res.status(400).json({ message: "All fields are required !" });
 
+  if (bio.trim().length > 50)
+    return res
+      .status(400)
+      .json({ message: "Bio must be less than 50 characters !" });
+
   try {
     const existingUsername = await userModel.findOne({ username });
     if (existingUsername)

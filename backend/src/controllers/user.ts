@@ -3,6 +3,11 @@ import { Response } from "express";
 import userModel from "../models/user.js";
 import chatModel from "../models/chat.js";
 import { ChatTypes } from "../types/chat.js";
+import {
+  deleteFromCloudinary,
+  uploadToCloudinary,
+} from "../utils/cloudinary.js";
+import { FileProps } from "../types/file.js";
 
 const getUser = async (req: RequestWithUser, res: Response) => {
   const { userId } = req.user!;
@@ -37,6 +42,12 @@ const searchUser = async (req: RequestWithUser, res: Response) => {
 const sendRequest = async (req: RequestWithUser, res: Response) => {
   const { id } = req.params;
   const { userId } = req.user!;
+
+  if (id === userId.toString()) {
+    return res
+      .status(400)
+      .json({ message: "You cannot send request to yourself !" });
+  }
 
   try {
     const [loggedInUser, otherUser] = await Promise.all([
@@ -144,20 +155,34 @@ const respondRequest = async (req: RequestWithUser, res: Response) => {
 
 const updateDetails = async (req: RequestWithUser, res: Response) => {
   const { userId } = req.user!;
-  const { username, bio } = req.body;
+  const { bio } = req.body;
+  const avatar = req.file;
 
-  if (bio.trim().length > 100)
+  if (!bio && !avatar) {
+    return res.status(400).json({
+      message: "Please provide at least a bio or an avatar to update !",
+    });
+  }
+
+  if (bio && bio.trim().length > 50)
     return res
       .status(400)
-      .json({ message: "Bio must be less than 100 characters !" });
+      .json({ message: "Bio must be less than 50 characters !" });
 
   try {
     const user = await userModel.findById(userId);
     if (!user)
-      return res.status(500).json({ message: "Unable to fetch data !" });
+      return res.status(500).json({ message: "User does not exist !" });
 
-    if (username.trim()) user.username = username;
     if (bio.trim()) user.bio = bio;
+
+    if (avatar) {
+      deleteFromCloudinary(user.avatar.public_id);
+      const { public_id, url } = await uploadToCloudinary(avatar as FileProps);
+      user.avatar.public_id = public_id;
+      user.avatar.url = url;
+    }
+
     await user.save();
 
     return res.status(200).json({ message: "Details Updated Successfully !" });

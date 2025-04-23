@@ -8,6 +8,7 @@ import {
   sendRequest,
   updateDetails,
 } from "../controllers/user.js";
+import { multerUpload } from "../config/multer.js";
 
 const router = express.Router();
 
@@ -17,6 +18,6 @@ router.get("/search-user", searchUser);
 router.post("/send-request/:id", sendRequest);
 router.get("/get-requests", getRequests);
 router.post("/respond-request/:id", respondRequest);
-router.put("/update-details", updateDetails);
+router.put("/update-details", multerUpload.single("avatar"), updateDetails);
 
 export default router;
