@@ -170,7 +170,7 @@ const SettingsComponent = () => {
           <Input
             register={register("bio")}
             type="text"
-            placeholder={loggedInUser.bio}
+            placeholder={`Bio: ${loggedInUser.bio}`}
             className="h-10"
           />
 
