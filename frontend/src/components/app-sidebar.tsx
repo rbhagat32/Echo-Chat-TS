@@ -77,7 +77,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       .then(() => {
         toast.success("Logged out successfully !");
         dispatch(setAuth(false));
-        dispatch(api.util.invalidateTags(["Auth"]));
         dispatch(clearUser());
         dispatch(clearChats());
         dispatch(clearActiveChat());

@@ -12,6 +12,7 @@ import { setAuth } from "../store/reducers/AuthSlice";
 import { axios } from "../utils/axios";
 import { Input } from "@/components/ui/input";
 import { useDimension } from "@/hooks/useDimension";
+import { useNavigate } from "react-router-dom";
 
 interface LoginFormData {
   username: string;
@@ -41,6 +42,7 @@ const schema = yup.object().shape({
 
 const Login = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { width } = useDimension();
 
   // State for loading spinner
@@ -76,8 +78,8 @@ const Login = () => {
       reset();
       dispatch(setAuth(true));
       // Invalidate the Auth, User and Chats tags to refetch data after login
+      navigate("/");
       dispatch(api.util.invalidateTags(["Auth", "User", "Chats"]));
-      // no need to navigate to home page as it is handled when auth is invalidated
       toast.success(response.data.message);
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Failed to Log In!");
@@ -125,7 +127,7 @@ const Login = () => {
       {/* Right side */}
       <div
         style={
-          width <= 640
+          width <= 768
             ? {
                 backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,1), rgba(0,0,0,0.8)), url(/background.jpeg)`,
                 backgroundSize: "cover",
