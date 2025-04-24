@@ -3,7 +3,7 @@ import { v4 as uuid } from "uuid";
 import { getBase64 } from "../helpers/getBase64.js";
 import { FileProps } from "../types/file.js";
 
-interface CloudinaryResponse {
+interface ReturnTypes {
   public_id: string | null;
   url: string | null;
 }
@@ -13,9 +13,7 @@ interface CloudinaryUploadResult {
   url: string;
 }
 
-const uploadToCloudinary = async (
-  file: FileProps
-): Promise<CloudinaryResponse> => {
+const uploadToCloudinary = async (file: FileProps): Promise<ReturnTypes> => {
   if (!file) {
     return {
       public_id: null,
