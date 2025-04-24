@@ -8,6 +8,7 @@ import {
   uploadToCloudinary,
 } from "../utils/cloudinary.js";
 import { FileProps } from "../types/file.js";
+import { io, userSocketsMap } from "../socket.js";
 
 const getUser = async (req: RequestWithUser, res: Response) => {
   const { userId } = req.user!;
@@ -143,6 +144,28 @@ const respondRequest = async (req: RequestWithUser, res: Response) => {
       // if request is rejected, just save the loggedInUser
       // as request has been already removed from requests array
       await loggedInUser.save();
+    }
+
+    // Emit refetch chats event to the other user
+    const receiverSocketId = userSocketsMap.get(otherUser._id.toString());
+    if (receiverSocketId) {
+      // send refetch event and send what to refetch
+      if (response === "accept")
+        io.to(receiverSocketId).emit("refetch", [
+          "User",
+          "Chats",
+          "Searches",
+          "Requests",
+        ]);
+
+      if (response === "reject")
+        io.to(receiverSocketId).emit("refetch", [
+          "User",
+          "Searches",
+          "Requests",
+        ]);
+    } else {
+      // console.log(`Other user: ${otherUserId} is not online`);
     }
 
     return res

@@ -117,19 +117,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     }
   };
 
-  // socket listener for realtime request
+  // socket listeners
   React.useEffect(() => {
-    socket?.on("realtimeRequest", (user: UserTypes) => {
-      // append this user to requests in redux store
-      dispatch(appendRequest(user));
+    socket?.on("refetch", (whatToRefetch) => {
+      // console.log("Refetching:", whatToRefetch);
+      dispatch(api.util.invalidateTags(whatToRefetch));
     });
 
     socket?.on(
       "realtimeDeleteChat",
       (user: UserTypes, deletedChat: ChatTypes) => {
-        toast.warning(`${user.username} deleted the chat !`, {
-          description: "Refreshing in 3..2..1..",
-        });
+        toast.warning(`${user.username} deleted the chat !`);
 
         if (activeChat._id === deletedChat._id) {
           // if active chat is deleted by other user, clear active chat and messages
@@ -140,40 +138,30 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           dispatch(removeLatestChat(deletedChat));
           dispatch(clearMessages());
         }
-
-        setTimeout(() => {
-          dispatch(api.util.invalidateTags(["User", "Chats"]));
-        }, 3000);
       }
     );
 
-    socket?.on("realtimeAccept", (user: UserTypes) => {
-      toast.success(`${user.username} accepted your request !`, {
-        description: "Refreshing in 3..2..1..",
-      });
+    socket?.on("realtimeRequest", (user: UserTypes) => {
+      // append this user to requests in redux store
+      dispatch(appendRequest(user));
+    });
 
-      setTimeout(() => {
-        dispatch(
-          api.util.invalidateTags(["User", "Chats", "Searches", "Requests"])
-        );
-      }, 3000);
+    socket?.on("realtimeAccept", (user: UserTypes) => {
+      toast.success(`${user.username} accepted your request !`);
     });
 
     socket?.on("realtimeReject", (user: UserTypes) => {
       toast.warning(`${user.username} rejected your request !`);
-
-      setTimeout(() => {
-        dispatch(api.util.invalidateTags(["User", "Searches", "Requests"]));
-      }, 3000);
     });
 
     return () => {
-      socket?.off("realtimeRequest");
+      socket?.off("refetch");
       socket?.off("realtimeDeleteChat");
+      socket?.off("realtimeRequest");
       socket?.off("realtimeAccept");
       socket?.off("realtimeReject");
     };
-  }, [socket, user, activeChat]);
+  }, [socket, user, chats, activeChat]);
 
   return (
     <Sidebar {...props}>

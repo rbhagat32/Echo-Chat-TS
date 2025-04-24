@@ -25,6 +25,10 @@ const io = new Server(server, {
   },
 });
 
+// app.set("io", io); -> this can be used to access io in controllers by doing
+// const io = req.app.get("io");
+// but we are directly exporting io from this file and importing it in controllers
+
 const userSocketsMap = new Map<string, string>();
 
 io.use((socket, next) => {
@@ -122,4 +126,4 @@ io.on("connection", (socket: AuthenticatedSocket) => {
   });
 });
 
-export { app, server, io };
+export { app, server, io, userSocketsMap };

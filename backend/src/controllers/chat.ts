@@ -4,6 +4,7 @@ import userModel from "../models/user.js";
 import chatModel from "../models/chat.js";
 import messageModel from "../models/message.js";
 import { ChatTypes } from "../types/chat.js";
+import { io, userSocketsMap } from "../socket.js";
 
 const getChats = async (req: RequestWithUser, res: Response) => {
   const { userId } = req.user!;
@@ -109,6 +110,15 @@ const deleteChat = async (req: RequestWithUser, res: Response) => {
       loggedInUser.save(),
       otherUser.save(),
     ]);
+
+    // Emit refetch chats event to the other user
+    const receiverSocketId = userSocketsMap.get(otherUserId.toString());
+    if (receiverSocketId) {
+      // send refetch event and send what to refetch
+      io.to(receiverSocketId).emit("refetch", ["Chats"]);
+    } else {
+      // console.log(`Other user: ${otherUserId} is not online`);
+    }
 
     return res.status(200).json({ message: "Chat deleted successfully!" });
   } catch (error) {
