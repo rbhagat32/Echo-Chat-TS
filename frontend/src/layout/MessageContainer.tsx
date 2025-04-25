@@ -2,7 +2,7 @@ import MessageInput from "./MessageInput";
 import Welcome from "@/components/custom/Welcome";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import PageLoader from "@/partials/PageLoader";
 import { useLazyGetMessagesQuery } from "@/store/api";
 import {
@@ -29,6 +29,9 @@ export default function MessageContainer() {
   // fetching messages for the active chat
   const [trigger, remainingData] = useLazyGetMessagesQuery();
   const fetchMessages = async () => {
+    if (rootDivRef.current) {
+      previousScrollHeightRef.current = rootDivRef.current.scrollHeight;
+    }
     try {
       const response = await trigger({
         chatId: activeChat._id,
@@ -84,6 +87,16 @@ export default function MessageContainer() {
   // for infinite scroll
   const rootDivRef = useRef<HTMLDivElement>(null);
   const topDivRef = useRef<HTMLDivElement>(null);
+  const previousScrollHeightRef = useRef<number>(0);
+
+  useLayoutEffect(() => {
+    if (rootDivRef.current && previousScrollHeightRef.current) {
+      const container = rootDivRef.current;
+      const scrollHeightDiff =
+        container.scrollHeight - previousScrollHeightRef.current;
+      container.scrollTop = scrollHeightDiff;
+    }
+  }, [messagesData.messages]);
 
   return (
     // Container for messages and input box
