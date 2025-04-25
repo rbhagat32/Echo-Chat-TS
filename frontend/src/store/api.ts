@@ -2,11 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setAuth } from "./reducers/AuthSlice";
 import { setUser } from "./reducers/UserSlice";
 import { setChats } from "./reducers/ChatSlice";
-import {
-  setMessages,
-  appendMessage,
-  removeMessage,
-} from "./reducers/MessageSlice";
+import { appendMessage, removeMessage } from "./reducers/MessageSlice";
 import { toast } from "sonner";
 import { Draft } from "@reduxjs/toolkit";
 import { setRequests } from "./reducers/RequestsSlice";
@@ -102,10 +98,9 @@ export const api = createApi({
         limit = -1, // limit = -1 means fetch all messages (default value)
       }) => `message/get-messages/${chatId}?page=${page}&limit=${limit}`,
       providesTags: ["Messages"],
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_, { queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled;
-          dispatch(setMessages(data));
+          await queryFulfilled;
         } catch (error) {
           toast.error("Failed to fetch messages !");
           console.error("Failed to fetch messages:", error);

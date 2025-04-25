@@ -53,7 +53,9 @@ const getMessages = async (req: RequestWithUser, res: Response) => {
     }
 
     const totalMessages = await messageModel.countDocuments({ chatId });
-    let getMessagesQuery = messageModel.find({ chatId });
+    let getMessagesQuery = messageModel
+      .find({ chatId })
+      .sort({ createdAt: -1 });
 
     if (limit !== -1) {
       getMessagesQuery = getMessagesQuery.skip((page - 1) * limit).limit(limit);
@@ -64,7 +66,7 @@ const getMessages = async (req: RequestWithUser, res: Response) => {
     const hasMore = limit !== -1 && page * limit < totalMessages;
 
     return res.status(200).json({
-      messages,
+      messages: messages.reverse(),
       hasMore,
     });
   } catch (error) {

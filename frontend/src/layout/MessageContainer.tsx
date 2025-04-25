@@ -2,17 +2,24 @@ import MessageInput from "./MessageInput";
 import Welcome from "@/components/custom/Welcome";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import PageLoader from "@/partials/PageLoader";
 import { useLazyGetMessagesQuery } from "@/store/api";
-import { clearMessages, removeMessage } from "@/store/reducers/MessageSlice";
+import {
+  clearMessages,
+  prependMessages,
+  removeMessage,
+} from "@/store/reducers/MessageSlice";
 import { RightClickMenu } from "@/components/custom/RightClickMenu";
 import { getSocket } from "@/Socket";
 import { toast } from "sonner";
+import InfiniteScroll from "@/components/custom/InfiniteScroll";
 
 export default function MessageContainer() {
   const socket = getSocket();
   const dispatch = useDispatch();
+
+  const [page, setPage] = useState<number>(1);
 
   // fetching required data from redux store
   const loggedInUser = useSelector((state: StateTypes) => state.user);
@@ -21,15 +28,22 @@ export default function MessageContainer() {
 
   // fetching messages for the active chat
   const [trigger, remainingData] = useLazyGetMessagesQuery();
+  const fetchMessages = async () => {
+    try {
+      const response = await trigger({
+        chatId: activeChat._id,
+        page: page,
+        limit: 25,
+      });
+      setPage((prev) => prev + 1);
+      dispatch(prependMessages(response.data!));
+    } catch (error) {
+      console.error("Failed to fetch messages:", error);
+    }
+  };
+
   useEffect(() => {
     if (activeChat._id === undefined) return;
-    const fetchMessages = async () => {
-      try {
-        await trigger({ chatId: activeChat._id });
-      } catch (error) {
-        console.error("Failed to fetch messages:", error);
-      }
-    };
     fetchMessages();
     return () => {
       // clear messages from redux store when activeChat is changed
@@ -48,7 +62,7 @@ export default function MessageContainer() {
     if (messagesData?.messages?.length) {
       scrollToBottom();
     }
-  }, [messagesData]);
+  }, [remainingData.isLoading]);
 
   // socket listener for realtime delete message
   useEffect(() => {
@@ -67,11 +81,16 @@ export default function MessageContainer() {
     };
   }, [socket, dispatch]);
 
+  // for infinite scroll
+  const rootDivRef = useRef<HTMLDivElement>(null);
+  const topDivRef = useRef<HTMLDivElement>(null);
+
   return (
     // Container for messages and input box
     <div className="rounded-xl bg-muted/50">
       {/* Messages container with fixed height */}
       <div
+        ref={rootDivRef}
         style={{ height: "calc(100vh - 13.5rem - 1px)" }}
         className="overflow-y-auto p-2"
       >
@@ -82,7 +101,7 @@ export default function MessageContainer() {
             <Welcome />
           </div>
         ) : // if some chat is selected, check if messages are loading or not
-        remainingData.isFetching ? (
+        remainingData.isLoading ? (
           // if messages are loading show PageLoader
           <PageLoader />
         ) : // else check no. of messages
@@ -94,6 +113,16 @@ export default function MessageContainer() {
         ) : (
           // if no. of messages is >0
           <>
+            <InfiniteScroll
+              hasMore={messagesData.hasMore}
+              isLoading={remainingData.isFetching}
+              next={fetchMessages}
+              reverse={true}
+              root={rootDivRef.current}
+            >
+              <div ref={topDivRef} />
+            </InfiniteScroll>
+
             {messagesData?.messages?.map((message: MessageTypes) => (
               // actual message
               <RightClickMenu

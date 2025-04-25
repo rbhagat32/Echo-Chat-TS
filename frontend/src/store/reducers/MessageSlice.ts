@@ -12,6 +12,13 @@ const MessageSlice = createSlice({
     setMessages: (_, action: PayloadAction<MessageStateTypes>) => {
       return action.payload;
     },
+    prependMessages: (
+      state,
+      action: PayloadAction<{ messages: MessageTypes[]; hasMore: boolean }>
+    ) => {
+      state.messages = [...action.payload.messages, ...state.messages];
+      state.hasMore = action.payload.hasMore;
+    },
     appendMessage: (state, action: PayloadAction<MessageTypes>) => {
       state.messages = [...state.messages, action.payload];
     },
@@ -27,5 +34,10 @@ const MessageSlice = createSlice({
 });
 
 export { MessageSlice };
-export const { setMessages, appendMessage, removeMessage, clearMessages } =
-  MessageSlice.actions;
+export const {
+  setMessages,
+  prependMessages,
+  appendMessage,
+  removeMessage,
+  clearMessages,
+} = MessageSlice.actions;
