@@ -56,16 +56,18 @@ export default function MessageContainer() {
 
   // Scroll to bottom when messages are displayed
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const [isNewMessage, setIsNewMessage] = useState<boolean>(false);
   const scrollToBottom = () => {
     if (scrollerRef.current) {
       scrollerRef.current.scrollIntoView();
     }
   };
   useEffect(() => {
-    if (messagesData?.messages?.length) {
+    if (isNewMessage === true) {
       scrollToBottom();
+      setIsNewMessage(false);
     }
-  }, [remainingData.isLoading]);
+  }, [remainingData.isLoading, isNewMessage]);
 
   // socket listener for realtime delete message
   useEffect(() => {
@@ -183,7 +185,7 @@ export default function MessageContainer() {
       {activeChat!._id === undefined ? (
         <div className="h-14 rounded-t-none rounded-b-xl" />
       ) : (
-        <MessageInput />
+        <MessageInput setIsNewMessage={setIsNewMessage} />
       )}
     </div>
   );

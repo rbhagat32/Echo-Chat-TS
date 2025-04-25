@@ -9,7 +9,11 @@ import { api, useSendMessageMutation } from "@/store/api";
 import { appendMessage } from "@/store/reducers/MessageSlice";
 import { appendLatestChat } from "@/store/reducers/LatestChatSlice";
 
-function MessageInputComponent() {
+interface PropTypes {
+  setIsNewMessage: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function MessageInputComponent({ setIsNewMessage }: PropTypes) {
   const dispatch = useDispatch();
   const socket = getSocket();
   const [sendMessage] = useSendMessageMutation();
@@ -28,6 +32,8 @@ function MessageInputComponent() {
   const [inputMessage, setInputMessage] = useState<string>("");
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return toast.error("Message cannot be empty !");
+
+    setIsNewMessage(true);
 
     const newMessage: MessageTypes = {
       _id: `realtime-${uuid().replace(/-/g, "").slice(0, 24)}`,
