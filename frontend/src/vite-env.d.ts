@@ -45,3 +45,11 @@ interface MessageTypes {
   createdAt: Date | string;
   updatedAt: Date | string;
 }
+
+type RefetchTypes =
+  | "Auth"
+  | "User"
+  | "Chats"
+  | "Messages"
+  | "Searches"
+  | "Requests";

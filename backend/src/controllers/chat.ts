@@ -5,6 +5,7 @@ import chatModel from "../models/chat.js";
 import messageModel from "../models/message.js";
 import { ChatTypes } from "../types/chat.js";
 import { io, userSocketsMap } from "../socket.js";
+import { RefetchTypes } from "../types/refetch.js";
 
 const getChats = async (req: RequestWithUser, res: Response) => {
   const { userId } = req.user!;
@@ -115,7 +116,7 @@ const deleteChat = async (req: RequestWithUser, res: Response) => {
     const receiverSocketId = userSocketsMap.get(otherUserId.toString());
     if (receiverSocketId) {
       // send refetch event and send what to refetch
-      io.to(receiverSocketId).emit("refetch", ["Chats"]);
+      io.to(receiverSocketId).emit("refetch", ["Chats"] as RefetchTypes[]);
     } else {
       // console.log(`Other user: ${otherUserId} is not online`);
     }

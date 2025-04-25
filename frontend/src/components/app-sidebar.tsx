@@ -118,7 +118,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   // socket listeners
   React.useEffect(() => {
-    socket?.on("refetch", (whatToRefetch) => {
+    socket?.on("refetch", (whatToRefetch: RefetchTypes[]) => {
       // console.log("Refetching:", whatToRefetch);
       dispatch(api.util.invalidateTags(whatToRefetch));
     });

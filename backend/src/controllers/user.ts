@@ -9,6 +9,7 @@ import {
 } from "../utils/cloudinary.js";
 import { FileProps } from "../types/file.js";
 import { io, userSocketsMap } from "../socket.js";
+import { RefetchTypes } from "../types/refetch.js";
 
 const getUser = async (req: RequestWithUser, res: Response) => {
   const { userId } = req.user!;
@@ -156,14 +157,14 @@ const respondRequest = async (req: RequestWithUser, res: Response) => {
           "Chats",
           "Searches",
           "Requests",
-        ]);
+        ] as RefetchTypes[]);
 
       if (response === "reject")
         io.to(receiverSocketId).emit("refetch", [
           "User",
           "Searches",
           "Requests",
-        ]);
+        ] as RefetchTypes[]);
     } else {
       // console.log(`Other user: ${otherUserId} is not online`);
     }
