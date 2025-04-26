@@ -17,6 +17,7 @@ export const RequestsComponent = () => {
   const [respondRequest] = useRespondRequestMutation();
   const loggedInUser = useSelector((state: StateTypes) => state.user);
   const requests = useSelector((state: StateTypes) => state.requests);
+  const onlineUserIds = useSelector((state: StateTypes) => state.onlineUsers);
 
   // refetch user data on initial render
   useEffect(() => {
@@ -54,6 +55,12 @@ export const RequestsComponent = () => {
                     />
                   </div>
                   <p className="ml-2 text-sm">{user.username}</p>
+                  {onlineUserIds.includes(user._id) && (
+                    <div className="flex items-center gap-1 mt-1.5 ml-2">
+                      <div className="size-1.5 rounded-full bg-green-500 mt-0.5" />
+                      <p className="text-[10px] text-zinc-600">online</p>
+                    </div>
+                  )}
                 </div>
 
                 {/* rendering buttons */}

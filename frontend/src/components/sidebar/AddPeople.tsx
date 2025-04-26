@@ -24,6 +24,7 @@ export const AddPeopleComponent = () => {
   const socket = getSocket();
   const dispatch = useDispatch();
   const loggedInUser = useSelector((state: StateTypes) => state.user);
+  const onlineUserIds = useSelector((state: StateTypes) => state.onlineUsers);
 
   // search functionality
   const [trigger, remainingData] = useLazySearchUserQuery();
@@ -103,6 +104,12 @@ export const AddPeopleComponent = () => {
                     />
                   </div>
                   <p className="ml-2 text-sm">{user.username}</p>
+                  {onlineUserIds.includes(user._id) && (
+                    <div className="flex items-center gap-1 mt-1.5 ml-2">
+                      <div className="size-1.5 rounded-full bg-green-500 mt-0.5" />
+                      <p className="text-[10px] text-zinc-600">online</p>
+                    </div>
+                  )}
                 </div>
 
                 {/* rendering buttons */}
