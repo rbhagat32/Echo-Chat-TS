@@ -38,7 +38,7 @@ import { Dialog } from "./custom/Dialog";
 import { SettingsComponent } from "./sidebar/Settings";
 import { useNavLinks } from "@/hooks/useNavLinks";
 import { appendRequest, clearRequests } from "@/store/reducers/RequestsSlice";
-import { setOnlineUsers } from "@/store/reducers/OnlineUsers";
+import { clearOnlineUsers, setOnlineUsers } from "@/store/reducers/OnlineUsers";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const socket = getSocket();
@@ -85,6 +85,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         dispatch(clearLatestChats());
         dispatch(clearMessages());
         dispatch(clearRequests());
+        dispatch(clearOnlineUsers());
 
         socket!.disconnect();
       })
