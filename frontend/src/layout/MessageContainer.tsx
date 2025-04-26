@@ -49,6 +49,9 @@ export default function MessageContainer() {
     if (activeChat._id === undefined) return;
     fetchMessages();
     return () => {
+      // reset page to 1 when activeChat changes
+      setPage(1);
+
       // clear messages from redux store when activeChat is changed
       dispatch(clearMessages());
     };
