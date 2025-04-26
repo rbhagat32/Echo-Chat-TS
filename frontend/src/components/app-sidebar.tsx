@@ -38,6 +38,7 @@ import { Dialog } from "./custom/Dialog";
 import { SettingsComponent } from "./sidebar/Settings";
 import { useNavLinks } from "@/hooks/useNavLinks";
 import { appendRequest, clearRequests } from "@/store/reducers/RequestsSlice";
+import { setOnlineUsers } from "@/store/reducers/OnlineUsers";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const socket = getSocket();
@@ -53,6 +54,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const activeChat = useSelector((state: StateTypes) => state.activeChat);
   const latestChats = useSelector((state: StateTypes) => state.latestChats);
   const requests = useSelector((state: StateTypes) => state.requests);
+  const onlineUserIds = useSelector((state: StateTypes) => state.onlineUsers);
 
   // Destructure data and loading state
   const user = userData.data;
@@ -118,6 +120,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   // socket listeners
   React.useEffect(() => {
+    socket?.on("onlineUsers", (onlineUserIds) => {
+      dispatch(setOnlineUsers(onlineUserIds));
+    });
+
     socket?.on("refetch", (whatToRefetch: RefetchTypes[]) => {
       // console.log("Refetching:", whatToRefetch);
       dispatch(api.util.invalidateTags(whatToRefetch));
@@ -154,13 +160,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     });
 
     return () => {
+      socket?.off("onlineUsers");
       socket?.off("refetch");
       socket?.off("realtimeDeleteChat");
       socket?.off("realtimeRequest");
       socket?.off("realtimeAccept");
       socket?.off("realtimeReject");
     };
-  }, [socket, user, chats, activeChat]);
+  }, [socket, user, chats, activeChat, onlineUserIds]);
 
   return (
     <Sidebar {...props}>
@@ -286,6 +293,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       latestChat._id !== activeChat._id
                   ) || false;
 
+                const isOnline = onlineUserIds.some(
+                  (onlineUserId) => onlineUserId === chat.users[0]._id
+                );
+
                 return (
                   <button
                     key={index}
@@ -295,7 +306,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     } rounded-md p-2 hover:bg-muted/50 duration-300`}
                   >
                     <div className="flex items-center">
-                      <div className="relative shrink-0 size-8 rounded-full overflow-hidden">
+                      <div
+                        className={`relative shrink-0 size-8 rounded-full overflow-hidden ${
+                          isOnline && "border-2 border-green-500"
+                        }`}
+                      >
                         <img
                           src={chat.users[0].avatar.url || "/placeholder.jpeg"}
                           alt="Chat Profile Picture"

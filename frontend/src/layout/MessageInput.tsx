@@ -33,6 +33,7 @@ function MessageInputComponent({ setIsNewMessage }: PropTypes) {
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return toast.error("Message cannot be empty !");
 
+    // fro scrolling to the bottom of the chat window when new message is sent
     setIsNewMessage(true);
 
     const newMessage: MessageTypes = {
@@ -58,6 +59,9 @@ function MessageInputComponent({ setIsNewMessage }: PropTypes) {
   // socket listener for realtime messages
   useEffect(() => {
     const handleRealtimeMessage = async (msg: MessageTypes) => {
+      // for scrolling to the bottom of the chat window when new message is received
+      setIsNewMessage(true);
+
       // check if the message belongs to the active chat
       if (msg.senderId === activeChat.users[0]._id) {
         dispatch(appendMessage(msg));

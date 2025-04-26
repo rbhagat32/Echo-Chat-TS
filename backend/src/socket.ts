@@ -45,6 +45,8 @@ io.on("connection", (socket: AuthenticatedSocket) => {
 
   userSocketsMap.set(userId, socket.id);
 
+  io.emit("onlineUsers", Array.from(userSocketsMap.keys()));
+
   socket.on("message", (message) => {
     const receiverSocketId = userSocketsMap.get(message.receiverId.toString());
     if (receiverSocketId) {
@@ -123,6 +125,7 @@ io.on("connection", (socket: AuthenticatedSocket) => {
   socket.on("disconnect", (_) => {
     // console.log(`User: ${user.username}, Disconnected: ${reason}`);
     userSocketsMap.delete(userId);
+    io.emit("onlineUsers", Array.from(userSocketsMap.keys()));
   });
 });
 

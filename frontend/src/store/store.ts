@@ -7,6 +7,7 @@ import { ActiveChatSlice } from "./reducers/ActiveChatSlice";
 import { LatestChatSlice } from "./reducers/LatestChatSlice";
 import { MessageSlice } from "./reducers/MessageSlice";
 import { RequestsSlice } from "./reducers/RequestsSlice";
+import { OnlineUsersSlice } from "./reducers/OnlineUsers";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     [LatestChatSlice.name]: LatestChatSlice.reducer,
     [MessageSlice.name]: MessageSlice.reducer,
     [RequestsSlice.name]: RequestsSlice.reducer,
+    [OnlineUsersSlice.name]: OnlineUsersSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(api.middleware),
