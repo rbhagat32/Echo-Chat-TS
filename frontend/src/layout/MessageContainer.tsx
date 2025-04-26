@@ -77,6 +77,7 @@ export default function MessageContainer() {
     const handleRealtimeDeleteMessage = async (
       deletedMessage: MessageTypes
     ) => {
+      setIsNewMessage(true);
       toast.warning(`${activeChat.users[0].username} deleted a message`);
       dispatch(removeMessage(deletedMessage));
     };
@@ -87,7 +88,7 @@ export default function MessageContainer() {
       // on cleanup, remove the socket listener
       socket?.off("realtimeDeleteMessage", handleRealtimeDeleteMessage);
     };
-  }, [socket, dispatch]);
+  }, [socket, dispatch, messagesData]);
 
   // for infinite scroll
   const rootDivRef = useRef<HTMLDivElement>(null);
