@@ -3,7 +3,7 @@ services:
     container_name: echo-chat-ts-backend-container
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - 3000:3000
     env_file:
@@ -21,7 +21,7 @@ services:
     container_name: echo-chat-ts-frontend-container
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     depends_on:
       - backend-image
     ports:
