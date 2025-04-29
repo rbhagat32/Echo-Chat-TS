@@ -1,0 +1,10 @@
+{
+  "name": "echo-chat-ts",
+  "scripts": {
+    "docker:dev": "docker-compose up --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rbhagat32/Echo-Chat-TS.git"
+  }
+}
