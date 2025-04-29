@@ -23,7 +23,7 @@ import { Builder, By, Key, until } from "selenium-webdriver";
       2000
     );
     await driver1.sleep(2000);
-    await password1.sendKeys("raghav123");
+    await password1.sendKeys("Raghav@123");
 
     await driver1.sleep(2000);
     await password1.sendKeys(Key.RETURN);
@@ -41,27 +41,10 @@ import { Builder, By, Key, until } from "selenium-webdriver";
       2000
     );
     await driver2.sleep(2000);
-    await password2.sendKeys("test123");
+    await password2.sendKeys("Test@123");
 
     await driver2.sleep(2000);
     await password2.sendKeys(Key.RETURN);
-    await driver2.sleep(2000);
-
-    let menuBtn1 = await driver1.wait(
-      until.elementLocated(By.name("menu-icon")),
-      2000
-    );
-    await driver1.sleep(2000);
-    await menuBtn1.click();
-
-    let menuBtn2 = await driver2.wait(
-      until.elementLocated(By.name("menu-icon")),
-      2000
-    );
-    await driver2.sleep(2000);
-    await menuBtn2.click();
-
-    await driver1.sleep(2000);
     await driver2.sleep(2000);
 
     let chat1 = await driver1.wait(
