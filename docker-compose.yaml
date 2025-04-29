@@ -1,0 +1,38 @@
+services:
+  backend-image:
+    container_name: echo-chat-ts-backend-container
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    env_file:
+      - ./backend/.env
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /app
+          ignore: ["node_modules", "dist"]
+        - action: rebuild
+          path: ./backend/package.json
+
+  frontend-image:
+    container_name: echo-chat-ts-frontend-container
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - backend-image
+    ports:
+      - 5173:5173
+    env_file:
+      - ./frontend/.env
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend
+          target: /app
+          ignore: "node_modules"
+        - action: rebuild
+          path: ./frontend/package.json
