@@ -3,11 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { v2 as cloudinary } from "cloudinary";
-
-// mongoose connection
-import { connectDB } from "./config/mongoose-connection.js";
-
-// routers
+import { connectDB } from "./config/db.js";
 import authRouter from "./routes/auth.js";
 import userRouter from "./routes/user.js";
 import chatRouter from "./routes/chat.js";
