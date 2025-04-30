@@ -1,7 +1,8 @@
 {
   "name": "echo-chat-ts",
   "scripts": {
-    "docker:dev": "docker-compose up --watch"
+    "start": "docker-compose up --watch",
+    "stop": "docker-compose down"
   },
   "repository": {
     "type": "git",
