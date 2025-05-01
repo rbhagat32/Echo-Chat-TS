@@ -8,10 +8,11 @@ import authRouter from "./routes/auth.js";
 import userRouter from "./routes/user.js";
 import chatRouter from "./routes/chat.js";
 import messageRouter from "./routes/message.js";
+import { errorHandler } from "./middlewares/error-handler.js";
 import { app, server } from "./socket.js";
 
 // setup
-dotenv.config({ path: "./.env" });
+dotenv.config({ path: ".env" });
 
 app.use(
   cors({
@@ -42,6 +43,9 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/message", messageRouter);
+
+// custom error handler
+app.use(errorHandler);
 
 const PORT = Number(process.env.PORT) || 3000;
 server.listen(PORT, () => {

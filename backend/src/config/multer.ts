@@ -1,4 +1,4 @@
-import multer, { Options } from "multer";
+import multer, { type Options } from "multer";
 
 export const multerUpload = multer({
   storage: multer.memoryStorage(),

@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express";
 import { RequestWithUser, UserTypes } from "../types/user.js";
 import jwt from "jsonwebtoken";
-import { cookieOptions } from "../constants/cookieOptions.js";
+import { cookieOptions } from "../constants/cookie-options.js";
 
 const isLoggedIn = async (
   req: RequestWithUser,

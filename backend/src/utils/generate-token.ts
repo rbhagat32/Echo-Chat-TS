@@ -1,6 +1,6 @@
 import { Response } from "express";
 import jwt from "jsonwebtoken";
-import { cookieOptions } from "../constants/cookieOptions.js";
+import { cookieOptions } from "../constants/cookie-options.js";
 
 interface User {
   _id: string;
