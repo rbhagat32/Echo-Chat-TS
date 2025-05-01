@@ -29,9 +29,7 @@ const uploadToCloudinary = async (file: FileProps): Promise<ReturnTypes> => {
       .png({ quality: 70 })
       .toBuffer();
 
-    const uploadFromBuffer = (
-      buffer: Buffer
-    ): Promise<CloudinaryUploadResult> => {
+    const uploadFromBuffer = (buffer: Buffer): Promise<CloudinaryUploadResult> => {
       // uploadFromBuffer function returns uploadPromise
       return new Promise((resolve, reject) => {
         const uploadImage = cloudinary.uploader.upload_stream(
@@ -75,16 +73,12 @@ const deleteFromCloudinary = async (public_id: string): Promise<boolean> => {
   }
 
   const deletePromise = new Promise<boolean>((resolve, reject) => {
-    cloudinary.uploader.destroy(
-      public_id,
-      { resource_type: "image" },
-      (error, result) => {
-        if (error) return reject(error);
+    cloudinary.uploader.destroy(public_id, { resource_type: "image" }, (error, result) => {
+      if (error) return reject(error);
 
-        if (result.result === "ok") return resolve(true);
-        else return resolve(false);
-      }
-    );
+      if (result.result === "ok") return resolve(true);
+      else return resolve(false);
+    });
   });
 
   try {

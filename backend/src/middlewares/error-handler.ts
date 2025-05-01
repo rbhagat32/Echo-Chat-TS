@@ -1,17 +1,22 @@
 import type { Request, Response, NextFunction } from "express";
 
-interface ErrorWithStatus extends Error {
-  statusCode?: number;
+export class ErrorHandler extends Error {
+  constructor(public statusCode: number, public message: string) {
+    super(message);
+    this.statusCode = statusCode;
+  }
 }
 
 export const errorHandler = (
-  err: ErrorWithStatus,
+  err: ErrorHandler,
   _req: Request,
   res: Response,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _next: NextFunction
 ) => {
-  const statusCode = err.statusCode || 500;
-  const message = err.message || "Internal Server Error !";
+  err.statusCode ||= 500;
+  err.message ||= "Internal Server Error";
 
-  return res.status(statusCode).json({ message });
+  console.log(err);
+  return res.status(err.statusCode).json({ message: err.message });
 };

@@ -10,21 +10,14 @@ interface DecodedData {
   userId: string;
 }
 
-const socketAuthenticator = async (
-  err: any,
-  socket: AuthenticatedSocket,
-  next: NextFunction
-) => {
+const socketAuthenticator = async (err: any, socket: AuthenticatedSocket, next: NextFunction) => {
   try {
     if (err) return next(new Error("Authentication Error"));
 
     const token = (socket.request as any).cookies?.token;
     if (!token) return next(new Error("Authentication Error"));
 
-    const decodedData = jwt.verify(
-      token,
-      process.env.JWT_SECRET_KEY as string
-    ) as DecodedData;
+    const decodedData = jwt.verify(token, process.env.JWT_SECRET_KEY as string) as DecodedData;
 
     const user = await userModel.findById(decodedData.userId);
     if (!user) return next(new Error("Authentication Error"));

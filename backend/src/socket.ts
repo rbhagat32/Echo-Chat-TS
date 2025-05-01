@@ -16,10 +16,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [
-      `${process.env.FRONTEND_URL_DEV}`,
-      `${process.env.FRONTEND_URL_PROD}`,
-    ],
+    origin: [`${process.env.FRONTEND_URL_DEV}`, `${process.env.FRONTEND_URL_PROD}`],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   },
@@ -59,24 +56,17 @@ io.on("connection", (socket: AuthenticatedSocket) => {
     }
   });
 
-  socket.on(
-    "deleteChat",
-    async (loggedInUser: UserTypes, deletedChat: ChatTypes) => {
-      const receiverSocketId = userSocketsMap.get(
-        deletedChat.users[0]._id.toString()
-      );
-      if (receiverSocketId) {
-        socket
-          .to(receiverSocketId)
-          .emit("realtimeDeleteChat", loggedInUser, deletedChat);
-        // console.log(
-        //   `${loggedInUser._id} deleted chat with ${deletedChat.users[0]._id}`
-        // );
-      } else {
-        // console.log(`Other user: ${deletedChat.users[0]._id} is not online`);
-      }
+  socket.on("deleteChat", async (loggedInUser: UserTypes, deletedChat: ChatTypes) => {
+    const receiverSocketId = userSocketsMap.get(deletedChat.users[0]._id.toString());
+    if (receiverSocketId) {
+      socket.to(receiverSocketId).emit("realtimeDeleteChat", loggedInUser, deletedChat);
+      // console.log(
+      //   `${loggedInUser._id} deleted chat with ${deletedChat.users[0]._id}`
+      // );
+    } else {
+      // console.log(`Other user: ${deletedChat.users[0]._id} is not online`);
     }
-  );
+  });
 
   socket.on("request", (loggedInUser: UserTypes, user: UserTypes) => {
     const receiverSocketId = userSocketsMap.get(user._id.toString());

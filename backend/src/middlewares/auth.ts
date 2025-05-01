@@ -3,20 +3,12 @@ import { RequestWithUser, UserTypes } from "../types/user.js";
 import jwt from "jsonwebtoken";
 import { cookieOptions } from "../constants/cookie-options.js";
 
-const isLoggedIn = async (
-  req: RequestWithUser,
-  res: Response,
-  next: NextFunction
-) => {
+const isLoggedIn = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   try {
     const token = req.cookies.token;
-    if (!token)
-      return res.status(401).json({ message: "Please login to continue !" });
+    if (!token) return res.status(401).json({ message: "Please login to continue !" });
 
-    const loggedInUser = jwt.verify(
-      token,
-      process.env.JWT_SECRET_KEY as string
-    );
+    const loggedInUser = jwt.verify(token, process.env.JWT_SECRET_KEY as string);
 
     req.user = loggedInUser as UserTypes;
     next();
