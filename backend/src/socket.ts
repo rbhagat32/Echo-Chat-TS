@@ -9,7 +9,7 @@ import { UserTypes } from "./types/user.js";
 import { ChatTypes } from "./types/chat.js";
 import { MessageTypes } from "./types/message.js";
 
-dotenv.config({ path: "./.env" });
+dotenv.config({ path: ".env" });
 
 const app = express();
 

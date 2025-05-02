@@ -6,7 +6,7 @@ export interface RequestWithUser extends Request {
   user?: UserTypes;
 }
 
-export interface UserTypes extends Document {
+export interface UserTypes {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
   username: string;

@@ -1,7 +1,7 @@
 import { RequestWithUser } from "../types/user.js";
 import { Response } from "express";
-import userModel from "../models/user.js";
-import chatModel from "../models/chat.js";
+import { UserModel } from "../models/user.js";
+import { ChatModel } from "../models/chat.js";
 import { ChatTypes } from "../types/chat.js";
 import { deleteFromCloudinary, uploadToCloudinary } from "../utils/cloudinary.js";
 import { FileProps } from "../types/file.js";
@@ -13,7 +13,7 @@ import { ErrorHandler } from "../middlewares/error-handler.js";
 const getUser = tryCatch(async (req: RequestWithUser, res: Response) => {
   const { userId } = req.user!;
 
-  const user = await userModel.findById(userId);
+  const user = await UserModel.findById(userId);
   if (!user) throw new ErrorHandler(404, "User not found !");
 
   return res.status(200).json(user);
@@ -23,7 +23,7 @@ const searchUser = tryCatch(async (req: RequestWithUser, res: Response) => {
   const { userId } = req.user!;
   const { query } = req.query;
 
-  const users = await userModel.find({
+  const users = await UserModel.find({
     _id: { $ne: userId },
     username: { $regex: query, $options: "i" },
   });
@@ -39,8 +39,8 @@ const sendRequest = tryCatch(async (req: RequestWithUser, res: Response) => {
     throw new ErrorHandler(400, "You cannot send request to yourself !");
 
   const [loggedInUser, otherUser] = await Promise.all([
-    userModel.findById(userId),
-    userModel.findById(id),
+    UserModel.findById(userId),
+    UserModel.findById(id),
   ]);
 
   if (!loggedInUser || !otherUser) throw new ErrorHandler(404, "User not found !");
@@ -64,7 +64,7 @@ const sendRequest = tryCatch(async (req: RequestWithUser, res: Response) => {
 const getRequests = tryCatch(async (req: RequestWithUser, res: Response) => {
   const { userId } = req.user!;
 
-  const user = await userModel.findById(userId).populate("requests");
+  const user = await UserModel.findById(userId).populate("requests");
   if (!user) throw new ErrorHandler(404, "User not found !");
 
   return res.status(200).json(user.requests);
@@ -79,8 +79,8 @@ const respondRequest = tryCatch(async (req: RequestWithUser, res: Response) => {
     throw new ErrorHandler(400, "Invalid response !");
 
   const [loggedInUser, otherUser] = await Promise.all([
-    userModel.findById(userId),
-    userModel.findById(id),
+    UserModel.findById(userId),
+    UserModel.findById(id),
   ]);
 
   if (!loggedInUser || !otherUser) throw new ErrorHandler(404, "User not found !");
@@ -93,7 +93,7 @@ const respondRequest = tryCatch(async (req: RequestWithUser, res: Response) => {
 
   if (response === "accept") {
     // create new chat and put both users in it
-    const newChat = await chatModel.create({
+    const newChat = await ChatModel.create({
       users: [userId, id],
       messages: [],
     });
@@ -140,7 +140,7 @@ const updateDetails = tryCatch(async (req: RequestWithUser, res: Response) => {
   if (bio && bio.trim().length > 50)
     throw new ErrorHandler(400, "Bio must be less than 50 characters !");
 
-  const user = await userModel.findById(userId);
+  const user = await UserModel.findById(userId);
   if (!user) throw new ErrorHandler(404, "User not found !");
 
   if (bio.trim()) user.bio = bio;
@@ -160,7 +160,7 @@ const updateDetails = tryCatch(async (req: RequestWithUser, res: Response) => {
 const deleteBio = tryCatch(async (req: RequestWithUser, res: Response) => {
   const { userId } = req.user!;
 
-  const user = await userModel.findById(userId);
+  const user = await UserModel.findById(userId);
   if (!user) throw new ErrorHandler(404, "User not found !");
 
   user.bio = "";
@@ -172,7 +172,7 @@ const deleteBio = tryCatch(async (req: RequestWithUser, res: Response) => {
 const deleteAvatar = tryCatch(async (req: RequestWithUser, res: Response) => {
   const { userId } = req.user!;
 
-  const user = await userModel.findById(userId);
+  const user = await UserModel.findById(userId);
   if (!user) throw new ErrorHandler(404, "User not found !");
 
   deleteFromCloudinary(user.avatar.public_id);

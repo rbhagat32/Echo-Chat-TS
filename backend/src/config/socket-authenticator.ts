@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import userModel from "../models/user.js";
+import { UserModel } from "../models/user.js";
 import dotenv from "dotenv";
 import { NextFunction } from "express";
 import { AuthenticatedSocket } from "../types/socket.js";
@@ -19,7 +19,7 @@ const socketAuthenticator = async (err: any, socket: AuthenticatedSocket, next: 
 
     const decodedData = jwt.verify(token, process.env.JWT_SECRET_KEY as string) as DecodedData;
 
-    const user = await userModel.findById(decodedData.userId);
+    const user = await UserModel.findById(decodedData.userId);
     if (!user) return next(new Error("Authentication Error"));
     socket.user = user;
 

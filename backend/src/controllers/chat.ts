@@ -1,8 +1,8 @@
 import { Response } from "express";
 import { RequestWithUser, UserTypes } from "../types/user.js";
-import userModel from "../models/user.js";
-import chatModel from "../models/chat.js";
-import messageModel from "../models/message.js";
+import { UserModel } from "../models/user.js";
+import { ChatModel } from "../models/chat.js";
+import { MessageModel } from "../models/message.js";
 import { ChatTypes } from "../types/chat.js";
 import { io, userSocketsMap } from "../socket.js";
 import { RefetchTypes } from "../types/refetch.js";
@@ -12,7 +12,7 @@ import { ErrorHandler } from "../middlewares/error-handler.js";
 const getChats = tryCatch(async (req: RequestWithUser, res: Response) => {
   const { userId } = req.user!;
 
-  const user = await userModel.findById(userId).populate({
+  const user = await UserModel.findById(userId).populate({
     path: "chats",
     populate: [
       {
@@ -67,20 +67,20 @@ const deleteChat = tryCatch(async (req: RequestWithUser, res: Response) => {
   const { chatId } = req.params;
   const { userId } = req.user!;
 
-  const chat = await chatModel.findById(chatId);
+  const chat = await ChatModel.findById(chatId);
 
   if (!chat) throw new ErrorHandler(404, "Chat doesn't exist !");
 
   const otherUserId = chat.users.find((id: string) => id.toString() !== userId.toString());
 
   const [loggedInUser, otherUser] = await Promise.all([
-    userModel.findById(userId),
-    userModel.findById(otherUserId),
+    UserModel.findById(userId),
+    UserModel.findById(otherUserId),
   ]);
 
   // delete all messages belonging to this chat
   for (let i = 0; i < chat.messages.length; i++) {
-    await messageModel.findOneAndDelete({ _id: chat.messages[i].toString() });
+    await MessageModel.findOneAndDelete({ _id: chat.messages[i].toString() });
   }
 
   // remove chat from loggedInUser
@@ -95,7 +95,7 @@ const deleteChat = tryCatch(async (req: RequestWithUser, res: Response) => {
 
   // delete chat and save changes
   await Promise.all([
-    chatModel.findByIdAndDelete({ _id: chatId }),
+    ChatModel.findByIdAndDelete({ _id: chatId }),
     loggedInUser.save(),
     otherUser.save(),
   ]);

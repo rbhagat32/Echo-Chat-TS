@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { cookieOptions } from "../constants/cookie-options.js";
-import userModel from "../models/user.js";
+import { UserModel } from "../models/user.js";
 import { uploadToCloudinary } from "../utils/cloudinary.js";
 import { generateToken } from "../utils/generate-token.js";
 import { FileProps } from "../types/file.js";
@@ -23,13 +23,13 @@ const signUp = tryCatch(async (req: Request, res: Response) => {
 
   if (bio.trim().length > 50) throw new ErrorHandler(400, "Bio must be less than 50 characters !");
 
-  const existingUsername = await userModel.findOne({ username });
+  const existingUsername = await UserModel.findOne({ username });
   if (existingUsername) throw new ErrorHandler(400, "Username already taken !");
 
   // avatar upload to cloudinary
   const { public_id, url } = await uploadToCloudinary(avatar as FileProps);
 
-  const createdUser = await userModel.create({
+  const createdUser = await UserModel.create({
     username,
     password,
     bio,
@@ -48,7 +48,7 @@ const login = tryCatch(async (req: Request, res: Response) => {
   if (!username.trim() || !password.trim())
     throw new ErrorHandler(400, "All fields are required !");
 
-  const user = await userModel.findOne({ username }).select("+password");
+  const user = await UserModel.findOne({ username }).select("+password");
 
   if (!user) throw new ErrorHandler(401, "Invalid username or password !");
 
