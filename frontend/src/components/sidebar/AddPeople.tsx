@@ -54,7 +54,7 @@ export const AddPeopleComponent = () => {
 
   return (
     <div className="relative h-[60vh]">
-      <div className="absolute top-5 w-full">
+      <div className="absolute top-6 w-full">
         <SidebarInput
           id="search-users"
           value={query}
