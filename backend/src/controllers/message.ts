@@ -34,7 +34,7 @@ const sendMessage = tryCatch(async (req: RequestWithUser, res: Response) => {
 const getMessages = tryCatch(async (req: RequestWithUser, res: Response) => {
   const { chatId } = req.params;
   const page = parseInt(req.query.page as string) || 1;
-  let limit = parseInt(req.query.limit as string) || 10;
+  const limit = parseInt(req.query.limit as string) || 10;
   // treat limit = -1 as fetch all messages
 
   // ensure chat exists

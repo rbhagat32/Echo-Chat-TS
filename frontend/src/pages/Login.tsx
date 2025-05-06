@@ -165,7 +165,7 @@ const Login = () => {
             className="h-10"
           />
           <Button type="submit" width="w-full">
-            {!loading ? "Sign In" : <Spinner />}
+            {!loading ? "Log In" : <Spinner />}
           </Button>
 
           <p className="text-zinc-500">

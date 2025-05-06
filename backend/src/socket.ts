@@ -56,7 +56,7 @@ io.on("connection", (socket: AuthenticatedSocket) => {
     }
   });
 
-  socket.on("deleteChat", async (loggedInUser: UserTypes, deletedChat: ChatTypes) => {
+  socket.on("deleteChat", (loggedInUser: UserTypes, deletedChat: ChatTypes) => {
     const receiverSocketId = userSocketsMap.get(deletedChat.users[0]._id.toString());
     if (receiverSocketId) {
       socket.to(receiverSocketId).emit("realtimeDeleteChat", loggedInUser, deletedChat);

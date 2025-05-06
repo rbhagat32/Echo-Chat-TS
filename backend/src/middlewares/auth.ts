@@ -27,7 +27,7 @@ const isLoggedIn = async (req: RequestWithUser, res: Response, next: NextFunctio
 
     req.userId = loggedInUser.userId;
     next();
-  } catch (error) {
+  } catch {
     return res
       .status(401)
       .cookie("token", "", { ...cookieOptions, expires: new Date(Date.now()) })
