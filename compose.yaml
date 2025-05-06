@@ -1,6 +1,6 @@
 services:
   backend-image:
-    container_name: echo-chat-ts-backend-container
+    container_name: backend-container
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
@@ -10,15 +10,15 @@ services:
       - ./backend/.env
     develop:
       watch:
-        - action: sync
-          path: ./backend
+        - path: ./backend
+          action: sync
           target: /app
-          ignore: ["node_modules", "dist"]
-        - action: rebuild
-          path: ./backend/package.json
+          ignore: "node_modules"
+        - path: ./backend/package*.json
+          action: rebuild
 
   frontend-image:
-    container_name: echo-chat-ts-frontend-container
+    container_name: frontend-container
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
@@ -33,6 +33,6 @@ services:
         - action: sync
           path: ./frontend
           target: /app
-          ignore: "node_modules"
+          ignore: "node_modules/"
         - action: rebuild
-          path: ./frontend/package.json
+          path: ./frontend/package*.json
