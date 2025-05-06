@@ -30,7 +30,7 @@ export const useNavLinks = (): NavLink[] => {
       },
     },
     {
-      name: "Add people",
+      name: "Add",
       icon: <UserRoundPlus size="1rem" />,
       dialog: true,
       component: <AddPeopleComponent />,

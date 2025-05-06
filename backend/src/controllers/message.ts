@@ -13,10 +13,8 @@ const sendMessage = tryCatch(async (req: RequestWithUser, res: Response) => {
   if (!content) throw new ErrorHandler(400, "Message must not be empty !");
 
   const chat = await ChatModel.findById(chatId);
-  const senderId = req.user!.userId;
-  const receiverId = chat.users
-    .find((id: string) => id.toString() !== senderId.toString())
-    .toString();
+  const senderId = req.userId;
+  const receiverId = chat.users.find((id: string) => id.toString() !== senderId).toString();
 
   const newMessage: MessageTypes = await MessageModel.create({
     chatId,

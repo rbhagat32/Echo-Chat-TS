@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/app.js",
     "build": "tsc",
-    "dev": "concurrently \"tsc -w\" \"npx nodemon dist/app.js\""
+    "dev": "tsx watch src/app.ts"
   },
   "keywords": [],
   "author": "Raghav Bhagat",
@@ -36,8 +36,7 @@
     "@types/node": "^22.5.1",
     "@types/streamifier": "^0.1.2",
     "@types/uuid": "^10.0.0",
-    "concurrently": "^9.1.2",
-    "nodemon": "^3.1.4",
+    "tsx": "^4.19.4",
     "typescript": "^5.5.4"
   }
 }

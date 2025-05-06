@@ -1,7 +1,7 @@
 {
   "name": "echo-chat-ts",
   "scripts": {
-    "start": "docker-compose up --watch",
+    "start": "npm stop && docker-compose up --watch",
     "stop": "docker-compose down"
   },
   "repository": {

@@ -10,7 +10,7 @@ import { tryCatch } from "../utils/try-catch.js";
 import { ErrorHandler } from "../middlewares/error-handler.js";
 
 const getChats = tryCatch(async (req: RequestWithUser, res: Response) => {
-  const { userId } = req.user!;
+  const { userId } = req;
 
   const user = await UserModel.findById(userId).populate({
     path: "chats",
@@ -32,7 +32,7 @@ const getChats = tryCatch(async (req: RequestWithUser, res: Response) => {
 
   // remove the logged-in user from each chat's users array
   const chats = user.chats.map((chat: ChatTypes) => {
-    const otherUsers = chat.users.filter((user) => user._id.toString() !== userId.toString());
+    const otherUsers = chat.users.filter((user) => user._id.toString() !== userId);
 
     chat.users = otherUsers as UserTypes[];
     return chat;
@@ -65,13 +65,13 @@ const getChats = tryCatch(async (req: RequestWithUser, res: Response) => {
 
 const deleteChat = tryCatch(async (req: RequestWithUser, res: Response) => {
   const { chatId } = req.params;
-  const { userId } = req.user!;
+  const { userId } = req!;
 
   const chat = await ChatModel.findById(chatId);
 
   if (!chat) throw new ErrorHandler(404, "Chat doesn't exist !");
 
-  const otherUserId = chat.users.find((id: string) => id.toString() !== userId.toString());
+  const otherUserId = chat.users.find((id: string) => id.toString() !== userId);
 
   const [loggedInUser, otherUser] = await Promise.all([
     UserModel.findById(userId),

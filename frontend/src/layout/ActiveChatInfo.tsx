@@ -55,7 +55,7 @@ export default function ActiveChatInfo() {
               {activeChat.users[0].username}
             </h1>
             {onlineUserIds.includes(activeChat.users[0]._id) && (
-              <div className="flex items-center gap-1 mt-1.5 ml-1">
+              <div className="flex items-center gap-1 mt-1 ml-1">
                 <div className="size-1.5 rounded-full bg-green-500 mt-0.5" />
                 <p className="text-xs text-zinc-600">online</p>
               </div>

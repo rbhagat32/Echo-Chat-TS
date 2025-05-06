@@ -11,7 +11,6 @@ export const errorHandler = (
   err: ErrorHandler,
   _req: Request,
   res: Response,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _next: NextFunction
 ) => {
   err.statusCode ||= 500;

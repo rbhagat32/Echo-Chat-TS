@@ -3,7 +3,7 @@ import { ChatTypes } from "./chat.js";
 import { Request } from "express";
 
 export interface RequestWithUser extends Request {
-  user?: UserTypes;
+  userId?: string;
 }
 
 export interface UserTypes {

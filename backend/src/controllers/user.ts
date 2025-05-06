@@ -11,7 +11,7 @@ import { tryCatch } from "../utils/try-catch.js";
 import { ErrorHandler } from "../middlewares/error-handler.js";
 
 const getUser = tryCatch(async (req: RequestWithUser, res: Response) => {
-  const { userId } = req.user!;
+  const { userId } = req;
 
   const user = await UserModel.findById(userId);
   if (!user) throw new ErrorHandler(404, "User not found !");
@@ -20,7 +20,7 @@ const getUser = tryCatch(async (req: RequestWithUser, res: Response) => {
 });
 
 const searchUser = tryCatch(async (req: RequestWithUser, res: Response) => {
-  const { userId } = req.user!;
+  const { userId } = req;
   const { query } = req.query;
 
   const users = await UserModel.find({
@@ -33,10 +33,9 @@ const searchUser = tryCatch(async (req: RequestWithUser, res: Response) => {
 
 const sendRequest = tryCatch(async (req: RequestWithUser, res: Response) => {
   const { id } = req.params;
-  const { userId } = req.user!;
+  const { userId } = req;
 
-  if (id === userId.toString())
-    throw new ErrorHandler(400, "You cannot send request to yourself !");
+  if (id === userId) throw new ErrorHandler(400, "You cannot send request to yourself !");
 
   const [loggedInUser, otherUser] = await Promise.all([
     UserModel.findById(userId),
@@ -62,7 +61,7 @@ const sendRequest = tryCatch(async (req: RequestWithUser, res: Response) => {
 });
 
 const getRequests = tryCatch(async (req: RequestWithUser, res: Response) => {
-  const { userId } = req.user!;
+  const { userId } = req;
 
   const user = await UserModel.findById(userId).populate("requests");
   if (!user) throw new ErrorHandler(404, "User not found !");
@@ -71,7 +70,7 @@ const getRequests = tryCatch(async (req: RequestWithUser, res: Response) => {
 });
 
 const respondRequest = tryCatch(async (req: RequestWithUser, res: Response) => {
-  const { userId } = req.user!;
+  const { userId } = req;
   const { id } = req.params;
   const { response } = req.query;
 
@@ -130,7 +129,7 @@ const respondRequest = tryCatch(async (req: RequestWithUser, res: Response) => {
 });
 
 const updateDetails = tryCatch(async (req: RequestWithUser, res: Response) => {
-  const { userId } = req.user!;
+  const { userId } = req;
   const { bio } = req.body;
   const avatar = req.file;
 
@@ -158,7 +157,7 @@ const updateDetails = tryCatch(async (req: RequestWithUser, res: Response) => {
 });
 
 const deleteBio = tryCatch(async (req: RequestWithUser, res: Response) => {
-  const { userId } = req.user!;
+  const { userId } = req;
 
   const user = await UserModel.findById(userId);
   if (!user) throw new ErrorHandler(404, "User not found !");
@@ -170,7 +169,7 @@ const deleteBio = tryCatch(async (req: RequestWithUser, res: Response) => {
 });
 
 const deleteAvatar = tryCatch(async (req: RequestWithUser, res: Response) => {
-  const { userId } = req.user!;
+  const { userId } = req;
 
   const user = await UserModel.findById(userId);
   if (!user) throw new ErrorHandler(404, "User not found !");
