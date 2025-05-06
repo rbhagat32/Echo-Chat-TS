@@ -1,6 +1,6 @@
 # vercel does not support docker.
 # so setting up docker only for development
-FROM node
+FROM node:20
 WORKDIR /app
 COPY package* .
 RUN npm install
