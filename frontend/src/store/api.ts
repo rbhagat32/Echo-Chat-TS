@@ -7,10 +7,12 @@ import { toast } from "sonner";
 import { Draft } from "@reduxjs/toolkit";
 import { setRequests } from "./reducers/RequestsSlice";
 
+const serverUrl = "https://chat.void9.space/api";
+
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_BACKEND_URL}`,
+    baseUrl: `${serverUrl}`,
     credentials: "include",
   }),
   tagTypes: ["Auth", "User", "Chats", "Messages", "Searches", "Requests"],

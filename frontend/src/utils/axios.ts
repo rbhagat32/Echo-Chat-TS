@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const serverUrl = "https://chat.void9.space/api";
+
 const instance = axios.create({
-  baseURL: `${import.meta.env.VITE_BACKEND_URL}`,
+  baseURL: `${serverUrl}`,
   withCredentials: true,
 });
 

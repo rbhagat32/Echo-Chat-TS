@@ -4,5 +4,6 @@ COPY package* .
 RUN npm install
 COPY . .
 RUN npm run build
-EXPOSE 5173
+EXPOSE 4173
+# beacuse preview runs on port 4173
 CMD ["npm", "run", "preview"]
