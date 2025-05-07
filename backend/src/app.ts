@@ -45,6 +45,6 @@ app.use("/api/message", messageRouter);
 app.use(errorHandler);
 
 const PORT = Number(process.env.PORT) || 4000;
-server.listen(PORT, () => {
+server.listen(PORT, "0.0.0.0", () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
