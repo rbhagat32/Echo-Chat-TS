@@ -1,0 +1,120 @@
+name: echo-workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-changes:
+    runs-on: ubuntu-latest
+
+    outputs:
+      backend-changed: ${{ steps.backend-changed.outputs.backend }}
+      frontend-changed: ${{ steps.frontend-changed.outputs.frontend }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for changes in backend
+        id: backend-changed
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            backend:
+              - "backend/**"
+
+      - name: Check for changes in frontend
+        id: frontend-changed
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            frontend:
+              - "frontend/**"
+
+  backend-job:
+    runs-on: ubuntu-latest
+    needs: check-changes
+    if: needs.check-changes.outputs.backend-changed == 'true'
+
+    env:
+      EC2_PEM_KEY: ${{ secrets.EC2_PEM_KEY }}
+      EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
+      EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          cd backend
+          docker build -t rbhagat32/echo-backend .
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          docker push rbhagat32/echo-backend
+          docker logout
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          printf "%s" "$EC2_PEM_KEY" > ~/.ssh/raghav.pem
+          chmod 600 ~/.ssh/raghav.pem
+
+      - name: SSH into EC2, pull image and restart container
+        run: |
+          ssh-keyscan -H "$EC2_PUBLIC_IP" >> ~/.ssh/known_hosts
+          ssh -i ~/.ssh/raghav.pem -o StrictHostKeyChecking=no "$EC2_USERNAME@$EC2_PUBLIC_IP" << 'EOF'
+            sudo docker pull rbhagat32/echo-backend
+            cd /home/ubuntu/echo
+            sudo docker-compose up -d --no-deps --build backend-image
+            exit
+          EOF
+
+  frontend-job:
+    runs-on: ubuntu-latest
+    needs: check-changes
+    if: needs.check-changes.outputs.frontend-changed == 'true'
+
+    env:
+      EC2_PEM_KEY: ${{ secrets.EC2_PEM_KEY }}
+      EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
+      EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          cd frontend
+          docker build -t rbhagat32/echo-frontend .
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          docker push rbhagat32/echo-frontend
+          docker logout
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          printf "%s" "$EC2_PEM_KEY" > ~/.ssh/raghav.pem
+          chmod 600 ~/.ssh/raghav.pem
+
+      - name: SSH into EC2, pull image and restart container
+        run: |
+          ssh-keyscan -H "$EC2_PUBLIC_IP" >> ~/.ssh/known_hosts
+          ssh -i ~/.ssh/raghav.pem -o StrictHostKeyChecking=no "$EC2_USERNAME@$EC2_PUBLIC_IP" << 'EOF'
+            sudo docker pull rbhagat32/echo-frontend
+            cd /home/ubuntu/echo
+            sudo docker-compose up -d --no-deps --build frontend-image
+            exit
+          EOF
