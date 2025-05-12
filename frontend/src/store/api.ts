@@ -29,7 +29,6 @@ export const api = createApi({
           dispatch(setAuth(data.isLoggedIn));
         } catch (error) {
           toast.error("Failed to check login status !");
-          console.error("Failed to check login:", error);
         }
       },
     }),
