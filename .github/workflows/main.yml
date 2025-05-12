@@ -72,7 +72,7 @@ jobs:
           ssh -i ~/.ssh/raghav.pem -o StrictHostKeyChecking=no "$EC2_USERNAME@$EC2_PUBLIC_IP" << 'EOF'
             sudo docker pull rbhagat32/echo-backend
             cd /home/ubuntu/echo
-            sudo docker-compose up -d --no-deps --build backend-image
+            sudo docker compose up -d --no-deps --build backend-image
             exit
           EOF
 
@@ -115,6 +115,6 @@ jobs:
           ssh -i ~/.ssh/raghav.pem -o StrictHostKeyChecking=no "$EC2_USERNAME@$EC2_PUBLIC_IP" << 'EOF'
             sudo docker pull rbhagat32/echo-frontend
             cd /home/ubuntu/echo
-            sudo docker-compose up -d --no-deps --build frontend-image
+            sudo docker compose up -d --no-deps --build frontend-image
             exit
           EOF
