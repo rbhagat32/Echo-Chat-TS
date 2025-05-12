@@ -11,7 +11,7 @@ interface ReturnTypes {
 
 interface CloudinaryUploadResult {
   public_id: string;
-  url: string;
+  secure_url: string;
 }
 
 const uploadToCloudinary = async (file: FileProps): Promise<ReturnTypes> => {
@@ -56,7 +56,7 @@ const uploadToCloudinary = async (file: FileProps): Promise<ReturnTypes> => {
 
     return {
       public_id: result.public_id,
-      url: result.url,
+      url: result.secure_url,
     };
   } catch (error) {
     console.log("Image Upload error: ", error);

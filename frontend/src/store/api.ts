@@ -7,10 +7,12 @@ import { toast } from "sonner";
 import { Draft } from "@reduxjs/toolkit";
 import { setRequests } from "./reducers/RequestsSlice";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_BACKEND_URL}`,
+    baseUrl: BACKEND_URL as string,
     credentials: "include",
   }),
   tagTypes: ["Auth", "User", "Chats", "Messages", "Searches", "Requests"],

@@ -1,6 +1,8 @@
 import { createContext, ReactNode, useContext, useMemo } from "react";
 import { io, Socket } from "socket.io-client";
 
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
+
 const SocketContext = createContext<Socket | null>(null);
 
 const getSocket = () => useContext(SocketContext);
@@ -8,7 +10,7 @@ const getSocket = () => useContext(SocketContext);
 const SocketProvider = ({ children }: { children: ReactNode }) => {
   const socket = useMemo(
     () =>
-      io(`${import.meta.env.VITE_SOCKET_URL}`, {
+      io(SOCKET_URL as string, {
         transports: ["websocket"],
         withCredentials: true,
       }),
