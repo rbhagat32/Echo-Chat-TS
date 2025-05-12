@@ -1,38 +1,21 @@
 services:
   backend-image:
     container_name: backend-container
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.dev
+    image: rbhagat32/echo-backend
     ports:
       - 4000:4000
-    env_file:
-      - ./backend/.env
-    develop:
-      watch:
-        - path: ./backend
-          action: sync
-          target: /app
-          ignore: "node_modules"
-        - path: ./backend/package*.json
-          action: rebuild
+    environment:
+      - FRONTEND_URL_PROD=https://chat.void9.space
+      - MONGODB_URI=mongodb+srv://rbhagat:rbhagat@first-backend-app.rd0h0uk.mongodb.net/chat-socket-io
+      - JWT_SECRET=sdfarwegfaesdhfuaer
+      - CLOUDINARY_CLOUD_NAME=dkyxlrmcg
+      - CLOUDINARY_API_KEY=228997985731528
+      - CLOUDINARY_API_SECRET=v7ICBGN1ULXJ59XNwCUYzg7X55E
 
   frontend-image:
     container_name: frontend-container
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
+    image: rbhagat32/echo-frontend
     depends_on:
       - backend-image
     ports:
-      - 5173:5173
-    env_file:
-      - ./frontend/.env
-    develop:
-      watch:
-        - action: sync
-          path: ./frontend
-          target: /app
-          ignore: "node_modules/"
-        - action: rebuild
-          path: ./frontend/package*.json
+      - 4173:4173
