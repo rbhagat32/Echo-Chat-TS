@@ -7,7 +7,9 @@ import { toast } from "sonner";
 import { Draft } from "@reduxjs/toolkit";
 import { setRequests } from "./reducers/RequestsSlice";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = import.meta.env.DEV
+  ? import.meta.env.VITE_BACKEND_URL
+  : "https://chat.void9.space/api";
 
 export const api = createApi({
   reducerPath: "api",

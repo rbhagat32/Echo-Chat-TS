@@ -4,13 +4,8 @@ services:
     image: rbhagat32/echo-backend
     ports:
       - 4000:4000
-    environment:
-      - FRONTEND_URL_PROD=https://chat.void9.space
-      - MONGODB_URI=mongodb+srv://rbhagat:rbhagat@first-backend-app.rd0h0uk.mongodb.net/chat-socket-io
-      - JWT_SECRET=sdfarwegfaesdhfuaer
-      - CLOUDINARY_CLOUD_NAME=dkyxlrmcg
-      - CLOUDINARY_API_KEY=228997985731528
-      - CLOUDINARY_API_SECRET=v7ICBGN1ULXJ59XNwCUYzg7X55E
+    env_file:
+      - ./.env.backend
 
   frontend-image:
     container_name: frontend-container
