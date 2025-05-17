@@ -22,6 +22,7 @@ export default function MessageContainer() {
   const dispatch = useDispatch();
 
   const [page, setPage] = useState<number>(1);
+  const isFetchingMore = useRef(false);
 
   // fetching required data from redux store
   const loggedInUser = useSelector((state: StateTypes) => state.user);
@@ -31,9 +32,11 @@ export default function MessageContainer() {
   // fetching messages for the active chat
   const [trigger, remainingData] = useLazyGetMessagesQuery();
   const fetchMessages = async () => {
-    if (rootDivRef.current) {
+    if (rootDivRef.current)
       previousScrollHeightRef.current = rootDivRef.current.scrollHeight;
-    }
+
+    isFetchingMore.current = true;
+
     try {
       const response = await trigger({
         chatId: activeChat._id,
@@ -98,11 +101,16 @@ export default function MessageContainer() {
   const previousScrollHeightRef = useRef<number>(0);
 
   useLayoutEffect(() => {
-    if (rootDivRef.current && previousScrollHeightRef.current) {
+    if (
+      rootDivRef.current &&
+      previousScrollHeightRef.current &&
+      isFetchingMore.current
+    ) {
       const container = rootDivRef.current;
       const scrollHeightDiff =
         container.scrollHeight - previousScrollHeightRef.current;
       container.scrollTop = scrollHeightDiff;
+      isFetchingMore.current = false;
     }
   }, [messagesData.messages]);
 
