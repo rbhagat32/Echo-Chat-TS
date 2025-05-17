@@ -1,31 +1,31 @@
 import { Variants } from "motion/react";
 
-interface CustomProps {
+interface MessageVariantProps {
   isMyMessage: boolean;
 }
 
-export const messageVariants: Variants = {
-  initial: ({ isMyMessage }: CustomProps) => ({
+const messageVariants: Variants = {
+  initial: ({ isMyMessage }: MessageVariantProps) => ({
     opacity: 0,
     x: isMyMessage ? 50 : -50,
-    scale: 0.95,
   }),
   animate: {
     opacity: 1,
     x: 0,
-    scale: 1,
     transition: {
       type: "spring",
-      damping: 20,
-      stiffness: 150,
+      damping: 25,
+      stiffness: 2500,
+      duration: 0.025,
     },
   },
-  exit: ({ isMyMessage }: CustomProps) => ({
+  exit: ({ isMyMessage }: MessageVariantProps) => ({
     opacity: 0,
     x: isMyMessage ? 50 : -50,
-    scale: 0.95,
     transition: {
       duration: 0.15,
     },
   }),
 };
+
+export { messageVariants };
