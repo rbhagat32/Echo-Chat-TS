@@ -64,25 +64,28 @@ export default function MessageContainer() {
 
   // Scroll to bottom when messages are displayed
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const [isNewMessage, setIsNewMessage] = useState<boolean>(false);
+  const [shouldScrollToBottom, setShouldScrollToBottom] =
+    useState<boolean>(false);
+
   const scrollToBottom = () => {
     if (scrollerRef.current) {
       scrollerRef.current.scrollIntoView();
     }
   };
+
   useEffect(() => {
-    if (isNewMessage === true) {
+    if (shouldScrollToBottom === true) {
       scrollToBottom();
-      setIsNewMessage(false);
+      setShouldScrollToBottom(false);
     }
-  }, [remainingData.isLoading, isNewMessage]);
+  }, [remainingData.isLoading, shouldScrollToBottom]);
 
   // socket listener for realtime delete message
   useEffect(() => {
     const handleRealtimeDeleteMessage = async (
       deletedMessage: MessageTypes
     ) => {
-      setIsNewMessage(true);
+      // DO NOT set shouldScrollToBottom here to prevent scroll on delete
       toast.warning(`${activeChat.users[0].username} deleted a message`);
       dispatch(removeMessage(deletedMessage));
     };
@@ -212,7 +215,7 @@ export default function MessageContainer() {
       {activeChat!._id === undefined ? (
         <div className="h-14 rounded-t-none rounded-b-xl" />
       ) : (
-        <MessageInput setIsNewMessage={setIsNewMessage} />
+        <MessageInput setShouldScrollToBottom={setShouldScrollToBottom} />
       )}
     </div>
   );

@@ -10,10 +10,10 @@ import { appendMessage } from "@/store/reducers/MessageSlice";
 import { appendLatestChat } from "@/store/reducers/LatestChatSlice";
 
 interface PropTypes {
-  setIsNewMessage: React.Dispatch<React.SetStateAction<boolean>>;
+  setShouldScrollToBottom: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function MessageInputComponent({ setIsNewMessage }: PropTypes) {
+function MessageInputComponent({ setShouldScrollToBottom }: PropTypes) {
   const dispatch = useDispatch();
   const socket = getSocket();
   const [sendMessage] = useSendMessageMutation();
@@ -30,11 +30,12 @@ function MessageInputComponent({ setIsNewMessage }: PropTypes) {
 
   // send message functionality
   const [inputMessage, setInputMessage] = useState<string>("");
+
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return toast.error("Message cannot be empty !");
 
-    // fro scrolling to the bottom of the chat window when new message is sent
-    setIsNewMessage(true);
+    // for scrolling to the bottom of the chat window when new message is sent
+    setShouldScrollToBottom(true);
 
     const newMessage: MessageTypes = {
       _id: `realtime-${uuid().replace(/-/g, "").slice(0, 24)}`,
@@ -60,13 +61,13 @@ function MessageInputComponent({ setIsNewMessage }: PropTypes) {
   useEffect(() => {
     const handleRealtimeMessage = async (msg: MessageTypes) => {
       // for scrolling to the bottom of the chat window when new message is received
-      setIsNewMessage(true);
+      setShouldScrollToBottom(true);
 
-      // check if the message belongs to the active chat
-      if (msg.senderId === activeChat.users[0]._id) {
+      // Check if the message belongs to the active chat and sender is NOT loggedInUser
+      if (msg.chatId === activeChat._id && msg.senderId !== loggedInUser._id) {
         dispatch(appendMessage(msg));
       } else {
-        // if the message does not belong to the active chat,
+        // If message doesn't belong to active chat, update chats and latest chats
 
         // refetch chats in order of latest message when realtime message is received
         const refetchChatsPromise = dispatch(
@@ -79,19 +80,17 @@ function MessageInputComponent({ setIsNewMessage }: PropTypes) {
           .map((chat) => dispatch(appendLatestChat(chat)));
 
         // wait for all dispatches to complete
-        await Promise.all([refetchChatsPromise, appendLatestChatPromise]);
+        await Promise.all([refetchChatsPromise, ...appendLatestChatPromise]);
       }
     };
 
     socket?.on("realtime", handleRealtimeMessage);
 
     return () => {
-      // on cleanup, remove the socket listener
+      // cleanup socket listener on component unmount or dependencies change
       socket?.off("realtime", handleRealtimeMessage);
     };
-
-    // re-render when activeChat changes so that we can append the messages to the correct chat
-  }, [activeChat, socket, dispatch]);
+  }, [activeChat, socket, dispatch, loggedInUser._id, chats]);
 
   return (
     <div className="relative h-14">
