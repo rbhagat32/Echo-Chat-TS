@@ -14,6 +14,8 @@ import { RightClickMenu } from "@/components/custom/RightClickMenu";
 import { getSocket } from "@/Socket";
 import { toast } from "sonner";
 import InfiniteScroll from "@/components/custom/InfiniteScroll";
+import { motion, AnimatePresence } from "motion/react";
+import { messageVariants } from "@/lib/variants";
 
 export default function MessageContainer() {
   const socket = getSocket();
@@ -142,42 +144,55 @@ export default function MessageContainer() {
               <div ref={topDivRef} />
             </InfiniteScroll>
 
-            {messagesData?.messages?.map((message: MessageTypes) => (
-              // actual message
-              <RightClickMenu
-                key={message._id}
-                myMessage={message.senderId === loggedInUser._id}
-                message={message}
-              >
-                <div
-                  className={`flex gap-2 mb-2 ${
-                    message.senderId === loggedInUser._id
-                      ? "justify-end"
-                      : "justify-start"
-                  }`}
+            <AnimatePresence initial={false}>
+              {messagesData?.messages?.map((message: MessageTypes) => (
+                <motion.div
+                  key={message._id}
+                  custom={{
+                    isMyMessage: message.senderId === loggedInUser._id,
+                  }}
+                  variants={messageVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  layout
                 >
-                  <div
-                    className={
-                      "max-w-[40ch] md:max-w-[50ch] lg:max-w-[80ch] xl:max-w-[100ch] text-sm px-4 py-2 rounded-md bg-zinc-800"
-                    }
+                  <RightClickMenu
+                    myMessage={message.senderId === loggedInUser._id}
+                    message={message}
                   >
-                    {/* break-words ensures long messages don't overflow out of div */}
-                    <p className="break-words">{message.content}</p>
-                    <p
-                      className={`text-[10px] text-zinc-500 flex gap-1 items-center mt-1 ${
+                    <div
+                      className={`flex gap-2 mb-2 ${
                         message.senderId === loggedInUser._id
                           ? "justify-end"
                           : "justify-start"
                       }`}
                     >
-                      <span>{moment(message.createdAt).format("hh:mm A")}</span>
-                      <span className="mt-px mx-0.5 size-[3px] rounded-full bg-zinc-500"></span>
-                      <span>{moment(message.createdAt).fromNow()}</span>
-                    </p>
-                  </div>
-                </div>
-              </RightClickMenu>
-            ))}
+                      <div
+                        className={
+                          "max-w-[40ch] md:max-w-[50ch] lg:max-w-[80ch] xl:max-w-[100ch] text-sm px-4 py-2 rounded-md bg-zinc-800"
+                        }
+                      >
+                        <p className="break-words">{message.content}</p>
+                        <p
+                          className={`text-[10px] text-zinc-500 flex gap-1 items-center mt-1 ${
+                            message.senderId === loggedInUser._id
+                              ? "justify-end"
+                              : "justify-start"
+                          }`}
+                        >
+                          <span>
+                            {moment(message.createdAt).format("hh:mm A")}
+                          </span>
+                          <span className="mt-px mx-0.5 size-[3px] rounded-full bg-zinc-500"></span>
+                          <span>{moment(message.createdAt).fromNow()}</span>
+                        </p>
+                      </div>
+                    </div>
+                  </RightClickMenu>
+                </motion.div>
+              ))}
+            </AnimatePresence>
 
             {/* Scroll to bottom */}
             <div ref={scrollerRef} />
