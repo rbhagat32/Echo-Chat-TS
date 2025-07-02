@@ -302,7 +302,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <button
                     key={index}
                     onClick={() => handleOpenChat(chat)}
-                    className={`w-full flex justify-between items-center ${
+                    className={`mb-2 w-full flex justify-between items-center ${
                       activeChat._id === chat._id && "bg-zinc-800"
                     } rounded-md p-2 hover:bg-muted/50 duration-300`}
                   >
