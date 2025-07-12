@@ -55,7 +55,7 @@ const Routing = ({ isLoggedIn = false }: { isLoggedIn: boolean }) => {
         }
       /> */}
 
-      {/* Wildcard Route */}
+      {/* catch all */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

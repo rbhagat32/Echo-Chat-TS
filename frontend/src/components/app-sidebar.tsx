@@ -39,6 +39,7 @@ import { SettingsComponent } from "./sidebar/Settings";
 import { useNavLinks } from "@/hooks/useNavLinks";
 import { appendRequest, clearRequests } from "@/store/reducers/RequestsSlice";
 import { clearOnlineUsers, setOnlineUsers } from "@/store/reducers/OnlineUsers";
+import ProfilePicture from "./custom/ProfilePicture";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const socket = getSocket();
@@ -185,13 +186,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarHeader>
           {/* Logged in user info */}
           <header className="px-2 py-1 flex rounded-lg justify-center items-center gap-2 border bg-muted/50">
-            <div className="shrink-0 size-10 rounded-full overflow-hidden">
-              <img
-                src={user?.avatar!.url || "/placeholder.jpeg"}
-                alt="User Profile Picture"
-                className="w-full h-full object-cover"
-              />
-            </div>
+            <Dialog
+              component={
+                <ProfilePicture
+                  username={user?.username || "Me"}
+                  imageUrl={user?.avatar?.url || "/placeholder.jpeg"}
+                />
+              }
+            >
+              <div className="cursor-pointer shrink-0 size-10 rounded-full overflow-hidden">
+                <img
+                  src={user?.avatar!.url || "/placeholder.jpeg"}
+                  alt="User Profile Picture"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </Dialog>
             <div className="w-full flex justify-between items-center">
               <div className="py-2">
                 <h1 className="text-base">@{user?.username}</h1>

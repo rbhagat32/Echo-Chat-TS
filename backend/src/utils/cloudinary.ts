@@ -25,8 +25,8 @@ const uploadToCloudinary = async (file: FileProps): Promise<ReturnTypes> => {
   try {
     // sharp accepts Buffer as input and returns a Buffer (compressed) as output
     const compressedBuffer = await sharp(file.buffer)
-      .resize({ width: 200 })
-      .png({ quality: 70 })
+      .resize({ width: 1000 })
+      .png({ quality: 100 })
       .toBuffer();
 
     const uploadFromBuffer = (buffer: Buffer): Promise<CloudinaryUploadResult> => {

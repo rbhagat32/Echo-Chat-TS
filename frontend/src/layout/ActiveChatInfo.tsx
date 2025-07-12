@@ -7,6 +7,8 @@ import { clearActiveChat } from "@/store/reducers/ActiveChatSlice";
 import { clearMessages } from "@/store/reducers/MessageSlice";
 import { Tooltip } from "@/components/custom/Tooltip";
 import { getSocket } from "@/Socket";
+import { Dialog } from "@/components/custom/Dialog";
+import ProfilePicture from "@/components/custom/ProfilePicture";
 
 export default function ActiveChatInfo() {
   const socket = getSocket();
@@ -44,13 +46,24 @@ export default function ActiveChatInfo() {
       ) : (
         <div className="flex items-center justify-between px-4 py-2">
           <div className="flex items-center gap-2">
-            <div className="shrink-0 size-10 rounded-full overflow-hidden">
-              <img
-                src={activeChat.users[0]?.avatar.url || "/placeholder.jpeg"}
-                alt="User Profile Picture"
-                className="w-full h-full object-cover"
-              />
-            </div>
+            <Dialog
+              component={
+                <ProfilePicture
+                  username={activeChat.users[0].username}
+                  imageUrl={
+                    activeChat.users[0]?.avatar.url || "/placeholder.jpeg"
+                  }
+                />
+              }
+            >
+              <div className="cursor-pointer shrink-0 size-10 rounded-full overflow-hidden">
+                <img
+                  src={activeChat.users[0]?.avatar.url || "/placeholder.jpeg"}
+                  alt="User Profile Picture"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </Dialog>
             <h1 className="text-lg font-semibold">
               {activeChat.users[0].username}
             </h1>
