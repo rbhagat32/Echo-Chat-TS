@@ -65,28 +65,26 @@ export default function Layout() {
   }, [socket]);
 
   return (
-    <>
-      <main>
-        <SidebarProvider>
-          {/* Sidebar */}
-          <AppSidebar variant="floating" />
+    <main>
+      <SidebarProvider>
+        {/* Sidebar */}
+        <AppSidebar variant="floating" />
 
-          {/* Main Content -> right side of sidebar */}
-          <SidebarInset>
-            {/* Header -> sidebar open/close button + Echo logo */}
-            <Header />
+        {/* Main Content -> right side of sidebar */}
+        <SidebarInset>
+          {/* Header -> sidebar open/close button + Echo logo */}
+          <Header />
 
-            {/* Chat content -> Active Chat info + messages */}
-            <div className="flex flex-col gap-4 p-4">
-              {/* Active Chat Info */}
-              <ActiveChatInfo />
+          {/* Chat content -> Active Chat info + messages */}
+          <div className="flex flex-col gap-4 p-4">
+            {/* Active Chat Info */}
+            <ActiveChatInfo />
 
-              {/* Message Container + Message Input */}
-              <MessageContainer />
-            </div>
-          </SidebarInset>
-        </SidebarProvider>
-      </main>
-    </>
+            {/* Message Container + Message Input */}
+            <MessageContainer />
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
+    </main>
   );
 }
