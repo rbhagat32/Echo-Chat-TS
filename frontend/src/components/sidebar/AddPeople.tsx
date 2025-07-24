@@ -39,8 +39,6 @@ export const AddPeopleComponent = () => {
     const handleSearch = () => {
       if (debouncedQuery.length > 0) {
         trigger(debouncedQuery);
-      } else {
-        trigger("");
       }
     };
     handleSearch();
