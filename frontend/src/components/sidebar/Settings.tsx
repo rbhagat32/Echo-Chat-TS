@@ -180,7 +180,7 @@ const SettingsComponent = () => {
             type="file"
             accept=".jpg, .jpeg, .png, .webp"
             placeholder="Password"
-            className="h-10"
+            className="h-10 cursor-pointer file:cursor-pointer file:px-1 file:rounded-sm file:bg-zinc-800 file:text-muted-foreground"
           />
 
           <Button type="submit" width="w-full">
@@ -194,7 +194,7 @@ const SettingsComponent = () => {
               onConfirm={handleDeleteBio}
               title="Are you sure that you want to remove the bio ?"
             >
-              <div className="hover:bg-zinc-700 rounded-sm p-2 duration-300">
+              <div className="bg-zinc-800 hover:bg-zinc-700 rounded-sm p-2 duration-300">
                 <Trash2 size="1rem" className="text-rose-400" />
               </div>
             </AlertDialog>
@@ -205,7 +205,7 @@ const SettingsComponent = () => {
               onConfirm={handleDeleteAvatar}
               title="Are you sure that you want to remove the avatar ?"
             >
-              <div className="hover:bg-zinc-700 rounded-sm p-2 duration-300">
+              <div className="bg-zinc-800 hover:bg-zinc-700 rounded-sm p-2 duration-300">
                 <Trash2 size="1rem" className="text-rose-400" />
               </div>
             </AlertDialog>
