@@ -9,6 +9,8 @@ import { Check, X as RejectIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getSocket } from "@/Socket";
+import { Dialog } from "../custom/Dialog";
+import ProfilePicture from "../custom/ProfilePicture";
 
 export const RequestsComponent = () => {
   const socket = getSocket();
@@ -47,13 +49,22 @@ export const RequestsComponent = () => {
                 className="w-full flex justify-between items-center rounded-md p-2 hover:bg-muted/50 duration-300"
               >
                 <div className="flex items-center">
-                  <div className="relative shrink-0 size-8 rounded-full overflow-hidden">
-                    <img
-                      src={user.avatar?.url || "/placeholder.jpeg"}
-                      alt="Chat Profile Picture"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                  <Dialog
+                    component={
+                      <ProfilePicture
+                        username={user.username}
+                        imageUrl={user.avatar?.url || "/placeholder.jpeg"}
+                      />
+                    }
+                  >
+                    <div className="cursor-pointer relative shrink-0 size-8 rounded-full overflow-hidden">
+                      <img
+                        src={user.avatar?.url || "/placeholder.jpeg"}
+                        alt="Chat Profile Picture"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </Dialog>
                   <p className="ml-2 text-sm">{user.username}</p>
                   {onlineUserIds.includes(user._id) && (
                     <div className="flex items-center gap-1 mt-1.5 ml-2">
