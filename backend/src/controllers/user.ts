@@ -145,7 +145,7 @@ const updateDetails = tryCatch(async (req: RequestWithUser, res: Response) => {
   if (bio.trim()) user.bio = bio;
 
   if (avatar) {
-    deleteFromCloudinary(user.avatar.public_id);
+    await deleteFromCloudinary(user.avatar.public_id);
     const { public_id, url } = await uploadToCloudinary(avatar as FileProps);
     user.avatar.public_id = public_id;
     user.avatar.url = url;
