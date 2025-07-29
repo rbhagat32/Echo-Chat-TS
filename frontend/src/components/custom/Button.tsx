@@ -12,10 +12,7 @@ const Button = ({
   color = "bg-indigo-500",
 }: ButtonProps) => {
   return (
-    <button
-      type={type}
-      className={`${width} ${color} text-lg px-4 py-3 rounded-lg font-semibold`}
-    >
+    <button type={type} className={`${width} ${color} rounded-lg px-4 py-3 text-lg font-semibold`}>
       {children}
     </button>
   );

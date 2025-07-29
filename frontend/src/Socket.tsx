@@ -1,9 +1,7 @@
 import { createContext, ReactNode, useContext, useMemo } from "react";
 import { io, Socket } from "socket.io-client";
 
-const SOCKET_URL = import.meta.env.DEV
-  ? import.meta.env.VITE_SOCKET_URL
-  : "wss://chat.void9.space";
+const SOCKET_URL = import.meta.env.DEV ? import.meta.env.VITE_SOCKET_URL : "wss://chat.void9.space";
 
 const SocketContext = createContext<Socket | null>(null);
 
@@ -19,9 +17,7 @@ const SocketProvider = ({ children }: { children: ReactNode }) => {
     []
   );
 
-  return (
-    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
-  );
+  return <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>;
 };
 
 export { SocketProvider, getSocket };

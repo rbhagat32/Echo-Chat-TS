@@ -19,5 +19,4 @@ const LatestChatSlice = createSlice({
 });
 
 export { LatestChatSlice };
-export const { appendLatestChat, removeLatestChat, clearLatestChats } =
-  LatestChatSlice.actions;
+export const { appendLatestChat, removeLatestChat, clearLatestChats } = LatestChatSlice.actions;

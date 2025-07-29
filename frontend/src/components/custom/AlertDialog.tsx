@@ -35,10 +35,7 @@ export function AlertDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={onConfirm}
-            className="bg-zinc-200 hover:bg-zinc-50"
-          >
+          <AlertDialogAction onClick={onConfirm} className="bg-zinc-200 hover:bg-zinc-50">
             Continue
           </AlertDialogAction>
         </AlertDialogFooter>

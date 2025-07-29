@@ -27,10 +27,7 @@ const schema = yup.object().shape({
     .required("Username is required !")
     .min(4, "Username must be at least 4 characters !")
     .max(12, "Username must not exceed 12 characters !")
-    .matches(
-      /^[a-zA-Z0-9_]+$/,
-      "Username can only contain letters, numbers, and underscores !"
-    ),
+    .matches(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores !"),
   bio: yup.string().max(50, "Bio must not exceed 50 characters !").optional(),
   password: yup
     .string()
@@ -43,21 +40,13 @@ const schema = yup.object().shape({
     ),
   avatar: yup
     .mixed<FileList>()
-    .test(
-      "fileType",
-      "Only jpg, jpeg, png and webp images are accepted !",
-      (value) => {
-        return value && value.length > 0
-          ? ["image/jpg", "image/jpeg", "image/png", "image/webp"].includes(
-              value[0].type
-            )
-          : true;
-      }
-    )
-    .test("fileSize", "Avatar must be less than 5MB !", (value) => {
+    .test("fileType", "Only jpg, jpeg, png and webp images are accepted !", (value) => {
       return value && value.length > 0
-        ? value[0].size <= 5 * 1024 * 1024
+        ? ["image/jpg", "image/jpeg", "image/png", "image/webp"].includes(value[0].type)
         : true;
+    })
+    .test("fileSize", "Avatar must be less than 5MB !", (value) => {
+      return value && value.length > 0 ? value[0].size <= 5 * 1024 * 1024 : true;
     })
     .optional(),
 });
@@ -129,7 +118,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="w-screen h-screen flex">
+    <div className="flex h-screen w-screen">
       {/* Left side */}
       <div
         style={
@@ -142,22 +131,17 @@ const SignUp = () => {
               }
             : {}
         }
-        className="relative px-20 lg:px-40 w-full h-full flex justify-center items-center flex-col text-center gap-2"
+        className="relative flex h-full w-full flex-col items-center justify-center gap-2 px-20 text-center lg:px-40"
       >
         <CustomLink absolute={true} side="left" route="login">
           Log In Instead
         </CustomLink>
         <div>
-          <h1 className="font-bold text-2xl mb-1">Sign Up to a new account</h1>
-          <h2 className="text-lg text-zinc-500">
-            Enter your details to create a new account
-          </h2>
+          <h1 className="mb-1 text-2xl font-bold">Sign Up to a new account</h1>
+          <h2 className="text-lg text-zinc-500">Enter your details to create a new account</h2>
         </div>
 
-        <form
-          onSubmit={handleSubmit(validation)}
-          className="w-full flex flex-col gap-3"
-        >
+        <form onSubmit={handleSubmit(validation)} className="flex w-full flex-col gap-3">
           <Input
             register={register("username")}
             type="text"
@@ -202,18 +186,17 @@ const SignUp = () => {
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
-        className="bg-neutral-800/30 px-10 lg:px-20 xl:px-40 hidden md:flex py-20 w-full h-full justify-between items-end flex-col gap-4"
+        className="hidden h-full w-full flex-col items-end justify-between gap-4 bg-neutral-800/30 px-10 py-20 md:flex lg:px-20 xl:px-40"
       >
-        <div className="w-fit flex items-center gap-2 text-right">
+        <div className="flex w-fit items-center gap-2 text-right">
           <img src="/logo-light.svg" alt="Logo" className="size-10" />
           <h1 className="text-3xl font-semibold">Echo.</h1>
         </div>
 
         <div className="text-right">
           <h1 className="text-lg text-zinc-500">
-            "Welcome back! Ready to dive into your conversations? Connect with
-            friends, share moments, and enjoy seamless communication all in one
-            place."
+            "Welcome back! Ready to dive into your conversations? Connect with friends, share
+            moments, and enjoy seamless communication all in one place."
           </h1>
         </div>
       </div>

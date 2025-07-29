@@ -19,5 +19,4 @@ const RequestsSlice = createSlice({
 });
 
 export { RequestsSlice };
-export const { setRequests, appendRequest, clearRequests } =
-  RequestsSlice.actions;
+export const { setRequests, appendRequest, clearRequests } = RequestsSlice.actions;

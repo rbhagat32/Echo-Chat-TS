@@ -36,12 +36,10 @@ export default function ActiveChatInfo() {
   };
 
   return (
-    <div className="h-14 rounded-xl bg-muted/50">
+    <div className="bg-muted/50 h-14 rounded-xl">
       {activeChat._id === undefined ? (
-        <div className="flex items-center justify-center h-full">
-          <p className="text-zinc-500 text-sm">
-            Select a chat to view details.
-          </p>
+        <div className="flex h-full items-center justify-center">
+          <p className="text-sm text-zinc-500">Select a chat to view details.</p>
         </div>
       ) : (
         <div className="flex items-center justify-between px-4 py-2">
@@ -50,26 +48,22 @@ export default function ActiveChatInfo() {
               component={
                 <ProfilePicture
                   username={activeChat.users[0].username}
-                  imageUrl={
-                    activeChat.users[0]?.avatar.url || "/placeholder.jpeg"
-                  }
+                  imageUrl={activeChat.users[0]?.avatar.url || "/placeholder.jpeg"}
                 />
               }
             >
-              <div className="cursor-pointer shrink-0 size-10 rounded-full overflow-hidden">
+              <div className="size-10 shrink-0 cursor-pointer overflow-hidden rounded-full">
                 <img
                   src={activeChat.users[0]?.avatar.url || "/placeholder.jpeg"}
                   alt="User Profile Picture"
-                  className="w-full h-full object-cover"
+                  className="h-full w-full object-cover"
                 />
               </div>
             </Dialog>
-            <h1 className="text-lg font-semibold">
-              {activeChat.users[0].username}
-            </h1>
+            <h1 className="text-lg font-semibold">{activeChat.users[0].username}</h1>
             {onlineUserIds.includes(activeChat.users[0]._id) && (
-              <div className="flex items-center gap-1 mt-1 ml-1">
-                <div className="size-1.5 rounded-full bg-green-500 mt-0.5" />
+              <div className="mt-1 ml-1 flex items-center gap-1">
+                <div className="mt-0.5 size-1.5 rounded-full bg-green-500" />
                 <p className="text-xs text-zinc-600">online</p>
               </div>
             )}
@@ -81,7 +75,7 @@ export default function ActiveChatInfo() {
               title="Are you sure that you want to delete this chat ?"
               description="This action cannot be undone."
             >
-              <div className="hover:bg-zinc-700 rounded-sm p-2 duration-300">
+              <div className="rounded-sm p-2 duration-300 hover:bg-zinc-700">
                 <Trash2 size="1rem" className="text-rose-400" />
               </div>
             </AlertDialog>

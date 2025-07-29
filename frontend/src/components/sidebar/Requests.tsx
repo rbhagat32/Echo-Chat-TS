@@ -1,9 +1,5 @@
 import PageLoader from "@/partials/PageLoader";
-import {
-  api,
-  useGetRequestsQuery,
-  useRespondRequestMutation,
-} from "@/store/api";
+import { api, useGetRequestsQuery, useRespondRequestMutation } from "@/store/api";
 import { Tooltip } from "../custom/Tooltip";
 import { Check, X as RejectIcon } from "lucide-react";
 import { useEffect } from "react";
@@ -32,11 +28,11 @@ export const RequestsComponent = () => {
         <h1>Pending Requests</h1>
       </div>
 
-      <div className="mt-20 h-[50vh] overflow-y-scroll flex flex-col gap-2">
+      <div className="mt-20 flex h-[50vh] flex-col gap-2 overflow-y-scroll">
         {isFetching ? (
           <PageLoader />
         ) : requests?.length == 0 ? (
-          <div className="w-full text-center text-zinc-500 text-sm">
+          <div className="w-full text-center text-sm text-zinc-500">
             <h1 className="font-semibold">You are all caught up !</h1>
             <p className="text-zinc-600">No pending requests to respond to.</p>
           </div>
@@ -46,7 +42,7 @@ export const RequestsComponent = () => {
             return (
               <div
                 key={index}
-                className="w-full flex justify-between items-center rounded-md p-2 hover:bg-muted/50 duration-300"
+                className="hover:bg-muted/50 flex w-full items-center justify-between rounded-md p-2 duration-300"
               >
                 <div className="flex items-center">
                   <Dialog
@@ -57,18 +53,18 @@ export const RequestsComponent = () => {
                       />
                     }
                   >
-                    <div className="cursor-pointer relative shrink-0 size-8 rounded-full overflow-hidden">
+                    <div className="relative size-8 shrink-0 cursor-pointer overflow-hidden rounded-full">
                       <img
                         src={user.avatar?.url || "/placeholder.jpeg"}
                         alt="Chat Profile Picture"
-                        className="w-full h-full object-cover"
+                        className="h-full w-full object-cover"
                       />
                     </div>
                   </Dialog>
                   <p className="ml-2 text-sm">{user.username}</p>
                   {onlineUserIds.includes(user._id) && (
-                    <div className="flex items-center gap-1 mt-1.5 ml-2">
-                      <div className="size-1.5 rounded-full bg-green-500 mt-0.5" />
+                    <div className="mt-1.5 ml-2 flex items-center gap-1">
+                      <div className="mt-0.5 size-1.5 rounded-full bg-green-500" />
                       <p className="text-[10px] text-zinc-600">online</p>
                     </div>
                   )}
@@ -87,7 +83,7 @@ export const RequestsComponent = () => {
                             response: "reject",
                           });
                         }}
-                        className="hover:bg-zinc-700 rounded-sm p-2 duration-300"
+                        className="rounded-sm p-2 duration-300 hover:bg-zinc-700"
                       >
                         <RejectIcon size="1rem" className="text-rose-400" />
                       </div>
@@ -102,7 +98,7 @@ export const RequestsComponent = () => {
                             response: "accept",
                           });
                         }}
-                        className="hover:bg-zinc-700 rounded-sm p-2 duration-300"
+                        className="rounded-sm p-2 duration-300 hover:bg-zinc-700"
                       >
                         <Check size="1rem" />
                       </div>

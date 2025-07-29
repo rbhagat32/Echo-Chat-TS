@@ -25,9 +25,7 @@ function MessageInputComponent({ setShouldScrollToBottom }: PropTypes) {
   const chats = useSelector((state: StateTypes) => state.chats);
 
   // extracting receiverId from activeChat
-  const receiverId = activeChat.users.find(
-    (user: UserTypes) => user._id !== loggedInUser._id
-  )?._id;
+  const receiverId = activeChat.users.find((user: UserTypes) => user._id !== loggedInUser._id)?._id;
 
   // send message functionality
   const [inputMessage, setInputMessage] = useState<string>("");
@@ -71,9 +69,7 @@ function MessageInputComponent({ setShouldScrollToBottom }: PropTypes) {
         // If message doesn't belong to active chat, update chats and latest chats
 
         // refetch chats in order of latest message when realtime message is received
-        const refetchChatsPromise = dispatch(
-          api.util.invalidateTags(["Chats"])
-        );
+        const refetchChatsPromise = dispatch(api.util.invalidateTags(["Chats"]));
 
         // append the chat to latest chats
         const appendLatestChatPromise = chats
@@ -94,7 +90,7 @@ function MessageInputComponent({ setShouldScrollToBottom }: PropTypes) {
   }, [activeChat, socket, dispatch, loggedInUser._id, chats]);
 
   return (
-    <div className="h-14 flex items-center gap-4">
+    <div className="flex h-14 items-center gap-4">
       <SidebarInput
         name="message-input-box"
         type="text"
@@ -106,15 +102,15 @@ function MessageInputComponent({ setShouldScrollToBottom }: PropTypes) {
           }
         }}
         placeholder="Type your message here..."
-        className="h-14 rounded-t-none rounded-b-xl pr-16 break-words"
+        className="h-14 rounded-t-none rounded-b-xl break-words"
       />
 
-      <div className="flex items-center gap-1 mr-4">
+      <div className="mr-4 flex items-center gap-1">
         <ImageUpload />
 
         <button
           onClick={handleSendMessage}
-          className="p-2 rounded-md hover:bg-zinc-700 duration-300"
+          className="rounded-md p-2 duration-300 hover:bg-zinc-700"
         >
           <Send size="1.2rem" />
         </button>

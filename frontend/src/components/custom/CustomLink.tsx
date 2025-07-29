@@ -7,12 +7,7 @@ interface ButtonAltProps {
   route?: string;
 }
 
-const CustomLink = ({
-  children,
-  absolute = false,
-  side,
-  route,
-}: ButtonAltProps) => {
+const CustomLink = ({ children, absolute = false, side, route }: ButtonAltProps) => {
   const navigate = useNavigate();
 
   return (
@@ -20,10 +15,8 @@ const CustomLink = ({
       onClick={() => navigate(`/${route}`)}
       className={`ring hover:ring-2 hover:ring-indigo-400 ${
         absolute &&
-        `absolute top-20 ${
-          side === "left" ? "left-20 lg:left-40" : "right-20 lg:right-40"
-        }`
-      } font-semibold px-4 py-2 rounded-lg duration-300 ease-in-out flex items-center`}
+        `absolute top-20 ${side === "left" ? "left-20 lg:left-40" : "right-20 lg:right-40"}`
+      } flex items-center rounded-lg px-4 py-2 font-semibold duration-300 ease-in-out`}
     >
       <p className="text-sm">{children}</p>
     </button>

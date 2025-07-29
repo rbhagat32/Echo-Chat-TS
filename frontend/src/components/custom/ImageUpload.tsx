@@ -47,7 +47,7 @@ export function ImageUpload() {
     <div className="flex items-center">
       <button
         onClick={() => inputRef.current?.click()}
-        className="p-2 rounded-md hover:bg-zinc-700 duration-300"
+        className="rounded-md p-2 duration-300 hover:bg-zinc-700"
       >
         <ImagePlus size="1.2rem" />
       </button>
@@ -69,15 +69,15 @@ export function ImageUpload() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
             transition={{ duration: 0.3 }}
-            className="absolute bottom-4 right-4 bg-zinc-900 border rounded-2xl shadow-xl"
+            className="absolute right-4 bottom-4 rounded-2xl border bg-zinc-900 shadow-xl"
           >
             {/* Topbar */}
-            <div className="rounded-md flex items-center justify-between px-4 py-2">
+            <div className="flex items-center justify-between rounded-md px-4 py-2">
               <h1>{fileName}</h1>
               <Tooltip text="Discard Image">
                 <div
                   onClick={handleDiscardImage}
-                  className="hover:bg-zinc-700 rounded-sm p-2 duration-300"
+                  className="rounded-sm p-2 duration-300 hover:bg-zinc-700"
                 >
                   <X size="1.2rem" className="text-rose-400" />
                 </div>
@@ -87,17 +87,16 @@ export function ImageUpload() {
             {/* Preview Image */}
             <div
               style={{
-                backgroundImage:
-                  "linear-gradient(rgba(0,0,0,0.5)), url(/background.jpg)",
+                backgroundImage: "linear-gradient(rgba(0,0,0,0.5)), url(/background.jpg)",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}
-              className="bg-zinc-800/40 w-full h-full"
+              className="h-full w-full bg-zinc-800/40"
             >
               <img
                 src={imagePreview}
                 alt="Preview"
-                className="w-[600px] h-[300px] object-contain"
+                className="h-[300px] w-[600px] object-contain"
               />
             </div>
 

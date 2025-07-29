@@ -73,13 +73,9 @@ export const api = createApi({
           // undefined means no arguments for "getChats" query
           // we get access to the cached data and can modify it directly
           // remove the chat with the given chatId from the cache
-          api.util.updateQueryData(
-            "getChats",
-            undefined,
-            (chats: Draft<ChatTypes[]>) => {
-              return chats.filter((chat: ChatTypes) => chat._id !== chatId);
-            }
-          )
+          api.util.updateQueryData("getChats", undefined, (chats: Draft<ChatTypes[]>) => {
+            return chats.filter((chat: ChatTypes) => chat._id !== chatId);
+          })
         );
 
         try {
@@ -201,21 +197,17 @@ export const api = createApi({
         const patchResult = dispatch(
           // update the cache for the "searchUser" query
           // original debouncedQuery is reqd as argument for "searchUser" query
-          api.util.updateQueryData(
-            "searchUser",
-            debouncedQuery,
-            (searches: Draft<UserTypes[]>) => {
-              const targetUser = searches.find((u) => u._id === userId);
-              if (targetUser) {
-                // Add loggedInUserId to the requests array of tergetUser if not already present
-                if (!targetUser.requests.includes(loggedInUserId)) {
-                  targetUser.requests.push(loggedInUserId);
-                }
+          api.util.updateQueryData("searchUser", debouncedQuery, (searches: Draft<UserTypes[]>) => {
+            const targetUser = searches.find((u) => u._id === userId);
+            if (targetUser) {
+              // Add loggedInUserId to the requests array of tergetUser if not already present
+              if (!targetUser.requests.includes(loggedInUserId)) {
+                targetUser.requests.push(loggedInUserId);
               }
-
-              return searches;
             }
-          )
+
+            return searches;
+          })
         );
 
         try {
@@ -242,10 +234,7 @@ export const api = createApi({
       },
     }),
 
-    respondRequest: builder.mutation<
-      void,
-      { userId: string; response: string }
-    >({
+    respondRequest: builder.mutation<void, { userId: string; response: string }>({
       query: ({ userId, response }) => ({
         url: `user/respond-request/${userId}?response=${response}`,
         method: "POST",

@@ -1,11 +1,4 @@
-import {
-  Search,
-  UserRoundPlus,
-  X as RejectIcon,
-  Check,
-  Loader,
-  CheckCheck,
-} from "lucide-react";
+import { Search, UserRoundPlus, X as RejectIcon, Check, Loader, CheckCheck } from "lucide-react";
 import { SidebarInput } from ".././ui/sidebar";
 import {
   api,
@@ -65,27 +58,21 @@ export const AddPeopleComponent = () => {
         <Search className="pointer-events-none absolute top-1/2 left-2 size-4 -translate-y-1/2 opacity-50 select-none" />
       </div>
 
-      <div className="mt-20 h-[50vh] overflow-y-scroll flex flex-col gap-2">
+      <div className="mt-20 flex h-[50vh] flex-col gap-2 overflow-y-scroll">
         {remainingData.isFetching ? (
           // loading state
           <PageLoader />
         ) : // if nothing is typed in search bar
         debouncedQuery.length == 0 ? (
-          <div className="w-full text-center text-zinc-500 text-sm">
-            <h1 className="font-semibold">
-              Search for users to send request !
-            </h1>
-            <p className="text-zinc-600">
-              Type a username in the search bar above.
-            </p>
+          <div className="w-full text-center text-sm text-zinc-500">
+            <h1 className="font-semibold">Search for users to send request !</h1>
+            <p className="text-zinc-600">Type a username in the search bar above.</p>
           </div>
         ) : // if no users are found
         remainingData?.data?.length == 0 ? (
-          <div className="w-full text-center text-zinc-500 text-sm">
+          <div className="w-full text-center text-sm text-zinc-500">
             <h1 className="font-semibold">No users found !</h1>
-            <p className="text-zinc-600">
-              Try searching for a different username.
-            </p>
+            <p className="text-zinc-600">Try searching for a different username.</p>
           </div>
         ) : (
           // if users are found, render them
@@ -93,7 +80,7 @@ export const AddPeopleComponent = () => {
             return (
               <div
                 key={index}
-                className="w-full flex justify-between items-center rounded-md p-2 hover:bg-muted/50 duration-300"
+                className="hover:bg-muted/50 flex w-full items-center justify-between rounded-md p-2 duration-300"
               >
                 <div className="flex items-center">
                   <Dialog
@@ -104,18 +91,18 @@ export const AddPeopleComponent = () => {
                       />
                     }
                   >
-                    <div className="cursor-pointer relative shrink-0 size-8 rounded-full overflow-hidden">
+                    <div className="relative size-8 shrink-0 cursor-pointer overflow-hidden rounded-full">
                       <img
                         src={user.avatar?.url || "/placeholder.jpeg"}
                         alt="Chat Profile Picture"
-                        className="w-full h-full object-cover"
+                        className="h-full w-full object-cover"
                       />
                     </div>
                   </Dialog>
                   <p className="ml-2 text-sm">{user.username}</p>
                   {onlineUserIds.includes(user._id) && (
-                    <div className="flex items-center gap-1 mt-1.5 ml-2">
-                      <div className="size-1.5 rounded-full bg-green-500 mt-0.5" />
+                    <div className="mt-1.5 ml-2 flex items-center gap-1">
+                      <div className="mt-0.5 size-1.5 rounded-full bg-green-500" />
                       <p className="text-[10px] text-zinc-600">online</p>
                     </div>
                   )}
@@ -124,11 +111,9 @@ export const AddPeopleComponent = () => {
                 {/* rendering buttons */}
                 {
                   // if loggedin user and this user are already in same chat
-                  user.chats.some((chatId) =>
-                    loggedInUser?.chats?.includes(chatId)
-                  ) ? (
+                  user.chats.some((chatId) => loggedInUser?.chats?.includes(chatId)) ? (
                     <Tooltip text="Already added">
-                      <div className="cursor-not-allowed hover:bg-zinc-700 rounded-sm p-2 duration-300">
+                      <div className="cursor-not-allowed rounded-sm p-2 duration-300 hover:bg-zinc-700">
                         <CheckCheck size="1rem" />
                       </div>
                     </Tooltip>
@@ -146,7 +131,7 @@ export const AddPeopleComponent = () => {
                             });
                             setQuery("");
                           }}
-                          className="hover:bg-zinc-700 rounded-sm p-2 duration-300"
+                          className="rounded-sm p-2 duration-300 hover:bg-zinc-700"
                         >
                           <RejectIcon size="1rem" className="text-rose-400" />
                         </div>
@@ -162,7 +147,7 @@ export const AddPeopleComponent = () => {
                             });
                             setQuery("");
                           }}
-                          className="hover:bg-zinc-700 rounded-sm p-2 duration-300"
+                          className="rounded-sm p-2 duration-300 hover:bg-zinc-700"
                         >
                           <Check size="1rem" />
                         </div>
@@ -171,7 +156,7 @@ export const AddPeopleComponent = () => {
                   ) : // if loggedin user has already sent request to this user
                   user?.requests?.includes(loggedInUser._id) ? (
                     <Tooltip text="Request pending">
-                      <div className="cursor-not-allowed hover:bg-zinc-700 rounded-sm p-2 duration-300">
+                      <div className="cursor-not-allowed rounded-sm p-2 duration-300 hover:bg-zinc-700">
                         <Loader size="1rem" />
                       </div>
                     </Tooltip>
@@ -191,7 +176,7 @@ export const AddPeopleComponent = () => {
                             debouncedQuery: debouncedQuery,
                           });
                         }}
-                        className="hover:bg-zinc-700 rounded-sm p-2 duration-300"
+                        className="rounded-sm p-2 duration-300 hover:bg-zinc-700"
                       >
                         <UserRoundPlus size="1rem" />
                       </div>

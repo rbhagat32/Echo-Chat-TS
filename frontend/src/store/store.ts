@@ -21,6 +21,5 @@ export const store = configureStore({
     [RequestsSlice.name]: RequestsSlice.reducer,
     [OnlineUsersSlice.name]: OnlineUsersSlice.reducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware),
 });

@@ -47,10 +47,4 @@ interface MessageTypes {
   updatedAt: Date | string;
 }
 
-type RefetchTypes =
-  | "Auth"
-  | "User"
-  | "Chats"
-  | "Messages"
-  | "Searches"
-  | "Requests";
+type RefetchTypes = "Auth" | "User" | "Chats" | "Messages" | "Searches" | "Requests";

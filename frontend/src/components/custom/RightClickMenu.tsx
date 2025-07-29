@@ -69,10 +69,7 @@ export function RightClickMenu({ children, myMessage, message }: PropTypes) {
 
               <ContextMenuSeparator />
 
-              <AlertDialogTrigger
-                className="w-full"
-                disabled={message._id.startsWith("realtime-")}
-              >
+              <AlertDialogTrigger className="w-full" disabled={message._id.startsWith("realtime-")}>
                 <ContextMenuItem
                   disabled={message._id.startsWith("realtime-")}
                   variant="destructive"

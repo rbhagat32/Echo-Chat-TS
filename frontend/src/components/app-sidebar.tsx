@@ -10,17 +10,9 @@ import { SearchForm } from "@/components/search-form";
 import { LogOut, Settings } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { Skeleton } from "./ui/skeleton";
-import {
-  api,
-  useGetChatsQuery,
-  useGetRequestsQuery,
-  useGetUserQuery,
-} from "@/store/api";
+import { api, useGetChatsQuery, useGetRequestsQuery, useGetUserQuery } from "@/store/api";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  clearActiveChat,
-  setActiveChat,
-} from "../store/reducers/ActiveChatSlice";
+import { clearActiveChat, setActiveChat } from "../store/reducers/ActiveChatSlice";
 import { AlertDialog } from "./custom/AlertDialog";
 import { axios } from "@/utils/axios";
 import { toast } from "sonner";
@@ -30,10 +22,7 @@ import { clearUser } from "@/store/reducers/UserSlice";
 import { clearMessages } from "@/store/reducers/MessageSlice";
 import { Tooltip } from "./custom/Tooltip";
 import { getSocket } from "@/Socket";
-import {
-  clearLatestChats,
-  removeLatestChat,
-} from "@/store/reducers/LatestChatSlice";
+import { clearLatestChats, removeLatestChat } from "@/store/reducers/LatestChatSlice";
 import { Dialog } from "./custom/Dialog";
 import { SettingsComponent } from "./sidebar/Settings";
 import { useNavLinks } from "@/hooks/useNavLinks";
@@ -114,9 +103,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
     // if query is not empty, filter chats by what is typed in query
     if (chats) {
-      setFilteredChats(
-        chats.filter((chat) => chat.users[0].username.includes(query))
-      );
+      setFilteredChats(chats.filter((chat) => chat.users[0].username.includes(query)));
     }
   };
 
@@ -131,22 +118,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       dispatch(api.util.invalidateTags(whatToRefetch));
     });
 
-    socket?.on(
-      "realtimeDeleteChat",
-      (user: UserTypes, deletedChat: ChatTypes) => {
-        toast.warning(`${user.username} deleted the chat !`);
+    socket?.on("realtimeDeleteChat", (user: UserTypes, deletedChat: ChatTypes) => {
+      toast.warning(`${user.username} deleted the chat !`);
 
-        if (activeChat._id === deletedChat._id) {
-          // if active chat is deleted by other user, clear active chat and messages
-          dispatch(clearActiveChat());
-          dispatch(clearMessages());
-        } else {
-          // if non active chat is deleted, remove it from latest chats and clear messages
-          dispatch(removeLatestChat(deletedChat));
-          dispatch(clearMessages());
-        }
+      if (activeChat._id === deletedChat._id) {
+        // if active chat is deleted by other user, clear active chat and messages
+        dispatch(clearActiveChat());
+        dispatch(clearMessages());
+      } else {
+        // if non active chat is deleted, remove it from latest chats and clear messages
+        dispatch(removeLatestChat(deletedChat));
+        dispatch(clearMessages());
       }
-    );
+    });
 
     socket?.on("realtimeRequest", (user: UserTypes) => {
       // append this user to requests in redux store
@@ -175,7 +159,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar {...props}>
       {/* Sidebar Header -> User info + Search chats + Navigation links */}
       {isLoading ? (
-        <div className="px-2 py-3.5 flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5 px-2 py-3.5">
           <Skeleton className="h-14" />
           {[...Array(4)].map((_, index) => (
             <Skeleton key={index} className="h-10" />
@@ -185,7 +169,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       ) : (
         <SidebarHeader>
           {/* Logged in user info */}
-          <header className="px-2 py-1 flex rounded-lg justify-center items-center gap-2 border bg-muted/50">
+          <header className="bg-muted/50 flex items-center justify-center gap-2 rounded-lg border px-2 py-1">
             <Dialog
               component={
                 <ProfilePicture
@@ -194,27 +178,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 />
               }
             >
-              <div className="cursor-pointer shrink-0 size-10 rounded-full overflow-hidden">
+              <div className="size-10 shrink-0 cursor-pointer overflow-hidden rounded-full">
                 <img
                   src={user?.avatar!.url || "/placeholder.jpeg"}
                   alt="User Profile Picture"
-                  className="w-full h-full object-cover"
+                  className="h-full w-full object-cover"
                 />
               </div>
             </Dialog>
-            <div className="w-full flex justify-between items-center">
+            <div className="flex w-full items-center justify-between">
               <div className="py-2">
                 <h1 className="text-base">@{user?.username}</h1>
                 <p className="text-xs text-zinc-400">
-                  {user?.bio?.length! > 20
-                    ? user?.bio!.slice(0, 20) + "..."
-                    : user?.bio}
+                  {user?.bio?.length! > 20 ? user?.bio!.slice(0, 20) + "..." : user?.bio}
                 </p>
               </div>
               <div>
                 <Tooltip text="Settings">
                   <Dialog component={<SettingsComponent />}>
-                    <div className="hover:bg-zinc-700 rounded-sm p-1.5 duration-300">
+                    <div className="rounded-sm p-1.5 duration-300 hover:bg-zinc-700">
                       <Settings size="1rem" />
                     </div>
                   </Dialog>
@@ -226,7 +208,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     title="Are you sure that you want to Logout ?"
                     description="You will be logged out from your account and redirected to login page. To login again, you need to enter your credentials."
                   >
-                    <div className="hover:bg-zinc-700 rounded-sm p-1.5 duration-300">
+                    <div className="rounded-sm p-1.5 duration-300 hover:bg-zinc-700">
                       <LogOut size="1rem" />
                     </div>
                   </AlertDialog>
@@ -236,9 +218,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </header>
 
           {/* Search chats field */}
-          <SearchForm
-            onChange={(e) => searchChats((e.target as HTMLInputElement).value)}
-          />
+          <SearchForm onChange={(e) => searchChats((e.target as HTMLInputElement).value)} />
 
           {/* Navigation Links -> Home, Search, Requests */}
           <div className="flex flex-col gap-1">
@@ -247,21 +227,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <div
                   key={index}
                   onClick={item.onClick}
-                  className="cursor-pointer flex items-center rounded-md p-3 hover:bg-muted/50 duration-300"
+                  className="hover:bg-muted/50 flex cursor-pointer items-center rounded-md p-3 duration-300"
                 >
                   <p className="mr-2">{item.icon}</p>
                   <p className="text-sm">{item.name}</p>
                 </div>
               ) : (
                 <Dialog key={index} component={item.component}>
-                  <div className="cursor-pointer flex justify-between items-center rounded-md p-3 hover:bg-muted/50 duration-300">
+                  <div className="hover:bg-muted/50 flex cursor-pointer items-center justify-between rounded-md p-3 duration-300">
                     <div className="flex items-center">
                       <p className="mr-2">{item.icon}</p>
                       <p className="text-sm">{item.name}</p>
                     </div>
                     {requests.length > 0 && item.name === "Requests" && (
                       <div className="flex items-center gap-1">
-                        <div className="size-1.5 rounded-full bg-green-500 mt-0.5" />
+                        <div className="mt-0.5 size-1.5 rounded-full bg-green-500" />
                         <p className="text-xs text-zinc-600">new</p>
                       </div>
                     )}
@@ -279,7 +259,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
         {/* Render Chats */}
         {isLoading ? (
-          <div className="px-2 py-3.5 flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1.5 px-2 py-3.5">
             {[...Array(10)].map((_, index) => (
               <Skeleton key={index} className="h-9" />
             ))}
@@ -287,11 +267,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ) : (
           <div id="chats" className="pb-2">
             {filteredChats?.length == 0 ? (
-              <div className="w-full text-center text-zinc-500 text-sm">
+              <div className="w-full text-center text-sm text-zinc-500">
                 <h1 className="font-semibold">No chats found !</h1>
-                <p className="text-zinc-600">
-                  Connect with friends to start chatting.
-                </p>
+                <p className="text-zinc-600">Connect with friends to start chatting.</p>
               </div>
             ) : (
               filteredChats?.map((chat: ChatTypes, index: number) => {
@@ -299,9 +277,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 // if yes, then show (. new) notification
                 const isLatest =
                   latestChats?.some(
-                    (latestChat) =>
-                      latestChat._id === chat._id &&
-                      latestChat._id !== activeChat._id
+                    (latestChat) => latestChat._id === chat._id && latestChat._id !== activeChat._id
                   ) || false;
 
                 const isOnline = onlineUserIds.some(
@@ -312,20 +288,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <button
                     key={index}
                     onClick={() => handleOpenChat(chat)}
-                    className={`mb-2 w-full flex justify-between items-center ${
+                    className={`mb-2 flex w-full items-center justify-between ${
                       activeChat._id === chat._id && "bg-zinc-800"
-                    } rounded-md p-2 hover:bg-muted/50 duration-300`}
+                    } hover:bg-muted/50 rounded-md p-2 duration-300`}
                   >
                     <div className="flex items-center">
                       <div
-                        className={`relative shrink-0 size-8 rounded-full overflow-hidden ${
+                        className={`relative size-8 shrink-0 overflow-hidden rounded-full ${
                           isOnline && "border-2 border-green-500"
                         }`}
                       >
                         <img
                           src={chat.users[0].avatar.url || "/placeholder.jpeg"}
                           alt="Chat Profile Picture"
-                          className="w-full h-full object-cover"
+                          className="h-full w-full object-cover"
                         />
                       </div>
                       <p className="ml-2 text-sm">{chat.users[0].username}</p>
@@ -333,7 +309,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
                     {isLatest && (
                       <div className="flex items-center gap-1">
-                        <div className="size-1.5 rounded-full bg-green-500 mt-0.5" />
+                        <div className="mt-0.5 size-1.5 rounded-full bg-green-500" />
                         <p className="text-xs text-zinc-600">new</p>
                       </div>
                     )}

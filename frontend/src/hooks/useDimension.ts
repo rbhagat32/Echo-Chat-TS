@@ -4,9 +4,7 @@ const useDimension = () => {
   const isClient = typeof window !== "undefined";
 
   const [width, setWidth] = useState<number>(isClient ? window.innerWidth : 0);
-  const [height, setHeight] = useState<number>(
-    isClient ? window.innerHeight : 0
-  );
+  const [height, setHeight] = useState<number>(isClient ? window.innerHeight : 0);
 
   const handleResize = useCallback(() => {
     requestAnimationFrame(() => {

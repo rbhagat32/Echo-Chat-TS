@@ -25,10 +25,7 @@ const schema = yup.object().shape({
     .required("Username is required")
     .min(4, "Username must be at least 4 characters")
     .max(12, "Username must not exceed 12 characters")
-    .matches(
-      /^[a-zA-Z0-9_]+$/,
-      "Username can only contain letters, numbers, and underscores !"
-    ),
+    .matches(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores !"),
   password: yup
     .string()
     .required("Password is required")
@@ -71,10 +68,7 @@ const Login = () => {
   const login: SubmitHandler<LoginFormData> = async (data) => {
     setLoading(true);
     try {
-      const response = await axios.post<{ message: string }>(
-        "/auth/login",
-        data
-      );
+      const response = await axios.post<{ message: string }>("/auth/login", data);
       reset();
       dispatch(setAuth(true));
       // Invalidate the Auth, User and Chats tags to refetch data after login
@@ -100,7 +94,7 @@ const Login = () => {
   };
 
   return (
-    <div className="w-screen h-screen flex">
+    <div className="flex h-screen w-screen">
       {/* Left side */}
       <div
         style={{
@@ -109,17 +103,16 @@ const Login = () => {
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
-        className="bg-neutral-800/30 px-10 lg:px-20 xl:px-40 hidden md:flex py-20 w-full h-full justify-between flex-col gap-4"
+        className="hidden h-full w-full flex-col justify-between gap-4 bg-neutral-800/30 px-10 py-20 md:flex lg:px-20 xl:px-40"
       >
-        <div className="w-fit flex items-center gap-2">
+        <div className="flex w-fit items-center gap-2">
           <img src="/logo-light.svg" alt="Logo" className="size-10" />
           <h1 className="text-3xl font-semibold">Echo.</h1>
         </div>
         <div>
           <h1 className="text-lg text-zinc-500">
-            "Welcome back! Ready to dive into your conversations? Connect with
-            friends, share moments, and enjoy seamless communication all in one
-            place."
+            "Welcome back! Ready to dive into your conversations? Connect with friends, share
+            moments, and enjoy seamless communication all in one place."
           </h1>
         </div>
       </div>
@@ -136,22 +129,17 @@ const Login = () => {
               }
             : {}
         }
-        className="relative px-20 lg:px-40 w-full h-full flex justify-center items-center flex-col text-center gap-2"
+        className="relative flex h-full w-full flex-col items-center justify-center gap-2 px-20 text-center lg:px-40"
       >
         <CustomLink absolute={true} side="right" route="signup">
           Sign Up Instead
         </CustomLink>
         <div>
-          <h1 className="font-bold text-2xl mb-1">Log In to your account</h1>
-          <h2 className="text-lg text-zinc-500">
-            Enter your username and password to Log In
-          </h2>
+          <h1 className="mb-1 text-2xl font-bold">Log In to your account</h1>
+          <h2 className="text-lg text-zinc-500">Enter your username and password to Log In</h2>
         </div>
 
-        <form
-          onSubmit={handleSubmit(validation)}
-          className="w-full flex flex-col gap-3"
-        >
+        <form onSubmit={handleSubmit(validation)} className="flex w-full flex-col gap-3">
           <Input
             register={register("username")}
             type="text"
