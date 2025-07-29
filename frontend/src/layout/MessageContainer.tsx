@@ -40,7 +40,7 @@ export default function MessageContainer() {
       const response = await trigger({
         chatId: activeChat._id,
         page: 1,
-        limit: 1000, // Load all at once
+        limit: -1,
       });
       dispatch(prependMessages(response.data!));
     } catch (error) {
