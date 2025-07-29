@@ -3,6 +3,7 @@ import { ImagePlus, X } from "lucide-react";
 import { SidebarInput } from "../ui/sidebar";
 import { Tooltip } from "./Tooltip";
 import { motion, AnimatePresence } from "motion/react";
+import { truncateFileName } from "@/utils/TruncateFileName";
 
 export function ImageUpload() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -73,7 +74,7 @@ export function ImageUpload() {
           >
             {/* Topbar */}
             <div className="flex items-center justify-between rounded-md px-4 py-2">
-              <h1>{fileName}</h1>
+              <h1>{truncateFileName(fileName, 40)}</h1>
               <Tooltip text="Discard Image">
                 <div
                   onClick={handleDiscardImage}
