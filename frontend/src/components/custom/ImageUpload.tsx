@@ -97,7 +97,7 @@ export function ImageUpload() {
               <img
                 src={imagePreview}
                 alt="Preview"
-                className="h-[300px] w-[600px] object-contain"
+                className="h-[300px] w-[460px] object-contain md:w-[600px]"
               />
             </div>
 
