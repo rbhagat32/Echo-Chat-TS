@@ -8,6 +8,7 @@ import { getSocket } from "@/Socket";
 import { api, useSendMessageMutation } from "@/store/api";
 import { appendMessage } from "@/store/reducers/MessageSlice";
 import { appendLatestChat } from "@/store/reducers/LatestChatSlice";
+import { ImageUpload } from "@/components/custom/ImageUpload";
 
 interface PropTypes {
   setShouldScrollToBottom: React.Dispatch<React.SetStateAction<boolean>>;
@@ -93,7 +94,7 @@ function MessageInputComponent({ setShouldScrollToBottom }: PropTypes) {
   }, [activeChat, socket, dispatch, loggedInUser._id, chats]);
 
   return (
-    <div className="relative h-14">
+    <div className="h-14 flex items-center gap-4">
       <SidebarInput
         name="message-input-box"
         type="text"
@@ -108,12 +109,16 @@ function MessageInputComponent({ setShouldScrollToBottom }: PropTypes) {
         className="h-14 rounded-t-none rounded-b-xl pr-16 break-words"
       />
 
-      <button
-        onClick={handleSendMessage}
-        className="z-[100] absolute right-5 top-1/2 -translate-y-[50%] pl-1.5 pr-2 py-2 rounded-md hover:bg-zinc-700 duration-300"
-      >
-        <Send size="1rem" />
-      </button>
+      <div className="flex items-center gap-1 mr-4">
+        <ImageUpload />
+
+        <button
+          onClick={handleSendMessage}
+          className="p-2 rounded-md hover:bg-zinc-700 duration-300"
+        >
+          <Send size="1.2rem" />
+        </button>
+      </div>
     </div>
   );
 }
