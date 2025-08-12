@@ -66,7 +66,7 @@ export function ImageUpload() {
         {imagePreview && (
           <motion.div
             ref={previewComponentRef}
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
             transition={{ duration: 0.3 }}
@@ -114,6 +114,7 @@ export function ImageUpload() {
                 //   }
                 // }}
                 placeholder="Add caption..."
+                autoFocus
                 className="mt-0.5 h-14 rounded-t-none rounded-b-xl pr-16 break-words"
               />
             </div>
