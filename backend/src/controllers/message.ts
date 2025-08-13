@@ -5,6 +5,7 @@ import { MessageModel } from "../models/message.js";
 import { MessageTypes } from "../types/message.js";
 import { tryCatch } from "../utils/try-catch.js";
 import { ErrorHandler } from "../middlewares/error-handler.js";
+import { io, userSocketsMap } from "../socket.js";
 
 const sendMessage = tryCatch(async (req: RequestWithUser, res: Response) => {
   const { chatId } = req.params;
@@ -27,6 +28,11 @@ const sendMessage = tryCatch(async (req: RequestWithUser, res: Response) => {
 
   chat.messages.push(newMessage._id);
   await chat.save();
+
+  const receiverSocketId = userSocketsMap.get(receiverId);
+  if (receiverSocketId) {
+    io.to(receiverSocketId).emit("realtime", newMessage);
+  }
 
   return res.status(201).json({ message: "Message sent successfully !" });
 });

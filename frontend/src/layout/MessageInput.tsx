@@ -49,9 +49,6 @@ function MessageInputComponent({ setShouldScrollToBottom }: PropTypes) {
     // reset the input field
     setInputMessage("");
 
-    // emit the message to the server for realtime communication
-    socket?.emit("message", newMessage);
-
     // send message api call
     sendMessage(newMessage);
   };
