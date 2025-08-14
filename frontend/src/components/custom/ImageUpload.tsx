@@ -47,7 +47,8 @@ export function ImageUpload() {
   return (
     <div className="flex items-center">
       <button
-        onClick={() => inputRef.current?.click()}
+        onClick={() => alert("Currently working on image upload")}
+        // onClick={() => inputRef.current?.click()}
         className="rounded-md p-2 duration-300 hover:bg-zinc-700"
       >
         <ImagePlus size="1.2rem" />
