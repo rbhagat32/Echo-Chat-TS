@@ -4,6 +4,7 @@ import { SidebarInput } from "../ui/sidebar";
 import { Tooltip } from "./Tooltip";
 import { motion, AnimatePresence } from "motion/react";
 import { truncateFileName } from "@/utils/TruncateFileName";
+import { toast } from "sonner";
 
 export function ImageUpload() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -47,7 +48,7 @@ export function ImageUpload() {
   return (
     <div className="flex items-center">
       <button
-        onClick={() => alert("Currently working on image upload")}
+        onClick={() => toast.error("Currently working on image upload")}
         // onClick={() => inputRef.current?.click()}
         className="rounded-md p-2 duration-300 hover:bg-zinc-700"
       >
