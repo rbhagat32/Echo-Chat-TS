@@ -179,7 +179,7 @@ const Login = () => {
                     onClick={() => fillCredentials("raghav", "Raghav@123")}
                     className="cursor-pointer rounded-md p-2 transition duration-300 hover:bg-zinc-700"
                   >
-                    <Upload size={"1.1rem"} />
+                    <Upload size={"1rem"} />
                   </div>
                 </div>
 
@@ -192,7 +192,7 @@ const Login = () => {
                     onClick={() => fillCredentials("test", "Test@123")}
                     className="cursor-pointer rounded-md p-2 transition duration-300 hover:bg-zinc-700"
                   >
-                    <Upload size={"1.1rem"} />
+                    <Upload size={"1rem"} />
                   </div>
                 </div>
               </div>
