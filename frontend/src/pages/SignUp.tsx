@@ -171,10 +171,6 @@ const SignUp = () => {
           <Button type="submit" width="w-full">
             {!loading ? "Sign Up" : <Spinner />}
           </Button>
-
-          <p className="text-zinc-500">
-            By continuing, you agree to our Terms of Service and Privacy Policy.
-          </p>
         </form>
       </div>
 

@@ -13,6 +13,8 @@ import { axios } from "../utils/axios";
 import { Input } from "@/components/ui/input";
 import { useDimension } from "@/hooks/useDimension";
 import { useNavigate } from "react-router-dom";
+import { Dialog } from "@/components/custom/Dialog";
+import { Upload } from "lucide-react";
 
 interface LoginFormData {
   username: string;
@@ -50,6 +52,7 @@ const Login = () => {
     register,
     reset,
     trigger,
+    setValue,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: yupResolver(schema),
@@ -91,6 +94,12 @@ const Login = () => {
     if (!isValid) return;
     // if form is valid, call the login function
     login(data);
+  };
+
+  const fillCredentials = (username: string, password: string) => {
+    setValue("username", username);
+    setValue("password", password);
+    toast.success("Credentials filled successfully !");
   };
 
   return (
@@ -156,9 +165,43 @@ const Login = () => {
             {!loading ? "Log In" : <Spinner />}
           </Button>
 
-          <p className="text-zinc-500">
-            By continuing, you agree to our Terms of Service and Privacy Policy.
-          </p>
+          <Dialog
+            component={
+              <div className="flex flex-col gap-4">
+                <h1 className="mb-2 text-center text-xl font-semibold">Login Credentials</h1>
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p>Username: raghav</p>
+                    <p>Password: Raghav@123</p>
+                  </div>
+                  <div
+                    onClick={() => fillCredentials("raghav", "Raghav@123")}
+                    className="cursor-pointer rounded-md p-2 transition duration-300 hover:bg-zinc-700"
+                  >
+                    <Upload size={"1.1rem"} />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p>Username: test</p>
+                    <p>Password: Test@123</p>
+                  </div>
+                  <div
+                    onClick={() => fillCredentials("test", "Test@123")}
+                    className="cursor-pointer rounded-md p-2 transition duration-300 hover:bg-zinc-700"
+                  >
+                    <Upload size={"1.1rem"} />
+                  </div>
+                </div>
+              </div>
+            }
+          >
+            <div className="mx-auto mt-2 flex w-fit cursor-pointer items-center rounded-lg px-4 py-2 font-semibold duration-300 ease-in-out hover:ring-2 hover:ring-indigo-400">
+              <p className="text-sm">A Secret for Recruiters & Testers !</p>
+            </div>
+          </Dialog>
         </form>
       </div>
     </div>
