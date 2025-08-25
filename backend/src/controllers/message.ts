@@ -6,6 +6,8 @@ import { MessageTypes } from "../types/message.js";
 import { tryCatch } from "../utils/try-catch.js";
 import { ErrorHandler } from "../middlewares/error-handler.js";
 import { io, userSocketsMap } from "../socket.js";
+import { uploadToCloudinary } from "../utils/cloudinary.js";
+import { FileProps } from "../types/file.js";
 
 const sendMessage = tryCatch(async (req: RequestWithUser, res: Response) => {
   const { chatId } = req.params;
@@ -77,7 +79,20 @@ const deleteMessage = tryCatch(async (req: RequestWithUser, res: Response) => {
   chat.messages = chat.messages.filter((id: string) => id.toString() !== messageId.toString());
   await chat.save();
 
+  // implement image deletion from Cloudinary when deleting message
+  // if (isImageUrl(message.content)) {
+  //   const publicId = message.content.split("/").pop().split(".")[0];
+  //   await deleteFromCloudinary(publicId);
+  // }
+
   return res.status(200).json({ message: "Message deleted successfully!" });
 });
 
-export { sendMessage, getMessages, deleteMessage };
+const uploadImage = tryCatch(async (req: RequestWithUser, res: Response) => {
+  const image = req.file;
+  const { public_id, url } = await uploadToCloudinary(image as FileProps);
+
+  res.status(200).json({ message: "Image uploaded successfully !", imageUrl: url, public_id });
+});
+
+export { sendMessage, getMessages, deleteMessage, uploadImage };

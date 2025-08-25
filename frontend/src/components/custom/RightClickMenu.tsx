@@ -7,12 +7,13 @@ import {
   ContextMenuShortcut,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import { Copy, Trash2 } from "lucide-react";
+import { Copy, Download, Trash2 } from "lucide-react";
 import { AlertDialog } from "./AlertDialog";
 import { AlertDialogTrigger } from "../ui/alert-dialog";
 import { toast } from "sonner";
 import { useDeleteMessageMutation } from "@/store/api";
 import { getSocket } from "@/Socket";
+import { isImageUrl } from "@/helpers/CheckImageUrl";
 
 interface PropTypes {
   children: ReactNode;
@@ -61,11 +62,45 @@ export function RightClickMenu({ children, myMessage, message }: PropTypes) {
                 onClick={() => handleCopy(message.content)}
                 className="cursor-pointer"
               >
-                Copy
+                {isImageUrl(message.content) ? "Copy Image URL" : "Copy Text"}
                 <ContextMenuShortcut>
                   <Copy size="1rem" />
                 </ContextMenuShortcut>
               </ContextMenuItem>
+
+              {isImageUrl(message.content) && (
+                <>
+                  <ContextMenuSeparator />
+
+                  <ContextMenuItem
+                    inset
+                    onClick={async () => {
+                      try {
+                        const response = await fetch(message.content);
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+
+                        const link = document.createElement("a");
+                        link.href = url;
+                        link.download = message.content.split("/").pop() || "download";
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                        window.URL.revokeObjectURL(url);
+                      } catch (error) {
+                        console.error("Download failed:", error);
+                      }
+                    }}
+                    className="cursor-pointer"
+                  >
+                    Download
+                    <ContextMenuShortcut>
+                      <Download size="1rem" />
+                    </ContextMenuShortcut>
+                  </ContextMenuItem>
+                </>
+              )}
 
               <ContextMenuSeparator />
 
@@ -90,11 +125,45 @@ export function RightClickMenu({ children, myMessage, message }: PropTypes) {
                 onClick={() => handleCopy(message.content)}
                 className="cursor-pointer"
               >
-                Copy
+                {isImageUrl(message.content) ? "Copy Image URL" : "Copy Text"}
                 <ContextMenuShortcut>
                   <Copy size="1rem" />
                 </ContextMenuShortcut>
               </ContextMenuItem>
+
+              {isImageUrl(message.content) && (
+                <>
+                  <ContextMenuSeparator />
+
+                  <ContextMenuItem
+                    inset
+                    onClick={async () => {
+                      try {
+                        const response = await fetch(message.content);
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+
+                        const link = document.createElement("a");
+                        link.href = url;
+                        link.download = message.content.split("/").pop() || "download";
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                        window.URL.revokeObjectURL(url);
+                      } catch (error) {
+                        console.error("Download failed:", error);
+                      }
+                    }}
+                    className="cursor-pointer"
+                  >
+                    Download
+                    <ContextMenuShortcut>
+                      <Download size="1rem" />
+                    </ContextMenuShortcut>
+                  </ContextMenuItem>
+                </>
+              )}
             </>
           )}
         </ContextMenuContent>

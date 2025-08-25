@@ -11,6 +11,8 @@ import { getSocket } from "@/Socket";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "motion/react";
 import { messageVariants } from "@/lib/variants";
+import { isImageUrl } from "@/helpers/CheckImageUrl";
+import { ImageWithSkeleton } from "@/components/custom/ImageWithSkeleton";
 
 export default function MessageContainer() {
   const socket = getSocket();
@@ -119,10 +121,23 @@ export default function MessageContainer() {
                       myMessage={message.senderId === loggedInUser._id}
                       message={message}
                     >
-                      <div className="max-w-[40ch] rounded-md bg-zinc-800 px-4 py-2 text-sm md:max-w-[50ch] lg:max-w-[80ch] xl:max-w-[100ch]">
-                        <p className="break-words">{message.content}</p>
+                      <div
+                        className={`max-w-[40ch] rounded-md bg-zinc-800 ${
+                          isImageUrl(message.content) ? "py-4" : "py-2"
+                        } px-4 text-sm md:max-w-[50ch] lg:max-w-[80ch] xl:max-w-[100ch]`}
+                      >
+                        {isImageUrl(message.content) ? (
+                          <ImageWithSkeleton
+                            src={message.content}
+                            alt={`Image_${message._id}`}
+                            onLoadCallback={scrollToBottom}
+                          />
+                        ) : (
+                          <p className="break-words">{message.content}</p>
+                        )}
+
                         <p
-                          className={`mt-1 flex items-center gap-1 text-[10px] text-zinc-500 ${
+                          className={`mt-3 flex items-center gap-1 text-[10px] text-zinc-500 ${
                             message.senderId === loggedInUser._id ? "justify-end" : "justify-start"
                           }`}
                         >

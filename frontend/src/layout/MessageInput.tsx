@@ -103,7 +103,13 @@ function MessageInputComponent({ setShouldScrollToBottom }: PropTypes) {
       />
 
       <div className="mr-4 flex items-center gap-1">
-        <ImageUpload />
+        <ImageUpload
+          activeChat={activeChat}
+          loggedInUser={loggedInUser}
+          receiverId={receiverId}
+          sendMessage={sendMessage}
+          setShouldScrollToBottom={setShouldScrollToBottom}
+        />
 
         <button
           onClick={handleSendMessage}

@@ -44,18 +44,6 @@ io.on("connection", (socket: AuthenticatedSocket) => {
 
   io.emit("onlineUsers", Array.from(userSocketsMap.keys()));
 
-  socket.on("message", (message) => {
-    const receiverSocketId = userSocketsMap.get(message.receiverId.toString());
-    if (receiverSocketId) {
-      socket.to(receiverSocketId).emit("realtime", message);
-      // console.log(
-      //   `Realtime message sent to ${message.receiverId}: ${message.content}`
-      // );
-    } else {
-      // console.log(`Other user: ${message.receiverId} is not online`);
-    }
-  });
-
   socket.on("deleteChat", (loggedInUser: UserTypes, deletedChat: ChatTypes) => {
     const receiverSocketId = userSocketsMap.get(deletedChat.users[0]._id.toString());
     if (receiverSocketId) {
