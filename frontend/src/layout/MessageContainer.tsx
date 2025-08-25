@@ -100,56 +100,79 @@ export default function MessageContainer() {
         ) : (
           <>
             <AnimatePresence initial={false}>
-              {messagesData.messages.map((message: MessageTypes) => (
-                <motion.div
-                  key={message._id}
-                  custom={{
-                    isMyMessage: message.senderId === loggedInUser._id,
-                  }}
-                  variants={messageVariants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  layout
-                >
-                  <div
-                    className={`mb-2 flex gap-2 ${
-                      message.senderId === loggedInUser._id ? "justify-end" : "justify-start"
-                    }`}
-                  >
-                    <RightClickMenu
-                      myMessage={message.senderId === loggedInUser._id}
-                      message={message}
+              {messagesData.messages.map((message: MessageTypes, index: number) => {
+                // date divider logic -> if current date is not same as previous date, then render date divider
+                const currentDate = moment(message.createdAt).format("DD-MM-YYYY");
+                const prevDate =
+                  index > 0
+                    ? moment(messagesData.messages[index - 1].createdAt).format("DD-MM-YYYY")
+                    : null;
+
+                const showDateDivider: boolean = currentDate !== prevDate;
+
+                return (
+                  <div key={message._id}>
+                    {/* render date divider */}
+                    {showDateDivider && (
+                      <div className="my-4 flex justify-center">
+                        <span className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs text-white">
+                          {currentDate}
+                        </span>
+                      </div>
+                    )}
+
+                    <motion.div
+                      custom={{
+                        isMyMessage: message.senderId === loggedInUser._id,
+                      }}
+                      variants={messageVariants}
+                      initial="initial"
+                      animate="animate"
+                      exit="exit"
+                      layout
                     >
                       <div
-                        className={`max-w-[40ch] rounded-md bg-zinc-800 ${
-                          isImageUrl(message.content) ? "py-4" : "py-2"
-                        } px-4 text-sm md:max-w-[50ch] lg:max-w-[80ch] xl:max-w-[100ch]`}
+                        className={`mb-2 flex gap-2 ${
+                          message.senderId === loggedInUser._id ? "justify-end" : "justify-start"
+                        }`}
                       >
-                        {isImageUrl(message.content) ? (
-                          <ImageWithSkeleton
-                            src={message.content}
-                            alt={`Image_${message._id}`}
-                            onLoadCallback={scrollToBottom}
-                          />
-                        ) : (
-                          <p className="break-words">{message.content}</p>
-                        )}
-
-                        <p
-                          className={`mt-3 flex items-center gap-1 text-[10px] text-zinc-500 ${
-                            message.senderId === loggedInUser._id ? "justify-end" : "justify-start"
-                          }`}
+                        <RightClickMenu
+                          myMessage={message.senderId === loggedInUser._id}
+                          message={message}
                         >
-                          <span>{moment(message.createdAt).format("hh:mm A")}</span>
-                          <span className="mx-0.5 mt-px size-[3px] rounded-full bg-zinc-500"></span>
-                          <span>{moment(message.createdAt).fromNow()}</span>
-                        </p>
+                          <div
+                            className={`max-w-[40ch] rounded-md bg-zinc-800 ${
+                              isImageUrl(message.content) ? "py-4" : "py-2"
+                            } px-4 text-sm md:max-w-[50ch] lg:max-w-[80ch] xl:max-w-[100ch]`}
+                          >
+                            {isImageUrl(message.content) ? (
+                              <ImageWithSkeleton
+                                src={message.content}
+                                alt={`Image_${message._id}`}
+                                onLoadCallback={scrollToBottom}
+                              />
+                            ) : (
+                              <p className="break-words">{message.content}</p>
+                            )}
+
+                            <p
+                              className={`mt-3 flex items-center gap-1 text-[10px] text-zinc-500 ${
+                                message.senderId === loggedInUser._id
+                                  ? "justify-end"
+                                  : "justify-start"
+                              }`}
+                            >
+                              <span>{moment(message.createdAt).format("hh:mm A")}</span>
+                              <span className="mx-0.5 mt-px size-[3px] rounded-full bg-zinc-500"></span>
+                              <span>{moment(message.createdAt).fromNow()}</span>
+                            </p>
+                          </div>
+                        </RightClickMenu>
                       </div>
-                    </RightClickMenu>
+                    </motion.div>
                   </div>
-                </motion.div>
-              ))}
+                );
+              })}
             </AnimatePresence>
 
             {/* Scroll anchor */}
