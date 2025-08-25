@@ -163,8 +163,8 @@ export default function MessageContainer() {
                               }`}
                             >
                               <span>{moment(message.createdAt).format("hh:mm A")}</span>
-                              <span className="mx-0.5 mt-px size-[3px] rounded-full bg-zinc-500"></span>
-                              <span>{moment(message.createdAt).fromNow()}</span>
+                              {/* <span className="mx-0.5 mt-px size-[3px] rounded-full bg-zinc-500"></span> */}
+                              {/* <span>{moment(message.createdAt).fromNow()}</span> */}
                             </p>
                           </div>
                         </RightClickMenu>
