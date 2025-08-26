@@ -199,7 +199,7 @@ const Login = () => {
             }
           >
             <div className="mx-auto mt-2 flex w-fit cursor-pointer items-center rounded-lg px-4 py-2 font-semibold duration-300 ease-in-out hover:ring-2 hover:ring-indigo-400">
-              <p className="text-sm">A Secret for Recruiters & Testers !</p>
+              <p className="text-sm">A Secret for Recruiters !</p>
             </div>
           </Dialog>
         </form>

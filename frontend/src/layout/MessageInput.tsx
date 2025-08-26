@@ -53,6 +53,15 @@ function MessageInputComponent({ setShouldScrollToBottom }: PropTypes) {
     sendMessage(newMessage);
   };
 
+  // empty the input field when active chat changes
+  useEffect(() => {
+    setInputMessage("");
+
+    return () => {
+      socket?.emit("notTyping", { receiverId });
+    };
+  }, [activeChat]);
+
   // socket listener for realtime messages
   useEffect(() => {
     const handleRealtimeMessage = async (msg: MessageTypes) => {
@@ -85,6 +94,12 @@ function MessageInputComponent({ setShouldScrollToBottom }: PropTypes) {
       socket?.off("realtime", handleRealtimeMessage);
     };
   }, [activeChat, socket, dispatch, loggedInUser._id, chats]);
+
+  // emit typing indicator
+  useEffect(() => {
+    if (inputMessage) socket?.emit("typing", { receiverId, chatId: activeChat._id });
+    else socket?.emit("notTyping", { receiverId });
+  }, [inputMessage]);
 
   return (
     <div className="flex h-14 items-center gap-4">

@@ -98,6 +98,22 @@ io.on("connection", (socket: AuthenticatedSocket) => {
     }
   });
 
+  socket.on("typing", ({ receiverId, chatId }) => {
+    const receiverSocketId = userSocketsMap.get(receiverId.toString());
+
+    if (receiverSocketId) {
+      socket.to(receiverSocketId).emit("realtimeTyping", chatId);
+    }
+  });
+
+  socket.on("notTyping", ({ receiverId, chatId }) => {
+    const receiverSocketId = userSocketsMap.get(receiverId.toString());
+
+    if (receiverSocketId) {
+      socket.to(receiverSocketId).emit("realtimeNotTyping", chatId);
+    }
+  });
+
   // when socket.disconnect() is called on client side, this event is triggered
   // reason for disconnect is received as a parameter is place of _
   socket.on("disconnect", (_) => {

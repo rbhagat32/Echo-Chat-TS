@@ -13,6 +13,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { messageVariants } from "@/lib/variants";
 import { isImageUrl } from "@/helpers/CheckImageUrl";
 import { ImageWithSkeleton } from "@/components/custom/ImageWithSkeleton";
+import TypingIndicator from "@/partials/TypingIndicator";
 
 export default function MessageContainer() {
   const socket = getSocket();
@@ -79,10 +80,36 @@ export default function MessageContainer() {
     };
 
     socket?.on("realtimeDeleteMessage", handleRealtimeDeleteMessage);
+
     return () => {
       socket?.off("realtimeDeleteMessage", handleRealtimeDeleteMessage);
     };
   }, [socket, dispatch, messagesData]);
+
+  // listen for typing indicator
+  const [isTyping, setIsTyping] = useState<boolean>(false);
+  useEffect(() => {
+    const handleRealtimeTyping = (chatId: string) => {
+      console.log(chatId);
+      if (chatId === activeChat._id) {
+        setIsTyping(true);
+        scrollToBottom();
+      }
+    };
+
+    const handleRealtimeNotTyping = () => {
+      setIsTyping(false);
+    };
+
+    socket?.on("realtimeTyping", handleRealtimeTyping);
+    socket?.on("realtimeNotTyping", handleRealtimeNotTyping);
+
+    return () => {
+      setIsTyping(false);
+      socket?.off("realtimeTyping", handleRealtimeTyping);
+      socket?.off("realtimeNotTyping", handleRealtimeNotTyping);
+    };
+  }, [activeChat, socket]);
 
   return (
     <div className="bg-muted/50 rounded-xl">
@@ -173,6 +200,8 @@ export default function MessageContainer() {
                   </div>
                 );
               })}
+
+              {isTyping && <TypingIndicator />}
             </AnimatePresence>
 
             {/* Scroll anchor */}
