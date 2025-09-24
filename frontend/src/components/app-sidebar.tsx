@@ -119,7 +119,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     });
 
     socket?.on("realtimeDeleteChat", (user: UserTypes, deletedChat: ChatTypes) => {
-      toast.warning(`${user.username} deleted the chat !`);
+      toast.info(`${user.username} deleted the chat !`);
 
       if (activeChat._id === deletedChat._id) {
         // if active chat is deleted by other user, clear active chat and messages
@@ -142,7 +142,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     });
 
     socket?.on("realtimeReject", (user: UserTypes) => {
-      toast.warning(`${user.username} rejected your request !`);
+      toast.info(`${user.username} rejected your request !`);
     });
 
     return () => {

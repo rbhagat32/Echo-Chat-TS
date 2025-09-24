@@ -75,7 +75,7 @@ export default function MessageContainer() {
   // Real-time delete message via socket
   useEffect(() => {
     const handleRealtimeDeleteMessage = (deletedMessage: MessageTypes) => {
-      toast.warning(`${activeChat.users[0].username} deleted a message`);
+      toast.info(`${activeChat.users[0].username} deleted a message`);
       dispatch(removeMessage(deletedMessage));
     };
 
