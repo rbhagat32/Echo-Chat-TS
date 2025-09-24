@@ -100,7 +100,7 @@ const SignUp = () => {
       dispatch(api.util.invalidateTags(["Auth", "User", "Chats"]));
       toast.success(response.data.message);
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to Sign Up!");
+      toast.error(error.response?.data?.message || "Failed to Sign Up !");
       console.error("Failed to Sign Up:", error);
     } finally {
       setLoading(false);

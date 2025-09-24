@@ -245,10 +245,10 @@ export const api = createApi({
 
           if (response === "accept") {
             dispatch(api.util.invalidateTags(["User", "Chats", "Requests"]));
-            toast.success("Request accepted successfully!");
+            toast.success("Request accepted successfully !");
           } else {
             dispatch(api.util.invalidateTags(["User", "Requests"]));
-            toast.warning("Request rejected successfully!");
+            toast.warning("Request rejected successfully !");
           }
         } catch (error) {
           toast.error("Failed to fetch chats !");

@@ -135,6 +135,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     socket?.on("realtimeRequest", (user: UserTypes) => {
       // append this user to requests in redux store
       dispatch(appendRequest(user));
+      toast.info(`New Chat Request received from ${user.username} !`);
     });
 
     socket?.on("realtimeAccept", (user: UserTypes) => {

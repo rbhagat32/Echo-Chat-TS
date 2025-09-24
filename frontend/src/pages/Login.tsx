@@ -79,7 +79,7 @@ const Login = () => {
       dispatch(api.util.invalidateTags(["Auth", "User", "Chats"]));
       toast.success(response.data.message);
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to Log In!");
+      toast.error(error.response?.data?.message || "Failed to Log In !");
       console.error("Failed to Login:", error);
     } finally {
       setLoading(false);

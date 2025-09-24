@@ -65,8 +65,8 @@ export function ImageUpload({
   };
 
   const handleSendImage = async () => {
-    if (!selectedFile) return toast.error("No image selected!");
-    if (!activeChat?._id) return toast.error("No active chat found!");
+    if (!selectedFile) return toast.error("No image selected !");
+    if (!activeChat?._id) return toast.error("No active chat found !");
 
     try {
       setUploading(true);
@@ -107,7 +107,7 @@ export function ImageUpload({
       sendMessage(newMessage);
     } catch (error: any) {
       console.error("Error sending image:", error);
-      toast.error(error.message || "Something went wrong!");
+      toast.error(error.message || "Something went wrong !");
     }
   };
 

@@ -16,7 +16,7 @@ export default function Layout() {
 
   useEffect(() => {
     const handleOffline = () => {
-      const id = toast.error("You are offline!", {
+      const id = toast.error("You are offline !", {
         description: "Please check your internet connection.",
         duration: Infinity,
       });
@@ -28,7 +28,7 @@ export default function Layout() {
     };
 
     const handleBackOnline = () => {
-      toast.success("You are back online!");
+      toast.success("You are back online !");
 
       // Dismiss the offline toast if it exists and set the ID to null
       if (offlineToastId.current) {
