@@ -51,6 +51,8 @@ function MessageInputComponent({ setShouldScrollToBottom }: PropTypes) {
 
     // send message api call
     sendMessage(newMessage);
+
+    socket?.emit("notTyping", { receiverId });
   };
 
   // empty the input field when active chat changes
@@ -97,9 +99,18 @@ function MessageInputComponent({ setShouldScrollToBottom }: PropTypes) {
 
   // emit typing indicator
   useEffect(() => {
-    if (inputMessage) socket?.emit("typing", { receiverId, chatId: activeChat._id });
-    else socket?.emit("notTyping", { receiverId });
-  }, [inputMessage]);
+    if (!socket) return;
+
+    if (inputMessage) {
+      socket.emit("typing", { receiverId, chatId: activeChat._id });
+    }
+
+    const timer = setTimeout(() => {
+      socket.emit("notTyping", { receiverId });
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [inputMessage, receiverId, activeChat._id, socket]);
 
   return (
     <div className="flex h-14 items-center gap-4">
