@@ -10,10 +10,11 @@ interface DecodedData {
   userId: string;
 }
 
-const socketAuthenticator = async (err: any, socket: AuthenticatedSocket, next: NextFunction) => {
+const socketAuthenticator = async (err: Error, socket: AuthenticatedSocket, next: NextFunction) => {
   try {
     if (err) return next(new Error("Authentication Error"));
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const token = (socket.request as any).cookies?.token;
     if (!token) return next(new Error("Authentication Error"));
 

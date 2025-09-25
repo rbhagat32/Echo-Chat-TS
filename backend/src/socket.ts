@@ -31,6 +31,7 @@ const userSocketsMap = new Map<string, string>();
 io.use((socket, next) => {
   cookieParser()(
     socket.request as Request,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (socket.request as Request & { res: any }).res,
     async (err) => await socketAuthenticator(err, socket, next as NextFunction)
   );
@@ -116,6 +117,8 @@ io.on("connection", (socket: AuthenticatedSocket) => {
 
   // when socket.disconnect() is called on client side, this event is triggered
   // reason for disconnect is received as a parameter is place of _
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   socket.on("disconnect", (_) => {
     // console.log(`User: ${user.username}, Disconnected: ${reason}`);
     userSocketsMap.delete(userId);
