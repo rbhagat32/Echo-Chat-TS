@@ -42,6 +42,7 @@ export function ImageUpload({
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
+      setUploading(false);
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [imagePreview]);
