@@ -40,9 +40,10 @@ export function ImageUpload({
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    if (uploading) toast.warning("Image is uploading, please wait...");
+    else document.addEventListener("mousedown", handleClickOutside);
+
     return () => {
-      setUploading(false);
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [imagePreview]);
@@ -107,8 +108,10 @@ export function ImageUpload({
 
       sendMessage(newMessage);
     } catch (error: any) {
+      setUploading(false);
+      handleDiscardImage();
       console.error("Error sending image:", error);
-      toast.error(error.message || "Something went wrong !");
+      toast.error(error.response.data.message || "Something went wrong !");
     }
   };
 

@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
+import multer from "multer";
 
 export class ErrorHandler extends Error {
   constructor(public statusCode: number, public message: string) {
@@ -14,6 +15,10 @@ export const errorHandler = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _next: NextFunction
 ) => {
+  if (err instanceof multer.MulterError && err.code === "LIMIT_FILE_SIZE") {
+    return res.status(413).json({ message: "File Size is too large !" });
+  }
+
   err.statusCode ||= 500;
   err.message ||= "Internal Server Error";
 
