@@ -1,7 +1,7 @@
-import jwt from "jsonwebtoken";
-import { UserModel } from "../models/user.js";
 import dotenv from "dotenv";
 import { NextFunction } from "express";
+import jwt from "jsonwebtoken";
+import { UserModel } from "../models/user.js";
 import { AuthenticatedSocket } from "../types/socket.js";
 
 dotenv.config({ path: "./.env" });
