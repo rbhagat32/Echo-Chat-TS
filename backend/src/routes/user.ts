@@ -1,16 +1,16 @@
 import express from "express";
-import { isLoggedIn } from "../middlewares/auth.js";
+import { multerUpload } from "../config/multer.js";
 import {
-  searchUser,
+  deleteAvatar,
+  deleteBio,
   getRequests,
   getUser,
   respondRequest,
+  searchUser,
   sendRequest,
   updateDetails,
-  deleteBio,
-  deleteAvatar,
 } from "../controllers/user.js";
-import { multerUpload } from "../config/multer.js";
+import { isLoggedIn } from "../middlewares/auth.js";
 
 const router = express.Router();
 

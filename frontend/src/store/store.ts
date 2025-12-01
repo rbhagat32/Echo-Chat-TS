@@ -1,13 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { api } from "./api";
-import { AuthSlice } from "./reducers/AuthSlice";
-import { UserSlice } from "./reducers/UserSlice";
-import { ChatSlice } from "./reducers/ChatSlice";
 import { ActiveChatSlice } from "./reducers/ActiveChatSlice";
+import { AuthSlice } from "./reducers/AuthSlice";
+import { ChatSlice } from "./reducers/ChatSlice";
 import { LatestChatSlice } from "./reducers/LatestChatSlice";
 import { MessageSlice } from "./reducers/MessageSlice";
-import { RequestsSlice } from "./reducers/RequestsSlice";
 import { OnlineUsersSlice } from "./reducers/OnlineUsers";
+import { RequestsSlice } from "./reducers/RequestsSlice";
+import { UserSlice } from "./reducers/UserSlice";
 
 export const store = configureStore({
   reducer: {

@@ -1,14 +1,14 @@
 import { AlertDialog } from "@/components/custom/AlertDialog";
-import { Trash2 } from "lucide-react";
-import { toast } from "sonner";
-import { useDispatch, useSelector } from "react-redux";
+import { Dialog } from "@/components/custom/Dialog";
+import ProfilePicture from "@/components/custom/ProfilePicture";
+import { Tooltip } from "@/components/custom/Tooltip";
+import { getSocket } from "@/Socket";
 import { useDeleteChatMutation } from "@/store/api";
 import { clearActiveChat } from "@/store/reducers/ActiveChatSlice";
 import { clearMessages } from "@/store/reducers/MessageSlice";
-import { Tooltip } from "@/components/custom/Tooltip";
-import { getSocket } from "@/Socket";
-import { Dialog } from "@/components/custom/Dialog";
-import ProfilePicture from "@/components/custom/ProfilePicture";
+import { Trash2 } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
 
 export default function ActiveChatInfo() {
   const socket = getSocket();

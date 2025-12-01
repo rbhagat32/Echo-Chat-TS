@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
-import { UserTypes } from "./user.js";
 import { ChatTypes } from "./chat.js";
+import { UserTypes } from "./user.js";
 
 export interface MessageTypes {
   _id: Types.ObjectId;

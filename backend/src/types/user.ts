@@ -1,6 +1,6 @@
+import { Request } from "express";
 import { Types } from "mongoose";
 import { ChatTypes } from "./chat.js";
-import { Request } from "express";
 
 export interface RequestWithUser extends Request {
   userId?: string;

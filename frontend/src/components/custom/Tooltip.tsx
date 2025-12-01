@@ -1,7 +1,7 @@
 import {
-  Tooltip as TooltipShadCN,
   TooltipContent,
   TooltipProvider,
+  Tooltip as TooltipShadCN,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 

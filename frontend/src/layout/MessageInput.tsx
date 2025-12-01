@@ -1,14 +1,14 @@
+import { ImageUpload } from "@/components/custom/ImageUpload";
+import { SidebarInput } from "@/components/ui/sidebar";
+import { getSocket } from "@/Socket";
+import { api, useSendMessageMutation } from "@/store/api";
+import { appendLatestChat } from "@/store/reducers/LatestChatSlice";
+import { appendMessage } from "@/store/reducers/MessageSlice";
+import { Send } from "lucide-react";
 import { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import { v4 as uuid } from "uuid";
-import { Send } from "lucide-react";
-import { SidebarInput } from "@/components/ui/sidebar";
-import { getSocket } from "@/Socket";
-import { api, useSendMessageMutation } from "@/store/api";
-import { appendMessage } from "@/store/reducers/MessageSlice";
-import { appendLatestChat } from "@/store/reducers/LatestChatSlice";
-import { ImageUpload } from "@/components/custom/ImageUpload";
 
 interface PropTypes {
   setShouldScrollToBottom: React.Dispatch<React.SetStateAction<boolean>>;

@@ -1,14 +1,14 @@
-import { RequestWithUser } from "../types/user.js";
 import { Response } from "express";
-import { UserModel } from "../models/user.js";
-import { ChatModel } from "../models/chat.js";
-import { ChatTypes } from "../types/chat.js";
-import { deleteFromCloudinary, uploadToCloudinary } from "../utils/cloudinary.js";
-import { FileProps } from "../types/file.js";
-import { io, userSocketsMap } from "../socket.js";
-import { RefetchTypes } from "../types/refetch.js";
-import { tryCatch } from "../utils/try-catch.js";
 import { ErrorHandler } from "../middlewares/error-handler.js";
+import { ChatModel } from "../models/chat.js";
+import { UserModel } from "../models/user.js";
+import { io, userSocketsMap } from "../socket.js";
+import { ChatTypes } from "../types/chat.js";
+import { FileProps } from "../types/file.js";
+import { RefetchTypes } from "../types/refetch.js";
+import { RequestWithUser } from "../types/user.js";
+import { deleteFromCloudinary, uploadToCloudinary } from "../utils/cloudinary.js";
+import { tryCatch } from "../utils/try-catch.js";
 
 const getUser = tryCatch(async (req: RequestWithUser, res: Response) => {
   const { userId } = req;
@@ -183,12 +183,12 @@ const deleteAvatar = tryCatch(async (req: RequestWithUser, res: Response) => {
 });
 
 export {
+  deleteAvatar,
+  deleteBio,
+  getRequests,
   getUser,
+  respondRequest,
   searchUser,
   sendRequest,
-  getRequests,
-  respondRequest,
   updateDetails,
-  deleteBio,
-  deleteAvatar,
 };

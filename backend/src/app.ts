@@ -1,14 +1,14 @@
-import express from "express";
+import { v2 as cloudinary } from "cloudinary";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
-import { v2 as cloudinary } from "cloudinary";
+import express from "express";
 import { connectDB } from "./config/db.js";
+import { errorHandler } from "./middlewares/error-handler.js";
 import authRouter from "./routes/auth.js";
-import userRouter from "./routes/user.js";
 import chatRouter from "./routes/chat.js";
 import messageRouter from "./routes/message.js";
-import { errorHandler } from "./middlewares/error-handler.js";
+import userRouter from "./routes/user.js";
 import { app, server } from "./socket.js";
 
 // setup

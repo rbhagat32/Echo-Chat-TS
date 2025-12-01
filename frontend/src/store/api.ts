@@ -1,11 +1,11 @@
+import { Draft } from "@reduxjs/toolkit";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { toast } from "sonner";
 import { setAuth } from "./reducers/AuthSlice";
-import { setUser } from "./reducers/UserSlice";
 import { setChats } from "./reducers/ChatSlice";
 import { appendMessage, removeMessage } from "./reducers/MessageSlice";
-import { toast } from "sonner";
-import { Draft } from "@reduxjs/toolkit";
 import { setRequests } from "./reducers/RequestsSlice";
+import { setUser } from "./reducers/UserSlice";
 
 const BACKEND_URL = import.meta.env.DEV
   ? import.meta.env.VITE_BACKEND_URL

@@ -20,4 +20,4 @@ const SocketProvider = ({ children }: { children: ReactNode }) => {
   return <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>;
 };
 
-export { SocketProvider, getSocket };
+export { getSocket, SocketProvider };

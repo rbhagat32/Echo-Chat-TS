@@ -1,8 +1,8 @@
-import * as React from "react";
-import { Bell, House, UserRoundPlus } from "lucide-react";
-import { useDispatch } from "react-redux";
 import { clearActiveChat } from "@/store/reducers/ActiveChatSlice";
 import { clearMessages } from "@/store/reducers/MessageSlice";
+import { Bell, House, UserRoundPlus } from "lucide-react";
+import * as React from "react";
+import { useDispatch } from "react-redux";
 import { AddPeopleComponent } from "../components/sidebar/AddPeople";
 import { RequestsComponent } from "../components/sidebar/Requests";
 

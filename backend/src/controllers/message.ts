@@ -1,13 +1,13 @@
-import { RequestWithUser } from "../types/user.js";
 import { Response } from "express";
+import { ErrorHandler } from "../middlewares/error-handler.js";
 import { ChatModel } from "../models/chat.js";
 import { MessageModel } from "../models/message.js";
-import { MessageTypes } from "../types/message.js";
-import { tryCatch } from "../utils/try-catch.js";
-import { ErrorHandler } from "../middlewares/error-handler.js";
 import { io, userSocketsMap } from "../socket.js";
-import { uploadToCloudinary } from "../utils/cloudinary.js";
 import { FileProps } from "../types/file.js";
+import { MessageTypes } from "../types/message.js";
+import { RequestWithUser } from "../types/user.js";
+import { uploadToCloudinary } from "../utils/cloudinary.js";
+import { tryCatch } from "../utils/try-catch.js";
 
 const sendMessage = tryCatch(async (req: RequestWithUser, res: Response) => {
   const { chatId } = req.params;
@@ -95,4 +95,4 @@ const uploadImage = tryCatch(async (req: RequestWithUser, res: Response) => {
   res.status(200).json({ message: "Image uploaded successfully !", imageUrl: url, public_id });
 });
 
-export { sendMessage, getMessages, deleteMessage, uploadImage };
+export { deleteMessage, getMessages, sendMessage, uploadImage };

@@ -1,12 +1,12 @@
 import PageLoader from "@/partials/PageLoader";
+import { getSocket } from "@/Socket";
 import { api, useGetRequestsQuery, useRespondRequestMutation } from "@/store/api";
-import { Tooltip } from "../custom/Tooltip";
 import { Check, X as RejectIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getSocket } from "@/Socket";
 import { Dialog } from "../custom/Dialog";
 import ProfilePicture from "../custom/ProfilePicture";
+import { Tooltip } from "../custom/Tooltip";
 
 export const RequestsComponent = () => {
   const socket = getSocket();

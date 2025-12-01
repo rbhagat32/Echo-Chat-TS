@@ -1,7 +1,7 @@
 import express from "express";
-import { isLoggedIn } from "../middlewares/auth.js";
-import { getMessages, sendMessage, deleteMessage, uploadImage } from "../controllers/message.js";
 import { multerUpload } from "../config/multer.js";
+import { deleteMessage, getMessages, sendMessage, uploadImage } from "../controllers/message.js";
+import { isLoggedIn } from "../middlewares/auth.js";
 
 const router = express.Router();
 

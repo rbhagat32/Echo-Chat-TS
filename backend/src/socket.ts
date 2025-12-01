@@ -1,13 +1,13 @@
+import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
 import express, { NextFunction, Request } from "express";
 import http from "http";
 import { Server } from "socket.io";
-import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
 import { socketAuthenticator } from "./config/socket-authenticator.js";
-import { AuthenticatedSocket } from "./types/socket.js";
-import { UserTypes } from "./types/user.js";
 import { ChatTypes } from "./types/chat.js";
 import { MessageTypes } from "./types/message.js";
+import { AuthenticatedSocket } from "./types/socket.js";
+import { UserTypes } from "./types/user.js";
 
 dotenv.config({ path: ".env" });
 
@@ -126,4 +126,4 @@ io.on("connection", (socket: AuthenticatedSocket) => {
   });
 });
 
-export { app, server, io, userSocketsMap };
+export { app, io, server, userSocketsMap };

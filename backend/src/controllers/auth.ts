@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import { cookieOptions } from "../constants/cookie-options.js";
+import { ErrorHandler } from "../middlewares/error-handler.js";
 import { UserModel } from "../models/user.js";
+import { FileProps } from "../types/file.js";
 import { uploadToCloudinary } from "../utils/cloudinary.js";
 import { generateToken } from "../utils/generate-token.js";
-import { FileProps } from "../types/file.js";
 import { tryCatch } from "../utils/try-catch.js";
-import { ErrorHandler } from "../middlewares/error-handler.js";
 
 const checkLoggedIn = (req: Request, res: Response) => {
   const token = req.cookies.token;
@@ -66,4 +66,4 @@ const logout = (_req: Request, res: Response) => {
     .json({ message: "Logged out successfully !" });
 };
 
-export { checkLoggedIn, signUp, login, logout };
+export { checkLoggedIn, login, logout, signUp };

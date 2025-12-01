@@ -1,10 +1,10 @@
+import Layout from "@/pages/Layout";
+import Login from "@/pages/Login";
+import SignUp from "@/pages/SignUp";
+import NotFound from "@/partials/NotFound";
 import { Route, Routes } from "react-router-dom";
 import { SocketProvider } from "../Socket";
 import ProtectedRoutes from "./ProtectedRoutes";
-import NotFound from "@/partials/NotFound";
-import Login from "@/pages/Login";
-import SignUp from "@/pages/SignUp";
-import Layout from "@/pages/Layout";
 
 const Routing = ({ isLoggedIn = false }: { isLoggedIn: boolean }) => {
   return (

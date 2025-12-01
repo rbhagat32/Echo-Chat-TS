@@ -1,8 +1,8 @@
 import { v2 as cloudinary } from "cloudinary";
-import { v4 as uuid } from "uuid";
-import { FileProps } from "../types/file.js";
 import sharp from "sharp";
 import streamifier from "streamifier";
+import { v4 as uuid } from "uuid";
+import { FileProps } from "../types/file.js";
 
 interface ReturnTypes {
   public_id: string | null;
@@ -90,4 +90,4 @@ const deleteFromCloudinary = async (public_id: string): Promise<boolean> => {
   }
 };
 
-export { uploadToCloudinary, deleteFromCloudinary };
+export { deleteFromCloudinary, uploadToCloudinary };

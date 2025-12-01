@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { getSocket } from "@/Socket";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -7,13 +7,13 @@ import {
   ContextMenuShortcut,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import { Copy, Download, Trash2 } from "lucide-react";
-import { AlertDialog } from "./AlertDialog";
-import { AlertDialogTrigger } from "../ui/alert-dialog";
-import { toast } from "sonner";
-import { useDeleteMessageMutation } from "@/store/api";
-import { getSocket } from "@/Socket";
 import { isImageUrl } from "@/helpers/CheckImageUrl";
+import { useDeleteMessageMutation } from "@/store/api";
+import { Copy, Download, Trash2 } from "lucide-react";
+import { ReactNode } from "react";
+import { toast } from "sonner";
+import { AlertDialogTrigger } from "../ui/alert-dialog";
+import { AlertDialog } from "./AlertDialog";
 
 interface PropTypes {
   children: ReactNode;

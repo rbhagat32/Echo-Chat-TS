@@ -1,13 +1,13 @@
 import { Response } from "express";
-import { RequestWithUser, UserTypes } from "../types/user.js";
-import { UserModel } from "../models/user.js";
+import { ErrorHandler } from "../middlewares/error-handler.js";
 import { ChatModel } from "../models/chat.js";
 import { MessageModel } from "../models/message.js";
-import { ChatTypes } from "../types/chat.js";
+import { UserModel } from "../models/user.js";
 import { io, userSocketsMap } from "../socket.js";
+import { ChatTypes } from "../types/chat.js";
 import { RefetchTypes } from "../types/refetch.js";
+import { RequestWithUser, UserTypes } from "../types/user.js";
 import { tryCatch } from "../utils/try-catch.js";
-import { ErrorHandler } from "../middlewares/error-handler.js";
 
 const getChats = tryCatch(async (req: RequestWithUser, res: Response) => {
   const { userId } = req;
@@ -112,4 +112,4 @@ const deleteChat = tryCatch(async (req: RequestWithUser, res: Response) => {
   return res.status(200).json({ message: "Chat deleted successfully!" });
 });
 
-export { getChats, deleteChat };
+export { deleteChat, getChats };

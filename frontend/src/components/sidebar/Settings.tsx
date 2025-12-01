@@ -1,17 +1,17 @@
+import { Input } from "@/components/ui/input";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
-import Button from "../custom/Button";
-import { Input } from "@/components/ui/input";
+import * as yup from "yup";
 import Spinner from "../../partials/Spinner";
 import { api } from "../../store/api";
 import { axios } from "../../utils/axios";
-import { Tooltip } from "../custom/Tooltip";
 import { AlertDialog } from "../custom/AlertDialog";
-import { Trash2 } from "lucide-react";
+import Button from "../custom/Button";
+import { Tooltip } from "../custom/Tooltip";
 
 interface UpdateFormData {
   bio?: string;

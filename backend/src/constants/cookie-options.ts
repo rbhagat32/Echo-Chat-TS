@@ -1,7 +1,7 @@
 interface CookieOptionsTypes {
   httpOnly: boolean;
   secure: boolean;
-  sameSite: "none" | "strict";
+  sameSite: "none" | "strict" | "lax";
   expires: Date;
 }
 

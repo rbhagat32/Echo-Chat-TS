@@ -1,9 +1,9 @@
-import { Toaster } from "sonner";
-import PageLoader from "./partials/PageLoader";
-import Routing from "./utils/Routing";
-import { useCheckLoginQuery } from "./store/api";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { Toaster } from "sonner";
+import PageLoader from "./partials/PageLoader";
+import { useCheckLoginQuery } from "./store/api";
+import Routing from "./utils/Routing";
 
 export default function App() {
   // dont use isLoggedIn from api as it might take time refetch Auth tag after login in case of slow internet

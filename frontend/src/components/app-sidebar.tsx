@@ -1,4 +1,4 @@
-import * as React from "react";
+import { SearchForm } from "@/components/search-form";
 import {
   Sidebar,
   SidebarContent,
@@ -6,29 +6,29 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { SearchForm } from "@/components/search-form";
-import { LogOut, Settings } from "lucide-react";
-import { Separator } from "./ui/separator";
-import { Skeleton } from "./ui/skeleton";
+import { useNavLinks } from "@/hooks/useNavLinks";
+import { getSocket } from "@/Socket";
 import { api, useGetChatsQuery, useGetRequestsQuery, useGetUserQuery } from "@/store/api";
-import { useDispatch, useSelector } from "react-redux";
-import { clearActiveChat, setActiveChat } from "../store/reducers/ActiveChatSlice";
-import { AlertDialog } from "./custom/AlertDialog";
-import { axios } from "@/utils/axios";
-import { toast } from "sonner";
 import { setAuth } from "@/store/reducers/AuthSlice";
 import { clearChats } from "@/store/reducers/ChatSlice";
-import { clearUser } from "@/store/reducers/UserSlice";
-import { clearMessages } from "@/store/reducers/MessageSlice";
-import { Tooltip } from "./custom/Tooltip";
-import { getSocket } from "@/Socket";
 import { clearLatestChats, removeLatestChat } from "@/store/reducers/LatestChatSlice";
-import { Dialog } from "./custom/Dialog";
-import { SettingsComponent } from "./sidebar/Settings";
-import { useNavLinks } from "@/hooks/useNavLinks";
-import { appendRequest, clearRequests } from "@/store/reducers/RequestsSlice";
+import { clearMessages } from "@/store/reducers/MessageSlice";
 import { clearOnlineUsers, setOnlineUsers } from "@/store/reducers/OnlineUsers";
+import { appendRequest, clearRequests } from "@/store/reducers/RequestsSlice";
+import { clearUser } from "@/store/reducers/UserSlice";
+import { axios } from "@/utils/axios";
+import { LogOut, Settings } from "lucide-react";
+import * as React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
+import { clearActiveChat, setActiveChat } from "../store/reducers/ActiveChatSlice";
+import { AlertDialog } from "./custom/AlertDialog";
+import { Dialog } from "./custom/Dialog";
 import ProfilePicture from "./custom/ProfilePicture";
+import { Tooltip } from "./custom/Tooltip";
+import { SettingsComponent } from "./sidebar/Settings";
+import { Separator } from "./ui/separator";
+import { Skeleton } from "./ui/skeleton";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const socket = getSocket();

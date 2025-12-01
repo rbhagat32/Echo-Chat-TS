@@ -1,8 +1,8 @@
 import { NextFunction, Response } from "express";
-import { RequestWithUser } from "../types/user.js";
 import jwt from "jsonwebtoken";
 import { cookieOptions } from "../constants/cookie-options.js";
 import { UserModel } from "../models/user.js";
+import { RequestWithUser } from "../types/user.js";
 
 interface JwtPayloadTypes {
   userId: string;

@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import { ImagePlus, Send, X } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
 import { truncateFileName } from "@/helpers/TruncateFileName";
+import Spinner from "@/partials/Spinner";
+import { ImagePlus, Send, X } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { v4 as uuid } from "uuid";
 import { axios } from "../../utils/axios";
-import Spinner from "@/partials/Spinner";
 
 interface PropTypes {
   activeChat: ChatTypes;
