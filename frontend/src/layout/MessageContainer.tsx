@@ -1,19 +1,19 @@
-import MessageInput from "./MessageInput";
-import Welcome from "@/components/custom/Welcome";
-import { useDispatch, useSelector } from "react-redux";
-import moment from "moment";
-import { useEffect, useRef, useState } from "react";
-import PageLoader from "@/partials/PageLoader";
-import { useLazyGetMessagesQuery } from "@/store/api";
-import { clearMessages, removeMessage, prependMessages } from "@/store/reducers/MessageSlice";
-import { RightClickMenu } from "@/components/custom/RightClickMenu";
-import { getSocket } from "@/Socket";
-import { toast } from "sonner";
-import { motion, AnimatePresence } from "motion/react";
-import { messageVariants } from "@/lib/variants";
-import { isImageUrl } from "@/helpers/CheckImageUrl";
 import { ImageWithSkeleton } from "@/components/custom/ImageWithSkeleton";
+import { RightClickMenu } from "@/components/custom/RightClickMenu";
+import Welcome from "@/components/custom/Welcome";
+import { isImageUrl } from "@/helpers/CheckImageUrl";
+import { messageVariants } from "@/lib/variants";
+import PageLoader from "@/partials/PageLoader";
 import TypingIndicator from "@/partials/TypingIndicator";
+import { getSocket } from "@/Socket";
+import { useLazyGetMessagesQuery } from "@/store/api";
+import { clearMessages, prependMessages, removeMessage } from "@/store/reducers/MessageSlice";
+import moment from "moment";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
+import MessageInput from "./MessageInput";
 
 export default function MessageContainer() {
   const socket = getSocket();
@@ -90,7 +90,6 @@ export default function MessageContainer() {
   const [isTyping, setIsTyping] = useState<boolean>(false);
   useEffect(() => {
     const handleRealtimeTyping = (chatId: string) => {
-      console.log(chatId);
       if (chatId === activeChat._id) {
         setIsTyping(true);
         scrollToBottom();
